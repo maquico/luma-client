@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root{
+    --luma-color-primary: #692DD7;
+    --luma-color-secondary: #FD7797;
+    --luma-color-accent: #FC714A;
+    --luma-color-green-success: #2E7D32;
+    --luma-color-red-error: #D32F2F;
+    --luma-color-bg-gradient: linear-gradient(to right, #6b5b95, #d6a5a5);
+}
