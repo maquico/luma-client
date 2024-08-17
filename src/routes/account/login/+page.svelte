@@ -2,13 +2,25 @@
 	<div class="card login">
 		<img src={logo} alt="luma-logo"/>
 		<form on:submit|preventDefault={validate}>
-			<label class="input input-bordered flex items-center gap-2">
-				<input type="text" name="email" id="email" class="grow" placeholder="Correo" required/>
+			<label class="input input-bordered flex items-center gap-2 {invalidInput? 'input-error': ''}">
+				<input type="text" name="email" id="email" placeholder="Correo" bind:value={email} size="30" required/>
 			</label>
-			<label class="input input-bordered flex items-center gap-2">
-				<input type="password" name="password" id="password" class="grow" placeholder="Contraseña" required/>
-<!--				<button on:click={() => {'show password'}}>show</button>-->
-			</label>
+			<div class="group">
+				<label class="input input-bordered flex items-center gap-2 {invalidInput? 'input-error': ''}">
+					<input type="password" name="password" id="password" class="grow" placeholder="Contraseña" bind:value={password} required/>
+					<label class="swap">
+						<input type="checkbox" on:click={() => {showPassword()}}/>
+						<div class="swap-on"><Eye /></div>
+						<div class="swap-off"><EyeOff /></div>
+					</label>
+				</label>
+				{#if invalidInput}
+					<div id="input-error-info">
+						<CircleAlert fill="red" color="white" size="16px"/>
+						<p class="text-red-600">Usuario o contraseña incorrectos</p>
+					</div>
+				{/if}
+			</div>
 			<button type="submit" class="btn btn-primary">
 				Ingresar
 			</button>
@@ -18,15 +30,40 @@
 	</div>
 
 	<div class="card">
-		<a href="/account/register">¿No tienes una cuenta? <span>Registrar usuario</span></a>
+		<a href="/account/signin">¿No tienes una cuenta? <span>Registrar usuario</span></a>
 	</div>
 </div>
 
 <script>
 	import logo from '$lib/assets/luma-logo.png'
+	import { CircleAlert, Eye, EyeOff } from 'lucide-svelte';
+	import { goto } from '$app/navigation';
+
+	let email
+	let password
+	let invalidInput=false
+	let validRegex = /^[\w-]+@[a-zA-Z\dx-]+\.[a-zA-Z]{2,}$/
 
 	function validate() {
 		console.log("I'm the validate() function")
+		// TODO: validate password with db data
+		if (email.match(validRegex) && password){
+			goto('/');
+			console.log('successfull login');
+			invalidInput=false
+		}else{
+			console.log('error login');
+			invalidInput=true
+		}
+	}
+
+	function showPassword() {
+		let x = document.getElementById("password");
+		if (x.type === "password") {
+			x.type = "text";
+		} else {
+			x.type = "password";
+		}
 	}
 </script>
 
@@ -35,18 +72,24 @@
         display: flex;
         flex-direction: column;
         gap: 1rem;
+				width: 400px;
     }
 
 		.login{
 				gap: 20px;
 				padding: 2rem 2rem !important;
+        height: 430px;
+		}
+
+		.input-error{
+        border: 2px solid red;
 		}
 
 		form{
 				display: flex;
 				flex-direction: column;
 				gap: 20px;
-        width: fill;
+        width: 20rem;
 		}
 
 		form label{
@@ -58,6 +101,27 @@
 				color: white;
 				font-weight: bold;
 		}
+
+		form .swap{
+				border: none;
+		}
+
+    .group{
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    #input-error-info{
+        display: flex;
+        gap: 2px;
+        align-items: center;
+        font-size: 12px;
+    }
+
+    #input-error-info p{
+        color: red !important;
+    }
 
 		.card{
 				background-color: white;
