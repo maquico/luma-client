@@ -3,10 +3,43 @@
 @tailwind utilities;
 
 :root{
-    --luma-color-primary: #692DD7;
+    --luma-color-violet-50: #f5f3ff;
+    --luma-color-violet-100: #ede9fe;
+    --luma-color-violet-200: #ddd6fe;
+    --luma-color-violet-300: #c4b5fd;
+    --luma-color-violet-400: #a78bfa;
+    --luma-color-violet-500: #8b5cf6;
+    --luma-color-violet-600: #7c3aed;
+    --luma-color-primary-violet: #6d28d9;
+    --luma-color-violet-800: #5b21b6;
+    --luma-color-violet-900: #4c1d95;
+    --luma-color-violet-950: #2e1065;
+
+    --luma-color-gray-50: #f9fafb;
+    --luma-color-gray-100: #f3f4f6;
+    --luma-color-gray-200: #e5e7eb;
+    --luma-color-gray-300: #d1d5db;
+    --luma-color-gray-400: #9ca3af;
+    --luma-color-gray-500: #6b7280;
+    --luma-color-gray-600: #4b5563;
+    --luma-color-gray-700: #374151;
+    --luma-color-gray-800: #1f2937;
+    --luma-color-gray-900: #111827;
+    --luma-color-gray-950: #030712;
+
+    --luma-color-orange-50: #fff7ed;
+    --luma-color-orange-100: #ffedd5;
+    --luma-color-orange-200: #fed7aa;
+    --luma-color-orange-300: #fdba74;
+    --luma-color-orange-400: #fb923c;
+    --luma-color-secondary-orange: #f97316;
+    --luma-color-orange-600: #ea580c;
+    --luma-color-orange-700: #c2410c;
+    --luma-color-orange-800: #9a3412;
+    --luma-color-orange-900: #7c2d12;
+    --luma-color-orange-950: #431407;
+
     --luma-color-secondary: #FD7797;
-    --luma-color-accent: #FC714A;
     --luma-color-green-success: #2E7D32;
     --luma-color-red-error: #D32F2F;
-    --luma-color-bg-gradient: linear-gradient(to right, #6b5b95, #d6a5a5);
 }
