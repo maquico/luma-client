@@ -132,7 +132,6 @@
 	let OTP
 	let newPassword
 	let confirmNewPassword
-	let bool_showPassword=false
 	let invalidInput=false
 
 	let validRegex = /^[\w-]+@[a-zA-Z\dx-]+\.[a-zA-Z]{2,}$/
