@@ -38,6 +38,7 @@
 	import logo from '$lib/assets/luma-logo.png'
 	import { CircleAlert, Eye, EyeOff } from 'lucide-svelte';
 	import { goto } from '$app/navigation';
+	import axios from 'axios';
 
 	let email
 	let password
@@ -48,7 +49,19 @@
 		console.log("I'm the validate() function")
 		// TODO: validate password with db data
 		if (email.match(validRegex) && password){
-			goto('/');
+			// goto('/');
+
+			axios.post('http://localhost:3000/api/session', {
+				email: email,
+				password: password,
+			})
+				.then(response => {
+					console.log(response.data);
+				})
+				.catch(error => {
+					console.error('Error:', error);
+				});
+
 			console.log('successfull login');
 			invalidInput=false
 		}else{
