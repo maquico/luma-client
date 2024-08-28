@@ -29,6 +29,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@supabase/supabase-js": "^2.45.2",
 		"axios": "^1.7.4",
 		"lucide-svelte": "^0.428.0",
 		"svelte-steps": "^2.4.1"
