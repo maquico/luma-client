@@ -1,3 +1,13 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<TopNavBar/>
 
+<div class="p-5">
+	<a href="/account/login" class="btn btn-primary"> Login </a>
+</div>
+
+<script>
+	import TopNavBar from '../components/top.navbar.svelte'
+</script>
+
+<style>
+
+</style>

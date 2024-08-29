@@ -49,7 +49,6 @@
 		console.log("I'm the validate() function")
 		// TODO: validate password with db data
 		if (email.match(validRegex) && password){
-			// goto('/');
 
 			axios.post('http://localhost:3000/api/session', {
 				email: email,
@@ -57,12 +56,13 @@
 			})
 				.then(response => {
 					console.log(response.data);
+					console.log('successfull login');
+					goto('/');
 				})
 				.catch(error => {
 					console.error('Error:', error);
 				});
 
-			console.log('successfull login');
 			invalidInput=false
 		}else{
 			console.log('error login');
