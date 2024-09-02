@@ -29,41 +29,92 @@
 			<Info />
 		</a>
 
-		<button class="avatar" on:click={() => {console.log('avatar')}}>
+		<button class="avatar"
+						use:clickOutside on:click_outside={() => { if(userDropdown) userDropdown = !userDropdown }}
+						on:click={() => { userDropdown = !userDropdown}}
+		>
 			<div class="w-9 rounded-full">
 				<img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" alt="user-avatar" />
 			</div>
 		</button>
 
-<!--		<div class="dropdown dropdown-end">-->
-<!--			<div tabindex="0" role="button" class="my-5">-->
-<!--				<div class="w-9 rounded-full">-->
-<!--					<img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" alt="user-avatar" />-->
-<!--				</div>-->
-<!--			</div>-->
-<!--			<ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">-->
-<!--				<li><a>Item 1</a></li>-->
-<!--				<li><a>Item 2</a></li>-->
-<!--			</ul>-->
-<!--		</div>-->
+<!--		TODO: pendiente revisar si afecta el comportamiento de que el dropdown cierre cuando se haga click fuera del menu-->
+		<div class="dropdown-menu-container {userDropdown ? 'open' : ''}">
+			<div class="dropdown-menu">
+				<div class="user-info">
+					<h3>John Doe</h3>
+					<p>jdoe@acme.com</p>
+				</div>
+
+				<div class="divider"/>
+
+				<div class="links">
+					<div class="menu-link">
+						<Globe size={20}/>
+						<p>Idioma</p>
+					</div>
+					<div class="menu-link">
+						<Star size={20}/>
+						<p>Insignias</p>
+					</div>
+					<div class="menu-link">
+						<User size={20}/>
+						<p>Perfil</p>
+					</div>
+				</div>
+
+				<div class="divider"/>
+
+				<div class="sign-out">
+					<div class="menu-link">
+						<LogOut size={20}/>
+						<p>Salir</p>
+					</div>
+				</div>
+			</div>
+		</div>
 
 	</div>
 </div>
 
 <script>
+	import {clickOutside} from '$lib/clickOutside.js';
 	import logo from '$lib/assets/luma-logo.png'
-	import { Info, ShoppingCart, Gem, Coins  } from 'lucide-svelte';
+	import { Info, ShoppingCart, Gem, Coins, LogOut, User, Star, Globe  } from 'lucide-svelte';
 
-
+ 	let userDropdown = true
 </script>
 
 <style>
 	.navbar{
 			display: flex;
 			justify-content: space-between;
-			background-color: white;
+			background-color: var(--luma-color-gray-50);
 			height: 64px;
+			position: relative;
+			padding: 0 2rem;
 	}
+
+  .dropdown-menu-container{
+      position: absolute;
+      top: 80%;
+      right: 1.3rem;
+      width: 220px;
+			max-height: 0px;
+			overflow: hidden;
+  }
+	.dropdown-menu-container.open{
+      max-height: 400px;
+  }
+
+  .dropdown-menu{
+			overflow: hidden;
+      border-radius: 5px;
+      background-color: var(--luma-color-gray-50);
+      padding: 20px;
+      margin: 10px;
+      box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  }
 
 	.left{
 			display: flex;
@@ -74,7 +125,7 @@
 			font-size: 14px;
 			position: relative;
 			padding: 2px 14px 2px 10px;
-			border: 1px solid gray;
+			border: 1px solid var(--luma-color-gray-400);
 			border-radius: 0.8rem;
 	}
 
@@ -91,8 +142,34 @@
 
   .gem .icon-container,
   .coins .icon-container{
-			background-color: white;
+			background-color: var(--luma-color-gray-50);
 			right: -15px;
   }
+
+	.divider{
+			background-color: var(--luma-color-gray-100);
+			transform: translateX(-20px);
+			width: 1000px;
+			height: 0.5px;
+			margin: 16px 0;
+	}
+
+	.links{
+			display: flex;
+			flex-direction: column;
+			gap: 10px;
+	}
+
+	.menu-link{
+      cursor: pointer;
+			display: flex;
+			align-items: center;
+			gap: 15px;
+	}
+
+  .menu-link:hover p{
+  	scale: 1.05;
+			color: var(--luma-color-gray-600);
+	}
 
 </style>

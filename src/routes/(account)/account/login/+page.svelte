@@ -30,7 +30,7 @@
 	</div>
 
 	<div class="card">
-		<a href="/account/signin">¿No tienes una cuenta? <span>Registrar usuario</span></a>
+		<a href="/account/register">¿No tienes una cuenta? <span>Registrar usuario</span></a>
 	</div>
 </div>
 

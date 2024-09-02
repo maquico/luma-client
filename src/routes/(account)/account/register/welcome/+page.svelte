@@ -1,7 +1,7 @@
 <script>
 	import logo from '$lib/assets/luma-logo.png';
 	import image from '$lib/assets/welcome-img.png';
-	import ButtonComponent from '../../../../components/button.svelte';
+	import ButtonComponent from '../../../../../components/button.svelte';
 </script>
 
 <div class="welcome-container">

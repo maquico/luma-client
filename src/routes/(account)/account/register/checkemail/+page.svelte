@@ -1,6 +1,5 @@
 <script>
 	import image from '$lib/assets/checkemail-img.png';
-	import ButtonComponent from '../../../../components/button.svelte';
 	import { ChevronLeft } from 'lucide-svelte';
 </script>
 
@@ -22,7 +21,7 @@
 			<hr />
 			<div class="button-container">
 				<ChevronLeft class="chevron-icon" />
-				<a href="/account/register" class="btn-secondary"> Regresar </a>
+				<a href="/src/routes/1account/register" class="btn-secondary"> Regresar </a>
 			</div>
 		</div>
 		<div class="divider"></div>

@@ -1,8 +1,8 @@
 <script>
 	import logo from '$lib/assets/luma-logo.png';
-	import { CircleAlert, Eye, EyeOff } from 'lucide-svelte';
+	import { Eye, EyeOff } from 'lucide-svelte';
 	import { goto } from '$app/navigation';
-	import ButtonComponent from '../../../components/button.svelte';
+	import ButtonComponent from '../../../../components/button.svelte';
 	import axios from 'axios';
 
 	let name;
