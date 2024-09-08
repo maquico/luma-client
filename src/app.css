@@ -47,6 +47,7 @@ html{
     --luma-color-secondary: #FD7797;
     --luma-color-green-success: #2E7D32;
     --luma-color-red-error: #D32F2F;
+    --luma-color-blue: #2196F3;
 
     /*Fonts*/
     --luma-h1-font-size: 6rem;
@@ -56,6 +57,7 @@ html{
     --luma-h5-font-size: 1.5rem;
     --luma-title-font-size: 1.25rem;
     --luma-paragraph-font-size: 1rem;
+    --luma-body-font-size: 0.875rem;
     --luma-caption-font-size: 0.75rem;
 
     /*Spacing*/
