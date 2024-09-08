@@ -1,4 +1,4 @@
-<div>
+<nav>
 		<a class="btn btn-primary" href="/account/config/profile">
 			Perfil
 		</a>
@@ -14,14 +14,14 @@
 		<a class="btn btn-primary" href="/account/config/security">
 			Seguridad
 		</a>
-</div>
+</nav>
 
 <script>
 
 </script>
 
 <style>
-    div{
+    nav{
         width: 256px;
         height: 90vh;
         background-color: var(--luma-color-gray-50);

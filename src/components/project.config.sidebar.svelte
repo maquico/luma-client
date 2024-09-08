@@ -1,5 +1,5 @@
-<div class="navbar">
-	<div class="top">
+<nav>
+	<div>
 		<a class="btn btn-primary" href="/config">
 			Resumen
 		</a>
@@ -12,14 +12,14 @@
 	<a class="btn btn-primary" href="/overview">
 		Cerrar configuraciones
 	</a>
-</div>
+</nav>
 
 <script>
 
 </script>
 
 <style>
-    .navbar{
+    nav{
 				width: 256px;
         height: 90vh;
         background-color: var(--luma-color-gray-50);
@@ -30,7 +30,7 @@
 				gap: 1rem;
     }
 
-		.top{
+		div{
 				display: flex;
 				flex-direction: column;
 				gap: 1rem;
