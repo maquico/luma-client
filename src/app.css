@@ -2,7 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+html{
+    font-size: 16px;
+}
+
 :root{
+    /*Colors*/
     --luma-color-violet-50: #f5f3ff;
     --luma-color-violet-100: #ede9fe;
     --luma-color-violet-200: #ddd6fe;
@@ -42,4 +47,18 @@
     --luma-color-secondary: #FD7797;
     --luma-color-green-success: #2E7D32;
     --luma-color-red-error: #D32F2F;
+
+    /*Fonts*/
+    --luma-h1-font-size: 6rem;
+    --luma-h2-font-size: 3.75rem;
+    --luma-h3-font-size: 3rem;
+    --luma-h4-font-size: 2.125rem;
+    --luma-h5-font-size: 1.5rem;
+    --luma-title-font-size: 1.25rem;
+    --luma-paragraph-font-size: 1rem;
+    --luma-caption-font-size: 0.75rem;
+
+    /*Spacing*/
+    --luma-element-spacing: 1rem;
+    --luma-half-element-spacing: 0.5rem;
 }
