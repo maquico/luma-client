@@ -4,6 +4,7 @@
 		<form on:submit|preventDefault={validate}>
 			<label class="input input-bordered flex items-center gap-2 {invalidInput? 'input-error': ''}">
 				<input type="text" name="email" id="email" placeholder="Correo" bind:value={email} size="30" required/>
+				<Mail />
 			</label>
 			<div class="group">
 				<label class="input input-bordered flex items-center gap-2 {invalidInput? 'input-error': ''}">
@@ -36,7 +37,7 @@
 
 <script>
 	import logo from '$lib/assets/luma-logo.png'
-	import { CircleAlert, Eye, EyeOff } from 'lucide-svelte';
+	import { CircleAlert, Eye, EyeOff, Mail } from 'lucide-svelte';
 	import { goto } from '$app/navigation';
 	import axios from 'axios';
 
