@@ -1,7 +1,7 @@
 <div class="navbar">
-	<div class="right">
-		<img src={logo} alt="luma-logo"/>
-	</div>
+	<a class="right" href="/">
+		<img src={logo} alt="luma-logo" />
+	</a>
 
 	<div class="left">
 		<div class="currency-container">
@@ -49,27 +49,27 @@
 				<div class="divider"/>
 
 				<div class="links">
-					<div class="menu-link">
+					<a class="menu-link" href="/account/config/language">
 						<Globe size={20}/>
 						<p>Idioma</p>
-					</div>
-					<div class="menu-link">
+					</a>
+					<a class="menu-link" href="/account/config/badge">
 						<Star size={20}/>
 						<p>Insignias</p>
-					</div>
-					<div class="menu-link">
+					</a>
+					<a class="menu-link" href="/account/config/profile">
 						<User size={20}/>
 						<p>Perfil</p>
-					</div>
+					</a>
 				</div>
 
 				<div class="divider"/>
 
 				<div class="sign-out">
-					<div class="menu-link">
+					<a class="menu-link" href="/">
 						<LogOut size={20}/>
 						<p>Salir</p>
-					</div>
+					</a>
 				</div>
 			</div>
 		</div>
@@ -79,10 +79,10 @@
 
 <script>
 	import {clickOutside} from '$lib/clickOutside.js';
-	import logo from '$lib/assets/luma-logo.png'
+	import logo from '$assets/luma-logo.png'
 	import { Info, ShoppingCart, Gem, Coins, LogOut, User, Star, Globe  } from 'lucide-svelte';
 
- 	let userDropdown = true
+ 	let userDropdown = false
 </script>
 
 <style>
@@ -102,6 +102,7 @@
       width: 220px;
 			max-height: 0px;
 			overflow: hidden;
+			z-index: 9999;
   }
 	.dropdown-menu-container.open{
       max-height: 400px;
