@@ -50,7 +50,7 @@
         padding: 1.5rem 1rem 1rem 1rem;
         display: flex;
         flex-direction: column;
-        gap: 1rem;
+        gap: calc(var(--luma-element-spacing) * 1.5);
     }
 
     .tabs-container{
@@ -69,7 +69,7 @@
         align-items: center;
         border-left: 3px solid var(--luma-color-gray-50);
         gap: var(--luma-half-element-spacing);
-        height: 50px;
+        height: 45px;
     }
 
     .tab:hover{

@@ -7,12 +7,14 @@
 
 		<div class="tabs-container">
 			<p><strong>General</strong></p>
-			<a class="tab {$pConfigActiveTab === 'config' ? 'active' : ''}" href="/config" on:click={() => setActiveTab('config')}>
+			<a class="tab {activeTab === '/config' ? 'active' : ''}"
+				 href="/config">
 				<Text size={20}/>
 				Resumen
 			</a>
 
-			<a class="tab {$pConfigActiveTab === 'team' ? 'active' : ''}" href="/config/team" on:click={() => setActiveTab('team')}>
+			<a class="tab {activeTab === '/config/team' ? 'active' : ''}"
+				 href="/config/team">
 				<Users size={20}/>
 				Equipo
 			</a>
@@ -27,15 +29,13 @@
 
 <script>
 	import { LogOut, Text, Users } from 'lucide-svelte';
-	import { writable } from 'svelte/store';
+	import { page } from '$app/stores';
 
 	let ProyectName = 'Nombre de proyecto'
-	let pConfigActiveTab = writable('config');
 
-	function setActiveTab(tab) {
-		pConfigActiveTab.set(tab);
-	}
+	let activeTab;
 
+	$: activeTab = $page.url.pathname
 </script>
 
 <style>
@@ -87,7 +87,7 @@
         align-items: center;
         border-left: 3px solid var(--luma-color-gray-50);
         gap: var(--luma-half-element-spacing);
-        height: 40px;
+        height: 45px;
     }
 
     .tab:hover,
