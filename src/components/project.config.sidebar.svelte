@@ -1,20 +1,40 @@
 <nav>
-	<div>
-		<a class="btn btn-primary" href="/config">
-			Resumen
-		</a>
+	<div class="top">
+		<div class="details">
+			<p>Configuraciones de proyecto</p>
+			<p>{ProyectName}</p>
+		</div>
 
-		<a class="btn btn-primary" href="/config/team">
-			Equipo
-		</a>
+		<div class="tabs-container">
+			<p><strong>General</strong></p>
+			<a class="tab {$pConfigActiveTab === 'config' ? 'active' : ''}" href="/config" on:click={() => setActiveTab('config')}>
+				<Text size={20}/>
+				Resumen
+			</a>
+
+			<a class="tab {$pConfigActiveTab === 'team' ? 'active' : ''}" href="/config/team" on:click={() => setActiveTab('team')}>
+				<Users size={20}/>
+				Equipo
+			</a>
+		</div>
 	</div>
 
-	<a class="btn btn-primary" href="/overview">
-		Cerrar configuraciones
+	<a class="settings" href="/overview">
+		<LogOut size={20}/>
+		Cerrar configuración
 	</a>
 </nav>
 
 <script>
+	import { LogOut, Text, Users } from 'lucide-svelte';
+	import { writable } from 'svelte/store';
+
+	let ProyectName = 'Nombre de proyecto'
+	let pConfigActiveTab = writable('config');
+
+	function setActiveTab(tab) {
+		pConfigActiveTab.set(tab);
+	}
 
 </script>
 
@@ -23,16 +43,68 @@
 				width: 256px;
         height: 90vh;
         background-color: var(--luma-color-gray-50);
-        padding: 1rem;
+        padding: 1.5rem 1rem 1rem 1rem;
 				display: flex;
 				flex-direction: column;
 				justify-content: space-between;
-				gap: 1rem;
     }
 
-		div{
+		.top{
+        display: flex;
+        flex-direction: column;
+        gap: calc(var(--luma-element-spacing) * 1.5);
+    }
+
+    .top .details{
+        display: flex;
+        flex-direction: column;
+        gap: var(--luma-half-element-spacing);
+    }
+
+    .top .details p:first-child{
+        color: var(--luma-color-gray-700);
+				font-weight: bold;
+    }
+
+    .top .details p:nth-child(2){
+			font-size: var(--luma-body-font-size);
+			color: var(--luma-color-gray-600);
+    }
+
+		.tabs-container{
 				display: flex;
 				flex-direction: column;
-				gap: 1rem;
 		}
+
+		.tabs-container p:first-child{
+        color: var(--luma-color-gray-700);
+				padding: 10px;
+		}
+
+    .tab{
+        display: flex;
+        justify-content: start;
+        align-items: center;
+        border-left: 3px solid var(--luma-color-gray-50);
+        gap: var(--luma-half-element-spacing);
+        height: 40px;
+    }
+
+    .tab:hover,
+    .settings:hover{
+        color: var(--luma-color-orange-600);
+    }
+
+    .tab.active{
+        border-left: 3px solid var(--luma-color-orange-600);
+        color: var(--luma-color-orange-600);
+        background-color: var(--luma-color-gray-100);
+    }
+
+    .settings{
+        padding: 0 1rem ;
+        display: flex;
+        align-items: center;
+        gap: var(--luma-half-element-spacing);
+    }
 </style>
