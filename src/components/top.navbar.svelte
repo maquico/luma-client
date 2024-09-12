@@ -93,6 +93,7 @@
 			height: 64px;
 			position: relative;
 			padding: 0 2rem;
+      box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 	}
 
   .dropdown-menu-container{
