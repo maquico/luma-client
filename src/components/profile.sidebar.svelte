@@ -46,7 +46,7 @@
     nav{
         width: 256px;
         height: 90vh;
-        background-color: var(--luma-color-gray-50);
+        background-color: var(--luma-color-gray-100);
         padding: 1.5rem 1rem 1rem 1rem;
         display: flex;
         flex-direction: column;
@@ -67,7 +67,7 @@
         display: flex;
         justify-content: start;
         align-items: center;
-        border-left: 3px solid var(--luma-color-gray-50);
+        border-left: 3px solid var(--luma-color-gray-100);
         gap: var(--luma-half-element-spacing);
         height: 45px;
     }
@@ -79,7 +79,6 @@
     .tab.active{
         border-left: 3px solid var(--luma-color-orange-600);
         color: var(--luma-color-orange-600);
-        background-color: var(--luma-color-gray-100);
     }
 
     .details{
