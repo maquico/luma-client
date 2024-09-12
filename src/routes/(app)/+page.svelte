@@ -1,4 +1,4 @@
-<div class="h-[90vh] flex items-center justify-center bg-gradient-to-r from-purple-500 to-pink-500">
+<div class="h-[90.5vh] flex items-center justify-center bg-gradient-to-r from-purple-500 to-pink-500">
 	<div class="page-content">
 		<div class="controls">
 			Proyectos
@@ -7,7 +7,7 @@
 					<ListFilter />
 					<input type="text" name="search" id="search" placeholder="Buscar proyecto ..." bind:value={searchValue} size="20"/>
 				</label>
-				<button class="btn btn-primary" on:click={() => {}}> Nuevo projecto </button>
+				<button class="btn btn-primary" on:click={() => {showModal = true}}> Nuevo projecto </button>
 			</div>
 		</div>
 
@@ -15,25 +15,37 @@
 		<div class="frequent-projects-container">
 			{#each frequentProjects as project}
 				<button class="card frequent-projects cursor-pointer" on:click={() => {goto('/overview')}}>
-					<span class="right">
+					<span class="top">
 						<div class="avatar placeholder">
 						 <div class="text-neutral-content w-10 p-2 border-2 rounded-l">
 							<span class="text-xl">XX</span>
 						 </div>
 						</div>
-				  </span>
-					<span class="left">
-      			<p class="title">{project.title}</p>
+						<p class="title">{project.title}
+					</span>
+					<span class="down">
 						<p class="description">	{project.description}</p>
 						<p class="create-details">{project.creator} • {project.create_date}</p>
-			     </span>
+					</span>
+<!--					<span class="right">-->
+<!--						<div class="avatar placeholder">-->
+<!--						 <div class="text-neutral-content w-10 p-2 border-2 rounded-l">-->
+<!--							<span class="text-xl">XX</span>-->
+<!--						 </div>-->
+<!--						</div>-->
+<!--				  </span>-->
+<!--					<span class="left">-->
+<!--      			<p class="title">{project.title}</p>-->
+<!--						<p class="description">	{project.description}</p>-->
+<!--						<p class="create-details">{project.creator} • {project.create_date}</p>-->
+<!--			     </span>-->
 				</button>
 			{/each}
 		</div>
 		{#if otherProjects.length !== 0}
 			<div class="projects-container">
 				{#each otherProjects as project}
-					<button class="projects cursor-pointer" on:click={() => {console.log('Abriendo proyecto')}}>
+					<button class="projects cursor-pointer" on:click={() => {goto('/overview')}}>
 						{project.title}
 					</button>
 				{/each}
@@ -42,10 +54,13 @@
 	</div>
 </div>
 
+<CreateProjectModal show={showModal} on:close={handleClose} />
+
 <script>
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { ListFilter } from 'lucide-svelte';
+	import CreateProjectModal from '$components/modals/createProject.modal.svelte'
 
 	let projects = [
 		{
@@ -130,6 +145,7 @@
 	let frequentProjects = []
 	let otherProjects = []
 	let searchValue = ''
+	let showModal = false
 
 	$:filter(searchValue)
 
@@ -142,6 +158,10 @@
 		console.log(searchValue);
 	}
 
+	function handleClose(){
+		showModal = false
+	}
+
 </script>
 
 <style>
@@ -151,7 +171,6 @@
         flex-direction: column;
         gap: 1rem;
     }
-
 
     .controls{
 				font-size: var(--luma-h4-font-size);
@@ -182,8 +201,6 @@
     }
 
     .frequent-projects.card{
-        display: flex;
-        flex-direction: row;
         align-items: start;
         justify-content: start;
         height: auto;
@@ -192,31 +209,54 @@
         gap: 10px;
     }
 
-    .frequent-projects .left{
+		.frequent-projects .top{
+				display: flex;
+				align-items: center;
+				gap: 1rem;
+		}
+
+    .frequent-projects .down{
+    	padding-left: 3.5rem;
 			display: flex;
 			flex-direction: column;
 			gap: 10px;
-    }
+		}
 
-    .frequent-projects .left .title{
-        color: var(--luma-color-gray-950);
-    }
-
-    .frequent-projects .left	.description{
+    .frequent-projects .description{
         font-size: var(--luma-body-font-size);
         width: 200px;
         height: 40px;
         overflow: hidden;
         display: -webkit-box;
         -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-    }
+        -webkit-box-orient: vertical
+		}
 
-    .frequent-projects .left .create-details{
-        font-size: var(--luma-body-font-size);
-        color: var(--luma-color-blue);
-        font-weight: 500;
-    }
+		.frequent-projects .create-details{
+				font-size: var(--luma-body-font-size);
+				color: var(--luma-color-blue);
+				font-weight: 500;
+		}
+
+				/*.frequent-projects .left .title{*/
+    /*    color: var(--luma-color-gray-950);*/
+    /*}*/
+
+    /*.frequent-projects .left	.description{*/
+    /*    font-size: var(--luma-body-font-size);*/
+    /*    width: 200px;*/
+    /*    height: 40px;*/
+    /*    overflow: hidden;*/
+    /*    display: -webkit-box;*/
+    /*    -webkit-line-clamp: 2;*/
+    /*    -webkit-box-orient: vertical;*/
+    /*}*/
+
+    /*.frequent-projects .left .create-details{*/
+    /*    font-size: var(--luma-body-font-size);*/
+    /*    color: var(--luma-color-blue);*/
+    /*    font-weight: 500;*/
+    /*}*/
 
 
     .projects-container{
