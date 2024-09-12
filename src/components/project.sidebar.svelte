@@ -1,17 +1,20 @@
 <nav>
 	<div>
-		<a class="tab {$projectActiveTab === 'overview' ? 'active' : ''}" href="/overview" on:click="{() => setActiveTab('overview')}">
+		<a class="tab {activeTab === '/overview' ? 'active' : ''}"
+			 href="/overview">
 			<Text size={20}/>
 			Resumen
 		</a>
 
-		<a class="tab {$projectActiveTab === 'board' ? 'active' : ''}" href="/board" on:click="{() => setActiveTab('board')}">
-			<SquareKanban  size={20}/>
+		<a class="tab {activeTab === '/board' ? 'active' : ''}"
+			 href="/board" >
+			<SquareKanban size={20}/>
 			Tablero
 		</a>
 
-		<a class="tab {$projectActiveTab === 'dashboard' ? 'active' : ''}" href="/dashboard" on:click="{() => setActiveTab('dashboard')}">
-			<LayoutPanelLeft  size={20}/>
+		<a class="tab {activeTab === '/dashboard' ? 'active' : ''}"
+			 href="/dashboard" >
+			<LayoutPanelLeft size={20}/>
 			Graficos
 		</a>
 	</div>
@@ -25,14 +28,11 @@
 
 <script>
 	import { LayoutPanelLeft, Settings, SquareKanban, Text } from 'lucide-svelte';
-	import { writable } from 'svelte/store';
+	import { page } from '$app/stores';
 
-	let projectActiveTab = writable('overview');
+	let activeTab;
 
-	function setActiveTab(tab) {
-		projectActiveTab.set(tab);
-	}
-
+	$: activeTab = $page.url.pathname
 </script>
 
 <style>
