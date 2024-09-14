@@ -47,6 +47,7 @@
 				display: flex;
 				flex-direction: column;
 				justify-content: space-between;
+        border-right: 3px solid var(--luma-color-gray-200);
     }
 
 		.top{

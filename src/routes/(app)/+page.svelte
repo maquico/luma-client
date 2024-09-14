@@ -71,13 +71,6 @@
 			"creator": "Juan Martínez"
 		},
 		{
-			"title": "Chatbot para Conti",
-			"description": "Desarrollo de un chatbot amigable para empleados de una organización multinacional.",
-			"create_date": "2024-08-05",
-			"members": ["Carlos López", "Sofía Jiménez"],
-			"creator": "Laura Fernández"
-		},
-		{
 			"title": "Proyecto Luma",
 			"description": "Plataforma web que combina la gestión de proyectos con la gamificación.",
 			"create_date": "2024-07-30",
@@ -204,7 +197,7 @@
         align-items: start;
         justify-content: start;
         height: auto;
-        width: fill;
+        width: stretch;
         text-align: left;
         gap: 10px;
     }

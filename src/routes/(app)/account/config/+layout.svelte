@@ -1,8 +1,8 @@
 <div>
 	<ProfileSideBar/>
-	<div class="content">
+	<section>
 		<slot/>
-	</div>
+	</section>
 </div>
 
 <script>
@@ -13,4 +13,10 @@
 	div{
 			display: flex;
 	}
+
+  section{
+      padding: calc(var(--luma-element-spacing) * 1.5);
+      background-color: var(--luma-color-gray-50);
+      width: 85vw;
+  }
 </style>

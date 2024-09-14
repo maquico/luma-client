@@ -51,6 +51,7 @@
         display: flex;
         flex-direction: column;
         gap: calc(var(--luma-element-spacing) * 1.5);
+        border-right: 3px solid var(--luma-color-gray-200);
     }
 
     .tabs-container{
