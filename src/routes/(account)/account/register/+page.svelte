@@ -2,7 +2,7 @@
 	import logo from '$lib/assets/luma-logo.png';
 	import { Eye, EyeOff } from 'lucide-svelte';
 	import { goto } from '$app/navigation';
-	import ButtonComponent from '../../../../components/button.svelte';
+	import ButtonComponent from '$components/button.svelte';
 	import axios from 'axios';
 
 	let name;
@@ -142,10 +142,9 @@
 					<div class="swap-off"><EyeOff /></div>
 				</label>
 			</label>
-			<ButtonComponent label="Registrarse" />
+			<ButtonComponent label="Registrarse" isPrimary="true" href="/account/register/checkemail" />
 		</form>
 	</div>
-
 	<div class="card">
 		<a href="/account/login">¿Ya tienes una cuenta? <span>Iniciar sesión</span></a>
 	</div>

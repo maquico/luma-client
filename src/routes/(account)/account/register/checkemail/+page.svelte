@@ -21,7 +21,7 @@
 			<hr />
 			<div class="button-container">
 				<ChevronLeft class="chevron-icon" />
-				<a href="/src/routes/1account/register" class="btn-secondary"> Regresar </a>
+				<a href="/account/register" class="btn-secondary"> Regresar </a>
 			</div>
 		</div>
 		<div class="divider"></div>

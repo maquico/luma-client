@@ -1,7 +1,7 @@
 <script>
 	import logo from '$lib/assets/luma-logo.png';
 	import image from '$lib/assets/welcome-img.png';
-	import ButtonComponent from '../../../../../components/button.svelte';
+	import ButtonComponent from '$components/button.svelte';
 </script>
 
 <div class="welcome-container">
@@ -17,7 +17,12 @@
 			<p>¡Prepárate para llevar tu productividad al siguiente nivel con Luma!</p>
 			<hr />
 			<div class="button-container">
-				<ButtonComponent label="Iniciar sesión" />
+				<ButtonComponent
+					label="Iniciar sesión"
+					isPrimary="True"
+					isLarge="True"
+					href="/account/login"
+				/>
 			</div>
 		</div>
 		<div class="divider"></div>

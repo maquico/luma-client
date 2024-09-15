@@ -1,18 +1,27 @@
-<ShopNavBar/>
-<div>
-	<ShopSideBar/>
-	<section>
-		<slot/>
-	</section>
-</div>
-
 <script>
-	import ShopNavBar from '$components/shop.navbar.svelte'
-	import ShopSideBar from '$components/shop.sidebar.svelte'
+	import ShopNavBar from '$components/shop.navbar.svelte';
+	import ShopSideBar from '$components/shop.sidebar.svelte';
 </script>
 
+<ShopNavBar />
+<div class="container">
+	<ShopSideBar />
+	<div class="main-content">
+		<section>
+			<slot />
+		</section>
+	</div>
+</div>
+
 <style>
-	div{
-			display: flex;
+	.container {
+		display: flex;
+		height: 100vh;
+	}
+
+	.main-content {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
 	}
 </style>

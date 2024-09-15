@@ -1,25 +1,24 @@
-<nav>
-	<a class="btn btn-primary" href="/">
-		General
-	</a>
-
-	<a class="btn btn-primary" href="/">
-		Personalizado
-	</a>
-</nav>
-
 <script>
-
+	import Select from '$components/select.svelte';
+	import Button from '$components/button.svelte';
+	const options = ['Item 1', 'Item 2', 'Item 3'];
 </script>
 
+<nav>
+	<Select {options} defaultOption="Disponibilidad" />
+	<Select {options} defaultOption="Ordenar" />
+	<Button label="Confirmar" isPrimary="true" isLarge="true" height="0.em" />
+</nav>
+
 <style>
-	nav{
-			background-color: var(--luma-color-gray-100);
-			height: 90vh;
-			padding: 1rem;
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			gap: 1rem;
+	nav {
+		background-color: white;
+		height: 90vh;
+		width: 280px;
+		padding: 1rem;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 1rem;
 	}
 </style>
