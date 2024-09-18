@@ -1,10 +1,15 @@
 node_modules
+dist
+/packages/create-svelte/template/CHANGELOG.md
+/packages/package/test/**/package
+/documentation/types.js
 
 # Output
 .output
 .vercel
 /.svelte-kit
 /build
+.idea/
 
 # OS
 .DS_Store

@@ -27,5 +27,10 @@
 		"tailwindcss": "^3.4.9",
 		"vite": "^5.0.3"
 	},
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"axios": "^1.7.4",
+		"lucide-svelte": "^0.428.0",
+		"svelte-steps": "^2.4.1"
+	}
 }
