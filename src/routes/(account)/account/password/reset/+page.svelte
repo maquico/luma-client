@@ -57,6 +57,7 @@
 								</div>
 							{/if}
 						</div>
+<!--						TODO: añadir un conteo regresivo que indique el tiempo restante de validez de la OTP-->
 						<button type="submit" class="btn btn-primary">
 							Enviar
 						</button>

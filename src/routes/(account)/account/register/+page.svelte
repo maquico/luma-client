@@ -16,7 +16,7 @@
 	function register() {
 		if (email.match(validRegex) && password && password === confirmPassword) {
 			axios
-				.post('http://localhost:3000/api/user', {
+				.post('https://luma-server.onrender.com/api/user/', {
 					email: email,
 					password: password,
 					first_name: name,
@@ -24,7 +24,7 @@
 				})
 				.then((response) => {
 					console.log(response.data);
-					goto('/account/register/checkemail');
+					// goto('/account/register/checkemail');
 					console.log('successfull register');
 				})
 				.catch((error) => {

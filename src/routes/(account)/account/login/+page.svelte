@@ -47,11 +47,9 @@
 	let validRegex = /^[\w-]+@[a-zA-Z\dx-]+\.[a-zA-Z]{2,}$/
 
 	function validate() {
-		console.log("I'm the validate() function")
-		// TODO: validate password with db data
+		// console.log("I'm the validate() function")
 		if (email.match(validRegex) && password){
-
-			axios.post('http://localhost:3000/api/session', {
+			axios.post('https://luma-server.onrender.com/api/session/', {
 				email: email,
 				password: password,
 			})
