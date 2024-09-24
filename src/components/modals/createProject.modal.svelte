@@ -9,6 +9,7 @@
 	export let show = true;
 	let projectName = '';
 	let projectDescription = '';
+	let userId = '37d3b652-d314-4124-9685-add5f0c6fc19';
 	let invalidInput = false;
 
 	const close = () => {
@@ -28,7 +29,7 @@
 			.post('https://luma-server.onrender.com/api/projects', {
 				nombre: projectName,
 				descripcion: projectDescription,
-				userId: '37d3b652-d314-4124-9685-add5f0c6fc19'
+				userId: userId
 			})
 			.then((response) => {
 				const projectId = response.data[0].proyecto_id;
