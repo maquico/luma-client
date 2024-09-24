@@ -13,12 +13,13 @@
 <style>
 	nav {
 		background-color: white;
-		height: 90vh;
+		height: 100vh; /* Cambiado a 100vh */
 		width: 280px;
 		padding: 1rem;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		gap: 1rem;
+		border-right: 2px solid #ddd;
 	}
 </style>

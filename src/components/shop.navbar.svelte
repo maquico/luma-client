@@ -15,14 +15,17 @@
 </script>
 
 <section role="tablist" class="tabs tabs-bordered flex items-center bg-gray-50">
-	<div class="tabs-container flex space-x-4 ml-72">
+	<div class="label-container ml-20">
+		<span class="label">RECOMPENSAS</span>
+	</div>
+	<div class="tabs-container ml-32">
 		<a
 			role="tab"
 			class="tab {currentPath === '/shop/general' ? 'tab-active' : ''}"
 			href="/shop/general"
 			on:click|preventDefault={() => handleTabClick('/shop/general')}
 		>
-			RECOMPENSAS GENERALES
+			GENERALES
 		</a>
 
 		<a
@@ -31,7 +34,7 @@
 			href="/shop/customize"
 			on:click|preventDefault={() => handleTabClick('/shop/customize')}
 		>
-			RECOMPENSAS PERSONALIZADAS
+			PERSONALIZADAS
 		</a>
 	</div>
 </section>
