@@ -1,11 +1,10 @@
 <script>
-	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { ListFilter } from 'lucide-svelte';
 	import CreateProjectModal from '$components/modals/createProject.modal.svelte';
-	import axios from 'axios';
 
-	export let userId = '37d3b652-d314-4124-9685-add5f0c6fc19';
+	export let data
+	// export let userId = '37d3b652-d314-4124-9685-add5f0c6fc19';
 
 	let frequentProjects = [];
 	let otherProjects = [];
@@ -14,23 +13,27 @@
 
 	$: filter(searchValue);
 
-	async function loadProjects() {
-		try {
-			const response = await axios.get(
-				`https://luma-server.onrender.com/api/projects/user/${userId}`
-			);
-			const projects = response.data;
+	// async function loadProjects() {
+	// 	try {
+	// 		const response = await axios.get(
+	// 			`https://luma-server.onrender.com/api/projects/user/${userId}`
+	// 		);
+	// 		const projects = response.data;
+	//
+	// 		frequentProjects = projects.slice(0, 3);
+	// 		otherProjects = projects.slice(3);
+	// 	} catch (error) {
+	// 		console.error('Error al cargar los proyectos:', error);
+	// 	}
+	// }
+	//
+	// onMount(() => {
+	// 	loadProjects();
+	// });
 
-			frequentProjects = projects.slice(0, 3);
-			otherProjects = projects.slice(3);
-		} catch (error) {
-			console.error('Error al cargar los proyectos:', error);
-		}
-	}
-
-	onMount(() => {
-		loadProjects();
-	});
+	let projects = data.data;
+	frequentProjects = projects.slice(0, 3);
+	otherProjects = projects.slice(3);
 
 	function filter(searchValue) {
 		console.log(searchValue);
