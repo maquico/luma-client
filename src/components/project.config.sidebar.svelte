@@ -7,21 +7,21 @@
 
 		<div class="tabs-container">
 			<p><strong>General</strong></p>
-			<a class="tab {activeTab === '/config' ? 'active' : ''}"
-				 href="/config">
+			<a class="tab {activeTab === 'config' ? 'active' : ''}"
+				 href={`/${projectID}/config`}>
 				<Text size={20}/>
 				Resumen
 			</a>
 
-			<a class="tab {activeTab === '/config/team' ? 'active' : ''}"
-				 href="/config/team">
+			<a class="tab {activeTab === 'config/team' ? 'active' : ''}"
+				 href={`/${projectID}/config/team`}>
 				<Users size={20}/>
 				Equipo
 			</a>
 		</div>
 	</div>
 
-	<a class="settings" href="/overview">
+	<a class="settings" href={`/${projectID}/overview`}>
 		<LogOut size={20}/>
 		Cerrar configuración
 	</a>
@@ -34,8 +34,20 @@
 	let ProyectName = 'Nombre de proyecto'
 
 	let activeTab;
+	let projectID;
 
-	$: activeTab = $page.url.pathname
+	$: page.subscribe(($page) => {
+		const segments = $page.url.pathname.split('/');
+		projectID = segments[1];
+		// console.log({segments});
+		if(segments.length == 4){
+			activeTab = `${segments[2]}/${segments[3]}`;
+		}else{
+			activeTab = segments[2]
+		}
+	});
+
+	// $: console.log(activeTab);
 </script>
 
 <style>

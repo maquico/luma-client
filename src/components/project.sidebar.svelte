@@ -1,26 +1,27 @@
 <nav>
 	<div>
-		<a class="tab {activeTab === '/overview' ? 'active' : ''}"
-			 href="/overview">
+		<a class="tab {activeTab === 'overview' ? 'active' : ''}"
+			 href={`/${projectID}/overview`}>
 			<Text size={20}/>
 			Resumen
 		</a>
 
-		<a class="tab {activeTab === '/board' ? 'active' : ''}"
-			 href="/board" >
+		<a class="tab {activeTab === 'board' ? 'active' : ''}"
+			 href={`/${projectID}/board`}>
 			<SquareKanban size={20}/>
 			Tablero
 		</a>
 
-		<a class="tab {activeTab === '/dashboard' ? 'active' : ''}"
-			 href="/dashboard" >
+		<a class="tab {activeTab === 'dashboard' ? 'active' : ''}"
+			 href={`/${projectID}/dashboard`}>
 			<LayoutPanelLeft size={20}/>
 			Graficos
 		</a>
 	</div>
 
 
-	<a class="settings" href="/config">
+	<a class="settings"
+		 href={`/${projectID}/config`}>
 		<Settings size={20}/>
 		Configuración
 	</a>
@@ -31,8 +32,10 @@
 	import { page } from '$app/stores';
 
 	let activeTab;
+	let projectID;
 
-	$: activeTab = $page.url.pathname
+	$: projectID = $page.url.pathname.split('/')[1]
+	$: activeTab = $page.url.pathname.split('/')[2]
 </script>
 
 <style>
