@@ -84,7 +84,7 @@
 				<button
 					class="card frequent-projects cursor-pointer"
 					on:click={() => {
-						goto('/overview');
+						goto(`/${project.Proyecto_ID}/overview`);
 					}}
 				>
 					<span class="top">

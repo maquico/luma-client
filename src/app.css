@@ -2,11 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-html{
+html {
     font-size: 16px;
 }
 
-:root{
+:root {
     /*Colors*/
     --luma-color-violet-50: #f5f3ff;
     --luma-color-violet-100: #ede9fe;
@@ -61,6 +61,6 @@ html{
     --luma-caption-font-size: 0.75rem;
 
     /*Spacing*/
-    --luma-element-spacing: 1rem;
+    --luma-element-spacing: 2rem;
     --luma-half-element-spacing: 0.5rem;
 }
