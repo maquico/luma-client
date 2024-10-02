@@ -32,7 +32,7 @@
 				userId: userId
 			})
 			.then((response) => {
-				const projectId = response.data[0].proyecto_id;
+				const projectId = response.data.proyecto_id;
 				console.log('Proyecto creado con ID:', projectId);
 				goto(`/${projectId}/overview`);
 				console.log('Proyecto creado:', response.data);
