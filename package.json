@@ -30,9 +30,12 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@supabase/auth-helpers-sveltekit": "^0.13.0",
+		"@supabase/supabase-js": "^2.45.4",
 		"axios": "^1.7.4",
 		"dotenv": "^16.4.5",
 		"lucide-svelte": "^0.428.0",
+		"luxon": "^3.5.0",
 		"svelte-dnd-action": "^0.9.50",
 		"svelte-steps": "^2.4.1"
 	}

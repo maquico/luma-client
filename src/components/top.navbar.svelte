@@ -65,12 +65,16 @@
 
 				<div class="divider"/>
 
-				<div class="sign-out">
-					<a class="menu-link" href="/account/login">
-						<LogOut size={20}/>
-						<p>Salir</p>
-					</a>
-				</div>
+				<form action="/logout" method="POST">
+					<button>
+						<div class="sign-out" on:click={() => {signOut()}}>
+							<a class="menu-link" href="/">
+								<LogOut size={20}/>
+								<p>Salir</p>
+							</a>
+						</div>
+					</button>
+				</form>
 			</div>
 		</div>
 
@@ -78,11 +82,39 @@
 </div>
 
 <script>
+	import { supabase } from "$lib/supabaseClient";
 	import {clickOutside} from '$lib/clickOutside.js';
 	import logo from '$assets/luma-logo.png'
 	import { Info, ShoppingCart, Gem, Coins, LogOut, User, Star, Globe  } from 'lucide-svelte';
+	import { goto } from '$app/navigation';
 
  	let userDropdown = false
+
+	async function signOut(){
+		// console.log(getSession());
+
+		const { error } = await supabaseSignOut();
+		if (!error) {
+			goto('/account/login');
+		} else {
+			console.error('Error signing out:', error.message);
+		}
+
+		// console.log(getSession());
+	}
+
+	//Supabase native signOut function
+	async function supabaseSignOut(){
+		const { error } = await supabase.auth.signOut({
+		});
+		return { error };
+	}
+
+	//Supabase native getSession
+	async function getSession(){
+		const { data, error } = await supabase.auth.getSession();
+		return { data, error };
+	}
 </script>
 
 <style>

@@ -76,7 +76,7 @@
 						showModal = true;
 					}}
 				>
-					Nuevo projecto
+					NUEVO PROYECTO
 				</button>
 			</div>
 		</div>
