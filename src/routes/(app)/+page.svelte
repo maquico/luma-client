@@ -2,38 +2,36 @@
 	import { goto } from '$app/navigation';
 	import { ListFilter } from 'lucide-svelte';
 	import CreateProjectModal from '$components/modals/createProject.modal.svelte';
+	import { onMount } from 'svelte';
+	import axios from 'axios';
 
-	export let data
-	// export let userId = '37d3b652-d314-4124-9685-add5f0c6fc19';
+	// export let data
+	export let userId = '37d3b652-d314-4124-9685-add5f0c6fc19';
 
 	let frequentProjects = [];
 	let otherProjects = [];
 	let searchValue = '';
 	let showModal = false;
+	let loading = true;
 
 	$: filter(searchValue);
 
-	// async function loadProjects() {
-	// 	try {
-	// 		const response = await axios.get(
-	// 			`https://luma-server.onrender.com/api/projects/user/${userId}`
-	// 		);
-	// 		const projects = response.data;
-	//
-	// 		frequentProjects = projects.slice(0, 3);
-	// 		otherProjects = projects.slice(3);
-	// 	} catch (error) {
-	// 		console.error('Error al cargar los proyectos:', error);
-	// 	}
-	// }
-	//
-	// onMount(() => {
-	// 	loadProjects();
-	// });
+	async function loadProjects() {
+		try {
+			const response = await axios.get(`https://luma-server.onrender.com/api/projects/user/${userId}`);
+			const projects = response.data || [];
+			frequentProjects = projects.slice(0, 3);
+			otherProjects = projects.slice(3);
+		} catch (err) {
+			console.error("Error while fetching projects: ", err);
+		} finally {
+			loading = false;
+		}
+	}
 
-	let projects = data.data;
-	frequentProjects = projects.slice(0, 3);
-	otherProjects = projects.slice(3);
+	onMount(() => {
+		loadProjects()
+	});
 
 	function filter(searchValue) {
 		console.log(searchValue);
@@ -56,68 +54,74 @@
 	class="h-[90.5vh] flex items-center justify-center bg-gradient-to-r from-purple-500 to-pink-500"
 >
 	<div class="page-content">
-		<div class="controls">
-			Proyectos
-			<div class="left">
-				<label class="input input-bordered flex items-center gap-2">
-					<ListFilter />
-					<input
-						type="text"
-						name="search"
-						id="search"
-						placeholder="Buscar proyecto ..."
-						bind:value={searchValue}
-						size="20"
-					/>
-				</label>
-				<button
-					class="btn btn-primary"
-					on:click={() => {
-						showModal = true;
-					}}
-				>
-					NUEVO PROYECTO
-				</button>
+		{#if loading}
+			<div class="flex items-center justify-center w-full">
+				<div class="loading loading-dots loading-lg"/>
 			</div>
-		</div>
-
-		<!--		Projects-->
-		<div class="frequent-projects-container">
-			{#each frequentProjects as project}
-				<button
-					class="card frequent-projects cursor-pointer"
-					on:click={() => {
-						goto(`/${project.Proyecto_ID}/overview`);
-					}}
-				>
-					<span class="top">
-						<div class="avatar placeholder">
-							<div class="text-neutral-content w-10 p-2 border-2 rounded-l">
-								<span class="text-xl">XX</span>
-							</div>
-						</div>
-						<p class="title">{project.nombre}</p></span
-					>
-					<span class="down">
-						<p class="description">{project.descripcion}</p>
-						<p class="create-details">{project.creator} • {formatDate(project.fechaRegistro)}</p>
-					</span>
-				</button>
-			{/each}
-		</div>
-		{#if otherProjects.length !== 0}
-			<div class="projects-container">
-				{#each otherProjects as project}
+		{:else}
+			<div class="controls">
+				Proyectos
+				<div class="left">
+					<label class="input input-bordered flex items-center gap-2">
+						<ListFilter />
+						<input
+							type="text"
+							name="search"
+							id="search"
+							placeholder="Buscar proyecto ..."
+							bind:value={searchValue}
+							size="20"
+						/>
+					</label>
 					<button
-						class="projects cursor-pointer"
+						class="btn btn-primary"
+						on:click={() => {
+							showModal = true;
+						}}
+					>
+						NUEVO PROYECTO
+					</button>
+				</div>
+			</div>
+
+			<!--		Projects-->
+			<div class="frequent-projects-container">
+				{#each frequentProjects as project}
+					<button
+						class="card frequent-projects cursor-pointer"
 						on:click={() => {
 							goto(`/${project.Proyecto_ID}/overview`);
 						}}
 					>
-						{project.nombre}
+						<span class="top">
+							<div class="avatar placeholder">
+								<div class="text-neutral-content w-10 p-2 border-2 rounded-l">
+									<span class="text-xl">XX</span>
+								</div>
+							</div>
+							<p class="title">{project.nombre}</p></span
+						>
+						<span class="down">
+							<p class="description">{project.descripcion}</p>
+							<p class="create-details">{project.creator} • {formatDate(project.fechaRegistro)}</p>
+						</span>
 					</button>
 				{/each}
 			</div>
+			{#if otherProjects.length !== 0}
+				<div class="projects-container">
+					{#each otherProjects as project}
+						<button
+							class="projects cursor-pointer"
+							on:click={() => {
+								goto(`/${project.Proyecto_ID}/overview`);
+							}}
+						>
+							{project.nombre}
+						</button>
+					{/each}
+				</div>
+			{/if}
 		{/if}
 	</div>
 </div>
