@@ -2,6 +2,9 @@
 	import { data } from './data';
 	import Board from '$components/board/Board.svelte';
 	import CreateTaskModal from '$components/modals/createTask.modal.svelte';
+	import { projectData } from '$lib/stores/projectStore';
+
+	console.log($projectData);
 
 	let showModal = false;
 

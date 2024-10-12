@@ -1,3 +1,26 @@
+<script>
+	import InviteModal from '$components/modals/invite.modal.svelte'
+	import { Trash2 } from 'lucide-svelte';
+	import { projectData } from '$lib/stores/projectStore';
+
+	console.log($projectData);
+
+	let showModal = false
+
+	function handleClose(){
+		showModal = false
+	}
+
+	let columns = ['Miembro', 'Correo', 'Rol', '']
+	let data = [
+		['Louis McCandie','lmccandie3@bloglines.com','Data C3','Data C4'],
+		['Louis McCandie','lmccandie3@bloglines.com','Data C3','Data C4'],
+		['Louis McCandie','lmccandie3@bloglines.com','Data C3','Data C4'],
+		['Louis McCandie','lmccandie3@bloglines.com','Data C3','Data C4'],
+		['Louis McCandie','lmccandie3@bloglines.com','Data C3','Data C4'],
+	]
+</script>
+
 <p class="title">Configuración de equipo</p>
 
 <div class="content">
@@ -35,26 +58,6 @@
 </div>
 
 <InviteModal show={showModal} on:close={handleClose} />
-
-<script>
-	import InviteModal from '$components/modals/invite.modal.svelte'
-	import { Trash2 } from 'lucide-svelte';
-
-	let showModal = false
-
-	function handleClose(){
-		showModal = false
-	}
-
-	let columns = ['Miembro', 'Correo', 'Rol', '']
-	let data = [
-		['Louis McCandie','lmccandie3@bloglines.com','Data C3','Data C4'],
-		['Louis McCandie','lmccandie3@bloglines.com','Data C3','Data C4'],
-		['Louis McCandie','lmccandie3@bloglines.com','Data C3','Data C4'],
-		['Louis McCandie','lmccandie3@bloglines.com','Data C3','Data C4'],
-		['Louis McCandie','lmccandie3@bloglines.com','Data C3','Data C4'],
-	]
-</script>
 
 <style>
 		.title{
