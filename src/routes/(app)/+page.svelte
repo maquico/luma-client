@@ -5,14 +5,12 @@
 	import { onMount } from 'svelte';
 	import axios from 'axios';
 
-	// export let data
-	export let userId = '37d3b652-d314-4124-9685-add5f0c6fc19';
-
 	let frequentProjects = [];
 	let otherProjects = [];
 	let searchValue = '';
 	let showModal = false;
 	let loading = true;
+	let userId
 
 	$: filter(searchValue);
 
@@ -30,6 +28,15 @@
 	}
 
 	onMount(() => {
+		const storedData = localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token');
+
+		if (storedData) {
+			// Parse the JSON data to access user info
+			const sessionData = JSON.parse(storedData);
+
+			userId = sessionData.user.id;
+		}
+
 		loadProjects()
 	});
 
