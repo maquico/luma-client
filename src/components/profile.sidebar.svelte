@@ -1,6 +1,6 @@
 <nav>
 	<div class="details">
-		<p>Configuraciones de proyecto</p>
+		<p>Configuraciones de perfil</p>
 		<p>{UserName}</p>
 	</div>
 
@@ -35,11 +35,24 @@
 <script>
 	import { Star, Globe, Shield, User } from 'lucide-svelte';
 	import { page } from '$app/stores';
+	import { onMount } from 'svelte';
 
 	let UserName = 'User name'
 	let activeTab;
 
 	$: activeTab = $page.url.pathname
+
+	onMount(() => {
+		const storedData = localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token');
+
+		if (storedData) {
+			// Parse the JSON data to access user info
+			const sessionData = JSON.parse(storedData);
+			console.log(sessionData);
+
+			UserName = `${sessionData.user.user_metadata.first_name} ${sessionData.user.user_metadata.last_name}`;
+		}
+	})
 </script>
 
 <style>
@@ -50,7 +63,7 @@
         padding: 1.5rem 1rem 1rem 1rem;
         display: flex;
         flex-direction: column;
-        gap: calc(var(--luma-element-spacing) * 1.5);
+        gap: var(--luma-element-spacing);
         border-right: 3px solid var(--luma-color-gray-200);
     }
 

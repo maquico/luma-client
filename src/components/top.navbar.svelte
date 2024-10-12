@@ -42,8 +42,8 @@
 		<div class="dropdown-menu-container {userDropdown ? 'open' : ''}">
 			<div class="dropdown-menu">
 				<div class="user-info">
-					<h3>John Doe</h3>
-					<p>jdoe@acme.com</p>
+					<h3>{userName}</h3>
+					<p>{userMail}</p>
 				</div>
 
 				<div class="divider"/>
@@ -87,8 +87,24 @@
 	import logo from '$assets/luma-logo.png'
 	import { Info, ShoppingCart, Gem, Coins, LogOut, User, Star, Globe  } from 'lucide-svelte';
 	import { goto } from '$app/navigation';
+	import { onMount } from 'svelte';
 
  	let userDropdown = false
+	let userName = 'John Doe'
+	let userMail = 'jdoe@acme.com'
+
+	onMount(() => {
+		const storedData = localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token');
+
+		if (storedData) {
+			// Parse the JSON data to access user info
+			const sessionData = JSON.parse(storedData);
+			console.log(sessionData);
+
+			userName = `${sessionData.user.user_metadata.first_name} ${sessionData.user.user_metadata.last_name}`;
+			userMail = sessionData.user.user_metadata.email
+		}
+	})
 
 	async function signOut(){
 		// console.log(getSession());
@@ -110,11 +126,6 @@
 		return { error };
 	}
 
-	//Supabase native getSession
-	async function getSession(){
-		const { data, error } = await supabase.auth.getSession();
-		return { data, error };
-	}
 </script>
 
 <style>
@@ -132,7 +143,7 @@
       position: absolute;
       top: 80%;
       right: 1.3rem;
-      width: 220px;
+      width: 250px;
 			max-height: 0px;
 			overflow: hidden;
 			z-index: 9999;
