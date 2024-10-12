@@ -50,6 +50,7 @@
     }
     .column-content {
         height: calc(100% - 2.5em);
+				padding: 0 var(--luma-half-element-spacing);
         /* Notice that the scroll container needs to be the dndzone if you want dragging near the edge to trigger scrolling */
         overflow-y: scroll;
     }

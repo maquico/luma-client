@@ -37,7 +37,7 @@
         height: 100%;
         width: 300px;
         padding: 0.5em;
-        border: 1px solid #333333;
-        background-color: white;
+        /*border: 1px solid #333333;*/
+        /*background-color: white;*/
     }
 </style>
