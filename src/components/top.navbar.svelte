@@ -111,6 +111,11 @@
 
 		const { error } = await supabaseSignOut();
 		if (!error) {
+			// Request to delete the auth cookie
+			await fetch('/account/logout', {
+				method: 'POST'
+			});
+
 			goto('/account/login');
 		} else {
 			console.error('Error signing out:', error.message);
