@@ -3,10 +3,17 @@
 	import Board from '$components/board/Board.svelte';
 	import CreateTaskModal from '$components/modals/createTask.modal.svelte';
 	import { projectData } from '$lib/stores/projectStore';
+	import axios from 'axios';
+	import { onMount } from 'svelte';
 
 	console.log($projectData);
 
+	onMount(() => {
+		getTags()
+	})
+
 	let showModal = false;
+	let tags = ['tag1', 'tag2', 'tag3', 'tag4'];
 
 	function handleClose() {
 		showModal = false;
@@ -17,7 +24,19 @@
 		$data = newColumnsData;
 	}
 
-	let tags = ['tag1', 'tag2', 'tag3', 'tag4'];
+	async function getTags(){
+		let projectId = $projectData.Proyecto_ID
+
+		await axios.get(`https://luma-server.onrender.com/api/task/tags/${projectId}`)
+			.then((response) => {
+				console.log(response.data);
+				tags = response.data
+			})
+			.catch((error) => {
+				console.log(error);
+			})
+	}
+
 </script>
 
 <div id="projectBoard">
@@ -33,7 +52,7 @@
 				Crear tarea</button
 			>
 			<select class="select select-primary w-full max-w-xs">
-				<option disabled selected>What is the best TV show?</option>
+				<option disabled selected>Filter by tag</option>
 				{#each tags as tag}
 					<option value={tag}>{tag}</option>
 				{/each}
