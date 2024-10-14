@@ -1,7 +1,9 @@
 <script>
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
+	import { createEventDispatcher } from 'svelte';
 
+	const dispatch = createEventDispatcher(); // Crear un despachador de eventos
 	let currentPath;
 
 	onMount(() => {
@@ -11,6 +13,7 @@
 	function handleTabClick(path) {
 		goto(path);
 		currentPath = path;
+		dispatch('tabChange', path); // Emitir el evento tabChange con la ruta
 	}
 </script>
 
