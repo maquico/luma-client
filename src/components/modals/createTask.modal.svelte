@@ -5,13 +5,17 @@
 	import { goto } from '$app/navigation';
 	import { Tags, User } from 'lucide-svelte';
 	import { DateInput, DatePicker } from 'date-picker-svelte';
-	let date = new Date();
-	let showDatePicker = false;
+	let showDatePickerStart = false;
+	let showDatePickerEnd = false;
+	let startDate = new Date();
+	let endDate = new Date();
 
 	const dispatch = createEventDispatcher();
 
 	export let show = true;
 	export let data;
+
+	let userId = '37d3b652-d314-4124-9685-add5f0c6fc19';
 
 	const close = () => {
 		show = false;
@@ -19,16 +23,29 @@
 		dispatch('close');
 	};
 
+	function formatDate(date) {
+		return date.toLocaleDateString('es-ES', {
+			day: '2-digit',
+			month: '2-digit',
+			year: 'numeric'
+		});
+	}
+
+	function formatDateForDB(date) {
+		return date.toISOString().split('T')[0]; // Devuelve solo YYYY-MM-DD
+	}
+
 	const initialFormData = {
 		projectId: 1,
 		name: '',
 		priority: '',
 		time: '',
+		state: '',
 		startDate: '',
 		endDate: '',
-		userId: '37d3b652-d314-4124-9685-add5f0c6fc19',
 		description: '',
-		tags: ''
+		tags: '',
+		comment: ''
 	};
 
 	let formData = { ...initialFormData };
@@ -41,7 +58,11 @@
 				projectId: formData.projectId,
 				name: formData.name,
 				priority: formData.priority,
+				startDate: formatDateForDB(startDate),
+				endDate: formatDateForDB(endDate),
 				time: formData.time,
+				userId: userId,
+				tags: formData.tags,
 				description: formData.description
 			});
 
@@ -66,18 +87,63 @@
 			</label>
 
 			<div class="task-details">
-				<label class="input input-bordered flex items-center gap-2">
+				<label class="input input-bordered flex items-center gap-2 w-full">
 					<User />
 					<input type="text" class="grow" placeholder="User" />
 				</label>
 
-				<label class="input input-bordered flex items-center gap-2">
+				<label class="input input-bordered flex items-center gap-2 w-full">
 					<Tags />
 					<input type="text" bind:value={formData.tags} class="grow" placeholder="Tags" />
 				</label>
+
+				<select class="select select-bordered w-full">
+					<option value="" disabled selected>Estado</option>
+					<!-- Placeholder visible por defecto -->
+					<option value="1">Nuevo</option>
+					<option value="2">En Progreso</option>
+					<option value="3">Completadas</option>
+					<option value="4">Aprobadas</option>
+				</select>
 			</div>
 
 			<div class="content">
+				<div class="row">
+					<!-- Campo de Fecha Inicio -->
+					<label class="form-control w-full max-w-xs">
+						<div class="label">
+							<span class="label-text">Fecha inicio</span>
+						</div>
+						<input
+							type="text"
+							class="input input-bordered w-full"
+							value={formatDate(startDate)}
+							readonly
+							on:click={() => (showDatePickerStart = !showDatePickerStart)}
+						/>
+						{#if showDatePickerStart}
+							<DatePicker bind:value={startDate} />
+						{/if}
+					</label>
+
+					<!-- Campo de Fecha Fin -->
+					<label class="form-control w-full max-w-xs">
+						<div class="label">
+							<span class="label-text">Fecha fin</span>
+						</div>
+						<input
+							type="text"
+							class="input input-bordered w-full"
+							value={formatDate(endDate)}
+							readonly
+							on:click={() => (showDatePickerEnd = !showDatePickerEnd)}
+						/>
+						{#if showDatePickerEnd}
+							<DatePicker bind:value={endDate} />
+						{/if}
+					</label>
+				</div>
+
 				<div class="row">
 					<label class="form-control w-full max-w-xs">
 						<div class="label">
@@ -106,64 +172,29 @@
 						</select>
 					</label>
 				</div>
-
-				<div class="row">
-					<label class="form-control w-full max-w-xs">
-						<div class="label">
-							<span class="label-text">Fecha inicio</span>
-						</div>
-						<DateInput
-							bind:value={date}
-							on:click={() => {
-								showDatePicker = !showDatePicker;
-							}}
-						/>
-						{#if showDatePicker}
-							<DatePicker bind:value={date} />
-						{/if}
-					</label>
-
-					<label class="form-control w-full max-w-xs">
-						<div class="label">
-							<span class="label-text">Fecha fin</span>
-						</div>
-						<DateInput
-							bind:value={date}
-							on:click={() => {
-								showDatePicker = !showDatePicker;
-							}}
-						/>
-						{#if showDatePicker}
-							<DatePicker bind:value={date} />
-						{/if}
-					</label>
-
-					<!-- <label class="form-control w-full max-w-xs">
-						<div class="label">
-							<span class="label-text">Pick the best fantasy franchise</span>
-						</div>
-						<select class="select select-bordered">
-							<option disabled selected>Pick one</option>
-							<option>Star Wars</option>
-							<option>Harry Potter</option>
-							<option>Lord of the Rings</option>
-							<option>Planet of the Apes</option>
-							<option>Star Trek</option>
-						</select>
-					</label> -->
-				</div>
-
-				<label class="form-control">
-					<div class="label">
-						<span class="label-text">Descripción</span>
-					</div>
-					<textarea
-						class="textarea textarea-bordered h-24"
-						bind:value={formData.description}
-						placeholder="Descricion de la tarea"
-					></textarea>
-				</label>
 			</div>
+
+			<label class="form-control">
+				<div class="label">
+					<span class="label-text">Descripción</span>
+				</div>
+				<textarea
+					class="textarea textarea-bordered h-24"
+					bind:value={formData.description}
+					placeholder="Descricion de la tarea"
+				></textarea>
+			</label>
+
+			<label class="form-control">
+				<div class="label">
+					<span class="label-text">Comentario</span>
+				</div>
+				<textarea
+					class="textarea textarea-bordered h-24"
+					bind:value={formData.comment}
+					placeholder="Comentario de la tarea"
+				></textarea>
+			</label>
 
 			<div class="controls">
 				<button type="submit" class="btn btn-primary"> Guardar </button>
