@@ -48,15 +48,6 @@
 	let invalidInput=false
 	let validRegex = /^[\w-]+@[a-zA-Z\dx-]+\.[a-zA-Z]{2,}$/
 
-	async function debug(){
-		const { data, error } = await supabase.auth.getSession();
-		const { data: { user } } = await supabase.auth.getUser();
-
-		console.log('debuggin state');
-		console.log({data});
-		console.log({user});
-	}
-
 	async function validate() {
 		if (email.match(validRegex) && password){
 			// console.log(getSession());
@@ -83,12 +74,6 @@
 			email: _email,
 			password: _password,
 		});
-		return { data, error };
-	}
-
-	//Supabase native getSession
-	async function getSession(){
-		const { data, error } = await supabase.auth.getSession();
 		return { data, error };
 	}
 
