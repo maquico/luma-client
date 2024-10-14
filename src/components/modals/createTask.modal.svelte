@@ -2,9 +2,8 @@
 	import Modal from '$components/modal.svelte';
 	import { createEventDispatcher } from 'svelte';
 	import axios from 'axios';
-	import { goto } from '$app/navigation';
 	import { Tags, User } from 'lucide-svelte';
-	import { DateInput, DatePicker } from 'date-picker-svelte';
+	import { DatePicker } from 'date-picker-svelte';
 	let showDatePickerStart = false;
 	let showDatePickerEnd = false;
 	let startDate = new Date();
