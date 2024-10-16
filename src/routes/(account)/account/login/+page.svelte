@@ -41,7 +41,6 @@
 	import { supabase } from "$lib/supabaseClient";
 	import logo from '$lib/assets/luma-logo.png'
 	import { CircleAlert, Eye, EyeOff, Mail } from 'lucide-svelte';
-	import { goto } from '$app/navigation';
 
 	let email = 'huanhaowu28@gmail.com'
 	let password = 'Abc123456!'

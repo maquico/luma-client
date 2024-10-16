@@ -22,6 +22,13 @@ export const actions = {
 			password: _password,
 		})
 
+		if (error) {
+			return {
+				status: 400,
+				body: { error: error.message }
+			};
+		}
+
 		//sets cookie with session.access_token
 		cookies.set("auth", "authenticated_user", {
 			path: "/",
