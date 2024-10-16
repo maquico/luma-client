@@ -1,4 +1,6 @@
 <div class="login-container">
+	<div class="card"> Login custom con logica de invite </div>
+
 	<div class="card login">
 		<img src={logo} alt="luma-logo"/>
 <!--		<form on:submit={validate} action="?/login" method="POST">-->

@@ -15,7 +15,6 @@
 <script>
 	import logo from '$lib/assets/luma-logo.png'
 	import notloggedin from '$lib/assets/user-notloggedin.png'
-	import { CircleAlert, Eye, EyeOff, Mail } from 'lucide-svelte';
 </script>
 
 <style>
