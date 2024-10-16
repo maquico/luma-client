@@ -1,10 +1,11 @@
 <script>
-	import 'tailwindcss/tailwind.css';
+	// import 'tailwindcss/tailwind.css';
 </script>
 
-<div class="h-screen flex items-center justify-center bg-gradient-to-r from-purple-500 to-pink-500">
+<!--<div class="h-screen flex items-center justify-center bg-gradient-to-r from-purple-500 to-pink-500">-->
 	<slot />
-</div>
+<!--</div>-->
 
 <style>
+
 </style>
