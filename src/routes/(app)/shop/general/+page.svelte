@@ -107,14 +107,16 @@
 		};
 	}
 
-	async function redeemTheme(themeName, themeId) {
+	async function redeemTheme(themeId) {
 		try {
+			console.log('Intentando canjear el tema:', themeId, userId);
 			const response = await axios.post('https://luma-server.onrender.com/api/rewards/predefined', {
 				rewardId: themeId,
 				userId: userId,
-				rewardIdType: 'theme'
+				rewardType: 'theme'
 			});
 			console.log('Canje exitoso:', response.data);
+			fetchRewards();
 		} catch (error) {
 			console.error('Error en el canje:', error);
 		}
@@ -157,7 +159,7 @@
 					{:else}
 						<button
 							class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-1 rounded-md"
-							on:click={() => redeemTheme(theme.name, theme.id)}
+							on:click={() => redeemTheme(theme.id)}
 						>
 							${theme.price}
 						</button>
