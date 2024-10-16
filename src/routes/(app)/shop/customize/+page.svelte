@@ -64,7 +64,6 @@
 				rewardIdType: 'theme' // Tipo de recompensa
 			});
 			console.log('Recompensa canjeada:', response.data);
-			// Opcional: recargar las recompensas después de canjear
 			loadRewards();
 		} catch (error) {
 			console.error('Error al canjear la recompensa:', error.response?.data || error.message);
