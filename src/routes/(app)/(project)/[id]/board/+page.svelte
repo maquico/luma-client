@@ -29,7 +29,7 @@
 
 		await axios.get(`https://luma-server.onrender.com/api/task/tags/${projectId}`)
 			.then((response) => {
-				console.log(response.data);
+				// console.log(response.data);
 				tags = response.data
 			})
 			.catch((error) => {
@@ -41,7 +41,13 @@
 
 <div id="projectBoard">
 	<div class="top">
-		<p>NOMBRE PROYECTO</p>
+		<p>
+			{#if $projectData}
+				<h1>{$projectData.nombre}</h1>
+			{:else}
+				<p>Loading project data...</p>
+			{/if}
+		</p>
 		<div class="controls">
 			<button
 				class="btn btn-primary"
