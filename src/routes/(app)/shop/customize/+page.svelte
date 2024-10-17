@@ -55,6 +55,21 @@
 		}
 	}
 
+	// Función para canjear una recompensa
+	async function redeemReward(rewardId) {
+		try {
+			const response = await axios.post('https://luma-server.onrender.com/api/rewards', {
+				rewardId: rewardId,
+				userId: userId, // ID del usuario
+				rewardIdType: 'theme' // Tipo de recompensa
+			});
+			console.log('Recompensa canjeada:', response.data);
+			loadRewards();
+		} catch (error) {
+			console.error('Error al canjear la recompensa:', error.response?.data || error.message);
+		}
+	}
+
 	onMount(() => {
 		loadRewards();
 	});
@@ -86,6 +101,7 @@
 					</div>
 					<button
 						class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-1 rounded-md"
+						on:click={() => redeemReward(reward.id)}
 					>
 						${reward.price}
 					</button>
