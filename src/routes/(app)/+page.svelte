@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { ListFilter } from 'lucide-svelte';
 	import CreateProjectModal from '$components/modals/createProject.modal.svelte';
+	import noContent from '$lib/assets/no-content.png'
 	import { onMount } from 'svelte';
 	import axios from 'axios';
 
@@ -66,40 +67,70 @@
 				<div class="loading loading-dots loading-lg"/>
 			</div>
 		{:else}
+
 			<div class="controls">
 				Proyectos
-				<div class="left">
-					<label class="input input-bordered flex items-center gap-2">
-						<ListFilter />
-						<input
-							type="text"
-							name="search"
-							id="search"
-							placeholder="Buscar proyecto ..."
-							bind:value={searchValue}
-							size="20"
-						/>
-					</label>
-					<button
-						class="btn btn-primary"
-						on:click={() => {
+
+				<!--TOOD: cambiar la condicional para cuando se pase al flujo normal -->
+				{#if frequentProjects.length !== 0}
+				<!--{#if frequentProjects.length === 0}-->
+					<div class="left">
+						<label class="input input-bordered flex items-center gap-2">
+							<ListFilter />
+							<input
+								type="text"
+								name="search"
+								id="search"
+								placeholder="Buscar proyecto ..."
+								bind:value={searchValue}
+								size="20"
+							/>
+						</label>
+						<button
+							class="btn btn-primary"
+							on:click={() => {
 							showModal = true;
 						}}
-					>
-						NUEVO PROYECTO
-					</button>
-				</div>
+						>
+							NUEVO PROYECTO
+						</button>
+					</div>
+				{/if}
+
 			</div>
 
-			<!--		Projects-->
-			<div class="frequent-projects-container">
-				{#each frequentProjects as project}
-					<button
-						class="card frequent-projects cursor-pointer"
-						on:click={() => {
+			<!--TOOD: cambiar la condicional para cuando se pase al flujo normal -->
+			{#if frequentProjects.length === 0}
+			<!--{#if frequentProjects.length !== 0} &lt;!&ndash;No content&ndash;&gt;-->
+				<div class="no-content">
+					<div class="right">
+						<p class="title"> No hay nada por aquí... aún. </p>
+						<p>Comienza creando un nuevo proyecto para empezar. <br>
+							Tus proyectos aparecerán aquí una vez crees uno o te inviten para formar parte</p>
+						<button
+							class="btn btn-primary"
+							on:click={() => {
+							showModal = true;
+						}}
+						>
+							NUEVO PROYECTO
+						</button>
+					</div>
+
+					<img src="{noContent}" alt="no-content image" />
+
+
+				</div>
+			{:else}
+				<!--		Projects-->
+				<div class="frequent-projects-container">
+					{#each frequentProjects as project}
+						<button
+							class="card frequent-projects cursor-pointer"
+							on:click={() => {
 							goto(`/${project.Proyecto_ID}/overview`);
 						}}
-					>
+						>
 						<span class="top">
 							<div class="avatar placeholder">
 								<div class="text-neutral-content w-10 p-2 border-2 rounded-l">
@@ -108,26 +139,28 @@
 							</div>
 							<p class="title">{project.nombre}</p></span
 						>
-						<span class="down">
+							<span class="down">
 							<p class="description">{project.descripcion}</p>
 							<p class="create-details">{project.creator} • {formatDate(project.fechaRegistro)}</p>
 						</span>
-					</button>
-				{/each}
-			</div>
-			{#if otherProjects.length !== 0}
-				<div class="projects-container">
-					{#each otherProjects as project}
-						<button
-							class="projects cursor-pointer"
-							on:click={() => {
-								goto(`/${project.Proyecto_ID}/overview`);
-							}}
-						>
-							{project.nombre}
 						</button>
 					{/each}
 				</div>
+				{#if otherProjects.length !== 0}
+					<div class="projects-container">
+						{#each otherProjects as project}
+							<button
+								class="projects cursor-pointer"
+								on:click={() => {
+								goto(`/${project.Proyecto_ID}/overview`);
+							}}
+							>
+								{project.nombre}
+							</button>
+						{/each}
+					</div>
+				{/if}
+
 			{/if}
 		{/if}
 	</div>
@@ -157,6 +190,10 @@
 		gap: 1rem;
 	}
 
+	.controls .left button{
+			color: white;
+	}
+
 	.card {
 		background-color: white;
 		border-radius: 4px;
@@ -164,6 +201,41 @@
 		align-items: center;
 		justify-content: center;
 		padding: 1rem 2rem;
+	}
+
+	.no-content{
+      background-color: white;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem 2rem;
+			height: 65vh;
+			gap: 2rem;
+	}
+
+	.no-content .right{
+			display: flex;
+			flex-direction: column;
+			text-align: center;
+			gap: 1rem;
+			width: 30vw;
+	}
+
+	.no-content .right button{
+			margin-top: 1rem;
+			color: var(--luma-color-gray-50);
+	}
+
+	.no-content .title{
+			color: var(--luma-color-gray-500);
+			font-weight: bold;
+			font-size: 2rem;
+      margin-bottom: 1rem;
+	}
+
+	.no-content img{
+      width: 30rem;
 	}
 
 	.frequent-projects-container {
@@ -208,26 +280,6 @@
 		color: var(--luma-color-blue);
 		font-weight: 500;
 	}
-
-	/*.frequent-projects .left .title{*/
-	/*    color: var(--luma-color-gray-950);*/
-	/*}*/
-
-	/*.frequent-projects .left	.description{*/
-	/*    font-size: var(--luma-body-font-size);*/
-	/*    width: 200px;*/
-	/*    height: 40px;*/
-	/*    overflow: hidden;*/
-	/*    display: -webkit-box;*/
-	/*    -webkit-line-clamp: 2;*/
-	/*    -webkit-box-orient: vertical;*/
-	/*}*/
-
-	/*.frequent-projects .left .create-details{*/
-	/*    font-size: var(--luma-body-font-size);*/
-	/*    color: var(--luma-color-blue);*/
-	/*    font-weight: 500;*/
-	/*}*/
 
 	.projects-container {
 		border-radius: 4px;
