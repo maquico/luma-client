@@ -49,6 +49,10 @@
 				<div class="divider"/>
 
 				<div class="links">
+					<a class="menu-link" href="/account/config/profile">
+						<User size={20}/>
+						<p>Perfil</p>
+					</a>
 					<a class="menu-link" href="/account/config/language">
 						<Globe size={20}/>
 						<p>Idioma</p>
@@ -56,10 +60,6 @@
 					<a class="menu-link" href="/account/config/badge">
 						<Star size={20}/>
 						<p>Insignias</p>
-					</a>
-					<a class="menu-link" href="/account/config/profile">
-						<User size={20}/>
-						<p>Perfil</p>
 					</a>
 				</div>
 
