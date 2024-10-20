@@ -1,5 +1,6 @@
 <script>
 	import { projectData } from '$lib/stores/projectStore';
+	import { goto } from '$app/navigation';
 
 	console.log($projectData);
 </script>
@@ -29,7 +30,7 @@
 
 					<div class="members-grid">
 						{#each [1,2,3,4,5,6] as member}
-							<div class="member">
+							<div class="member" on:click={() => {goto(`/user/${member}`)}}>
 								XX
 							</div>
 						{/each}
@@ -113,6 +114,7 @@
 				width: 70px;
 				height: 70px;
 				border-radius: 5px;
+				cursor: pointer;
 		}
 
 		.creation-date{
