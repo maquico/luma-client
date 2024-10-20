@@ -115,19 +115,21 @@
 <div class="content">
 	<p>Insignias</p>
 
-	<div class="badges-grid">
-		{#each sortedResponse as badge}
-			<div class="badge {badge.unlocked? '': 'locked'}" on:click={() => { if (badge.unlocked) {showModal = true; selectedBadge = badge} }}>
-				{badge.title}
+	<div class="scrollable">
+		<div class="badges-grid">
+			{#each sortedResponse as badge}
+				<div class="badge {badge.unlocked? '': 'locked'}" on:click={() => { if (badge.unlocked) {showModal = true; selectedBadge = badge} }}>
+					{badge.title}
 
-				{#if !badge.unlocked}
-					<div class="lock-icon">
-						<LockKeyhole size={140}/>
-					</div>
-				{/if}
+					{#if !badge.unlocked}
+						<div class="lock-icon">
+							<LockKeyhole size={140}/>
+						</div>
+					{/if}
 
-			</div>
-		{/each}
+				</div>
+			{/each}
+		</div>
 	</div>
 </div>
 
@@ -137,10 +139,15 @@
 	.content{
 			display: flex;
 			flex-direction: column;
-			gap: var(--luma-half-element-spacing);
 	}
 
+  .scrollable{
+      height: 80vh;
+      overflow: auto;
+  }
+
 	.badges-grid{
+    padding: var(--luma-half-element-spacing);
 		display: grid;
 		grid-template-columns: repeat(4, 1fr);
 		grid-auto-rows: minmax(1fr, auto);

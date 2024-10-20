@@ -8,3 +8,9 @@
 	import TopNavBar from '$components/top.navbar.svelte';
 </script>
 
+<style>
+	div{
+			overflow: hidden;
+	}
+</style>
+
