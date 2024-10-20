@@ -276,7 +276,7 @@
 	}
 
 	.side-bar{
-      width: 256px;
+      width: 270px;
       height: 90vh;
       background-color: var(--luma-color-gray-100);
       border-right: 3px solid var(--luma-color-gray-200);
