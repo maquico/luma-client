@@ -113,7 +113,7 @@
 </script>
 
 <div class="content">
-	<p>Insignias</p>
+	<p class="title">Insignias</p>
 
 	<div class="scrollable">
 		<div class="badges-grid">
@@ -139,6 +139,10 @@
 	.content{
 			display: flex;
 			flex-direction: column;
+	}
+
+	.content .title{
+			font-size: var(--luma-h4-font-size);
 	}
 
   .scrollable{
