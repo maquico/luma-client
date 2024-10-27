@@ -58,10 +58,10 @@
 	// Función para canjear una recompensa
 	async function redeemReward(rewardId) {
 		try {
-			const response = await axios.post('https://luma-server.onrender.com/api/rewards', {
-				rewardId: rewardId,
+			console.log('Canjeando recompensa:', rewardId, userId);
+			const response = await axios.post('https://luma-server.onrender.com/api/rewards/buy', {
 				userId: userId, // ID del usuario
-				rewardIdType: 'theme' // Tipo de recompensa
+				rewardId: rewardId
 			});
 			console.log('Recompensa canjeada:', response.data);
 			loadRewards();
@@ -99,12 +99,21 @@
 						<span>{reward.totalAvailable}</span>
 						<span>{reward.totalBought}/{reward.totalCapacity}</span>
 					</div>
-					<button
-						class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-1 rounded-md"
-						on:click={() => redeemReward(reward.id)}
-					>
-						${reward.price}
-					</button>
+					{#if reward.totalBought === reward.totalCapacity}
+						<button
+							class="w-full bg-purple-200 text-purple-600 font-bold py-1 rounded-md cursor-not-allowed"
+							disabled
+						>
+							Comprado
+						</button>
+					{:else}
+						<button
+							class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-1 rounded-md"
+							on:click={() => redeemReward(reward.id)}
+						>
+							${reward.price}
+						</button>
+					{/if}
 				</div>
 			</div>
 		{/each}
