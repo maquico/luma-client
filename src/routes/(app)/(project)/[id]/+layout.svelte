@@ -18,7 +18,7 @@
 	async function getProjectDetails(id){
 		await axios.get(`https://luma-server.onrender.com/api/projects/id/${id}`)
 			.then((response) => {
-				projectData = response.data[0]
+				projectData = response.data
 				console.log(projectData);
 				setProjectData(projectData);
 			})
@@ -29,7 +29,6 @@
 
 	onMount(() => {
 		projectId = $page.params.id
-
 		getProjectDetails(projectId)
 	})
 </script>
