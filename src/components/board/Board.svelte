@@ -12,15 +12,18 @@
 		columns[columnIdx].items = newItems;
 		onFinalUpdate([...columns]);
 	}
+
+	console.log(columns);
 </script>
 
 <section class="board">
-	{#each columns as {id, name, items}, idx (id)}
-		<div class="column"
-				 animate:flip="{{duration: flipDurationMs}}" >
-			<Column name={name}
+	{#each columns as {id, name, items}, index}
+		<div class="column">
+<!--			animate:flip="{{duration: flipDurationMs}}"-->
+			<Column statusId={id}
+							name={name}
 							items={items}
-							onDrop={(newItems) => handleItemFinalize(idx, newItems)} />
+							onDrop={(newItems) => handleItemFinalize(index, newItems)} />
 		</div>
 	{/each}
 </section>

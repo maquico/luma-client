@@ -6,14 +6,24 @@
 	import axios from 'axios';
 	import { onMount } from 'svelte';
 
-	console.log($projectData);
+	// console.log($projectData);
 
-	onMount(() => {
-		getTags()
+	onMount(async () => {
+		try {
+			const response = await axios.get(`https://luma-server.onrender.com/api/task/project/${projectId}`);
+			projectTasks = response.data || [];
+		}catch (error) {
+			console.log(error);
+		}
+
+		// getBoardTasks(projectId)
+		// await getTags(projectId)
 	})
 
 	let showModal = false;
 	let tags = ['tag1', 'tag2', 'tag3', 'tag4'];
+	let projectId = $projectData.Proyecto_ID
+	let projectTasks
 
 	function handleClose() {
 		showModal = false;
@@ -24,18 +34,28 @@
 		$data = newColumnsData;
 	}
 
-	async function getTags(){
-		let projectId = $projectData.Proyecto_ID
-
+	async function getTags(projectId){
 		await axios.get(`https://luma-server.onrender.com/api/task/tags/${projectId}`)
 			.then((response) => {
-				// console.log(response.data);
+				console.log(response.data);
 				tags = response.data
 			})
 			.catch((error) => {
 				console.log(error);
 			})
 	}
+
+	// async function getBoardTasks(projectId){
+	// 	await axios.get(`https://luma-server.onrender.com/api/task/project/${projectId}`)
+	// 		.then((response) => {
+	// 			// console.log(response.data);
+	// 			projectTasks = response.data
+	// 			console.log(projectTasks);
+	// 		})
+	// 		.catch((error) => {
+	// 			console.log(error);
+	// 		})
+	// }
 
 </script>
 
@@ -49,6 +69,13 @@
 			{/if}
 		</p>
 		<div class="controls">
+			<select class="select select-primary w-full max-w-xs">
+				<option disabled selected>Filter by tag</option>
+				<!--{#each tags as tag}-->
+				<!--	<option value={tag}>{tag}</option>-->
+				<!--{/each}-->
+			</select>
+
 			<button
 				class="btn btn-primary"
 				on:click={() => {
@@ -57,16 +84,16 @@
 			>
 				Crear tarea</button
 			>
-			<select class="select select-primary w-full max-w-xs">
-				<option disabled selected>Filter by tag</option>
-				{#each tags as tag}
-					<option value={tag}>{tag}</option>
-				{/each}
-			</select>
 		</div>
 	</div>
 
-	<Board columns={$data} onFinalUpdate={handleBoardUpdated} />
+	{#if !projectTasks}
+		<p>Loading tasks...</p>
+	{:else}
+		<!--	<Board columns={$data} onFinalUpdate={handleBoardUpdated} />-->
+		<Board columns={projectTasks} onFinalUpdate={handleBoardUpdated}/>
+	{/if}
+
 </div>
 
 <CreateTaskModal show={showModal} on:close={handleClose} />
@@ -79,7 +106,7 @@
 
 	.top .controls {
 		display: flex;
-		gap: var(--luma-element-spacing);
+		gap: var(--luma-half-element-spacing);
 	}
 
 	.top p:first-child {

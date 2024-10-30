@@ -3,17 +3,25 @@
 	import { Calendar } from 'lucide-svelte';
 	import { DateTime } from 'luxon';
 
-	export let name;
+	export let data;
 	let title = 'Title'
 	let description = 'Description'
 	let date = DateTime.now().toFormat('dd LLL yyyy')
 	let tags = ['tag1', 'tag2', 'tag3', 'tag4']
+
+	if (data){
+		title = data.name
+		description = data.description
+		tags = data.tags
+	}
 
 	let showModal = false
 
 	function handleClose(){
 		showModal = false
 	}
+
+	// console.log(data);
 
 </script>
 
@@ -45,7 +53,7 @@
 	</div>
 </div>
 
-<CreateTaskModal data={name} show={showModal} on:close={handleClose}/>
+<CreateTaskModal data={data} show={showModal} on:close={handleClose}/>
 
 <style>
     .inline-spacing{

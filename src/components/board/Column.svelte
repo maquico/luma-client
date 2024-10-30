@@ -2,24 +2,50 @@
 	import { flip } from 'svelte/animate';
 	import { dndzone, TRIGGERS } from 'svelte-dnd-action';
 	import Card from "$components/board/Card.svelte";
+	import axios from 'axios';
 
 	const flipDurationMs = 150;
 
 	export let name;
 	export let items;
 	export let onDrop;
+	export let statusId;
 
+	//En esta funcion se maneja el cambio de estado
 	function handleDndConsiderCards(e) {
 		const { items: newItems, info: { id, trigger } } = e.detail;
-		console.warn("got consider", name);
+		// console.log("got consider", name);
+		// console.log("Cambio de estado a", name);
+		// console.log("Cambio de estado a", e.detail);
 		if (trigger == TRIGGERS.DRAG_STARTED) {
 			const itemIdx = items.findIndex(item => item.id === id);
-			console.log("index", itemIdx);
+			console.log("index", itemIdx); //Estoy moviendo el objeto X
 		}
 		items = newItems;
 	}
-	function handleDndFinalizeCards(e) {
+
+	async function handleDndFinalizeCards(e) {
+		const { items: newItems, info: { id, trigger } } = e.detail;
+
 		onDrop(e.detail.items);
+
+		if (trigger == TRIGGERS.DROPPED_INTO_ZONE){
+			console.log('cambiaste de estado al estado ' + statusId + ' ' + name);
+			console.log(e.detail.items[e.detail.items.length - 1]);
+
+			let taskID = e.detail.items[e.detail.items.length - 1]
+
+			//TODO: consumir el endpoint para actualizar la tarea
+			await axios.put(`https://luma-server.onrender.com/api/task/status/${taskID}?status=${statusId}`)
+				.then((response) => {
+					// console.log(response.data);
+					console.log('status de tarea actualizada');
+				})
+				.catch((error) => {
+					// console.log(error.data);
+					console.log('arregle su diparate');
+				})
+		}
 	}
 
 </script>
@@ -33,8 +59,9 @@
 			 on:consider={handleDndConsiderCards}
 			 on:finalize={handleDndFinalizeCards}>
 		{#each items as item (item.id)}
+			<!--Al consultar item, obtengo toda la informacion de la tarjeta-->
 			<div animate:flip="{{duration: flipDurationMs}}" >
-				<Card name={item.name}/>
+				<Card data={item}/>
 			</div>
 		{/each}
 	</div>
