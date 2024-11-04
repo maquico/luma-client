@@ -1,5 +1,4 @@
 <script>
-	import { data } from './data';
 	import Board from '$components/board/Board.svelte';
 	import CreateTaskModal from '$components/modals/createTask.modal.svelte';
 	import { projectData } from '$lib/stores/projectStore';
@@ -24,10 +23,10 @@
 		showModal = false;
 	}
 
-	function handleBoardUpdated(newColumnsData) {
-		// if you wanted to update a database or a server, this is where you would do it
-		$data = newColumnsData;
-	}
+	// function handleBoardUpdated(newColumnsData) {
+	// 	// if you wanted to update a database or a server, this is where you would do it
+	// 	// $data = newColumnsData;
+	// }
 
 	async function getTags(projectId){
 		await axios.get(`https://luma-server.onrender.com/api/task/tags/${projectId}`)
@@ -113,7 +112,7 @@
 		<p>Loading tasks...</p>
 	{:else}
 <!--		<Board columns={projectTasks} onFinalUpdate={handleBoardUpdated}/>-->
-		<Board columns={filteredProjectTasks} onFinalUpdate={handleBoardUpdated}/>
+		<Board columns={filteredProjectTasks}/>
 	{/if}
 </div>
 
