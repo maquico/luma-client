@@ -9,21 +9,16 @@
 	// console.log($projectData);
 
 	onMount(async () => {
-		try {
-			const response = await axios.get(`https://luma-server.onrender.com/api/task/project/${projectId}`);
-			projectTasks = response.data || [];
-		}catch (error) {
-			console.log(error);
-		}
-
-		// getBoardTasks(projectId)
-		// await getTags(projectId)
+		await getBoardTasks(projectId)
+		await getTags(projectId)
 	})
 
 	let showModal = false;
-	let tags = ['tag1', 'tag2', 'tag3', 'tag4'];
+	let tags = ['Loading...'];
 	let projectId = $projectData.Proyecto_ID
-	let projectTasks
+	let projectTasks = []
+	let filteredProjectTasks = []
+	let selectedOption = ''
 
 	function handleClose() {
 		showModal = false;
@@ -37,7 +32,7 @@
 	async function getTags(projectId){
 		await axios.get(`https://luma-server.onrender.com/api/task/tags/${projectId}`)
 			.then((response) => {
-				console.log(response.data);
+				// console.log('tags',response.data);
 				tags = response.data
 			})
 			.catch((error) => {
@@ -45,18 +40,45 @@
 			})
 	}
 
-	// async function getBoardTasks(projectId){
-	// 	await axios.get(`https://luma-server.onrender.com/api/task/project/${projectId}`)
-	// 		.then((response) => {
-	// 			// console.log(response.data);
-	// 			projectTasks = response.data
-	// 			console.log(projectTasks);
-	// 		})
-	// 		.catch((error) => {
-	// 			console.log(error);
-	// 		})
-	// }
+	async function getBoardTasks(projectId){
+		await axios.get(`https://luma-server.onrender.com/api/task/project-client/${projectId}`)
+			.then((response) => {
+				projectTasks = response.data || [];
+				filteredProjectTasks = projectTasks;
+				// console.log(projectTasks);
+			})
+			.catch((error) => {
+				console.log(error);
+			})
+	}
 
+	async function filterByTag(tag){
+		return projectTasks.map(category => {
+			const filteredItems = category.items.filter(task => task.tags.includes(tag));
+
+			return {
+				...category,
+				items: filteredItems
+			};
+		})
+	}
+
+	async function handleSelectChange(event) {
+		selectedOption = event.target.value;
+		// console.log(`Selected option: ${selectedOption}`);
+
+		if(tags.includes(event.target.value)){ //Escenario para filtrar por tag
+			// console.log('El array tags tiene el valor de',event.target.value);
+			filteredProjectTasks = await filterByTag(selectedOption);
+			// console.log(filteredProjectTasks);
+
+		}else{ //Escenario no existente / default
+			// console.log('Escenario vacio');
+			filteredProjectTasks = projectTasks;
+			// console.log(filteredProjectTasks);
+		}
+
+	}
 </script>
 
 <div id="projectBoard">
@@ -69,11 +91,11 @@
 			{/if}
 		</p>
 		<div class="controls">
-			<select class="select select-primary w-full max-w-xs">
-				<option disabled selected>Filter by tag</option>
-				<!--{#each tags as tag}-->
-				<!--	<option value={tag}>{tag}</option>-->
-				<!--{/each}-->
+			<select class="select select-primary w-full max-w-xs" on:change={handleSelectChange}>
+				<option selected>None</option>
+				{#each tags as tag}
+					<option value={tag}>{tag}</option>
+				{/each}
 			</select>
 
 			<button
@@ -87,13 +109,12 @@
 		</div>
 	</div>
 
-	{#if !projectTasks}
+	{#if !filteredProjectTasks}
 		<p>Loading tasks...</p>
 	{:else}
-		<!--	<Board columns={$data} onFinalUpdate={handleBoardUpdated} />-->
-		<Board columns={projectTasks} onFinalUpdate={handleBoardUpdated}/>
+<!--		<Board columns={projectTasks} onFinalUpdate={handleBoardUpdated}/>-->
+		<Board columns={filteredProjectTasks} onFinalUpdate={handleBoardUpdated}/>
 	{/if}
-
 </div>
 
 <CreateTaskModal show={showModal} on:close={handleClose} />
