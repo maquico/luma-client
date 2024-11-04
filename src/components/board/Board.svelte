@@ -6,11 +6,11 @@
 
 	export let columns;
 	// will be called any time a card or a column gets dropped to update the parent data
-	export let onFinalUpdate;
+	// export let onFinalUpdate;
 
 	function handleItemFinalize(columnIdx, newItems) {
 		columns[columnIdx].items = newItems;
-		onFinalUpdate([...columns]);
+		// onFinalUpdate([...columns]);
 	}
 
 	console.log(columns);
