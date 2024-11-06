@@ -3,6 +3,12 @@
 	import { dndzone, TRIGGERS } from 'svelte-dnd-action';
 	import Card from "$components/board/Card.svelte";
 	import axios from 'axios';
+	import { projectData } from '$lib/stores/projectStore';
+	import { showToast } from '$lib/stores/toastStore';
+
+	let projectID =  $projectData.Proyecto_ID
+	let userData = JSON.parse(localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token'))
+	let userID = userData.user.id
 
 	const flipDurationMs = 150;
 
@@ -19,7 +25,7 @@
 		// console.log("Cambio de estado a", e.detail);
 		if (trigger == TRIGGERS.DRAG_STARTED) {
 			const itemIdx = items.findIndex(item => item.id === id);
-			console.log("index", itemIdx); //Estoy moviendo el objeto X
+			// console.log("index", itemIdx); //Estoy moviendo el objeto X
 		}
 		items = newItems;
 	}
@@ -36,14 +42,23 @@
 			let taskID = e.detail.items[e.detail.items.length - 1]
 
 			//TODO: consumir el endpoint para actualizar la tarea
-			await axios.put(`https://luma-server.onrender.com/api/task/status/${taskID}?status=${statusId}`)
+			//TODO: validaciones a lugar: para el estado APPROVED, el usuario que lo hace tiene que tener rol de Lider, y la tarea debe de tener un usuario asignado
+			await axios.put(`https://luma-server.onrender.com/api/task/status/${taskID.id}`, {
+				projectId: projectID,
+				newStatusId: statusId,
+				userId: userID
+			})
 				.then((response) => {
 					// console.log(response.data);
 					console.log('status de tarea actualizada');
+					console.log(response.data);
+					showToast('Cambio de estado guardado', { type: 'success', duration: 50000 })
 				})
 				.catch((error) => {
 					// console.log(error.data);
 					console.log('arregle su diparate');
+					console.log(error);
+					showToast('KBOOM! 💣', { type: 'error', duration: 50000 })
 				})
 		}
 	}
@@ -66,7 +81,6 @@
 		{/each}
 	</div>
 </div>
-
 
 <style>
     .wrapper {

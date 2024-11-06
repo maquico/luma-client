@@ -16,7 +16,7 @@
 		"@types/eslint": "^9.6.0",
 		"autoprefixer": "^10.4.20",
 		"daisyui": "^4.12.10",
-		"date-picker-svelte": "^2.13.0",
+		"date-picker-svelte": "^2.14.0",
 		"eslint": "^9.0.0",
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-svelte": "^2.36.0",
@@ -38,6 +38,7 @@
 		"lucide-svelte": "^0.428.0",
 		"luxon": "^3.5.0",
 		"svelte-dnd-action": "^0.9.50",
-		"svelte-steps": "^2.4.1"
+		"svelte-steps": "^2.4.1",
+		"svelte-toasts": "^1.1.2"
 	}
 }
