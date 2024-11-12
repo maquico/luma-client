@@ -5,14 +5,14 @@
 
 	<div class="left">
 		<div class="currency-container">
-			<div class="gem currency">
-			<span>
-				XXX,XXX
-			</span>
-				<div class="icon-container">
-					<Gem />
-				</div>
-			</div>
+<!--			<div class="gem currency">-->
+<!--			<span>-->
+<!--				XXX,XXX-->
+<!--			</span>-->
+<!--				<div class="icon-container">-->
+<!--					<Gem />-->
+<!--				</div>-->
+<!--			</div>-->
 			<div class="coins currency">
 			<span>
 				XXX,XXX
@@ -168,7 +168,7 @@
 
 	.left{
 			display: flex;
-			gap: 10px;
+			gap: 1rem;
 	}
 
 	.left .currency{

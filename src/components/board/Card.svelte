@@ -36,6 +36,7 @@
 
 	<div class="content inline-spacing">
 		<p> {title} </p>
+<!--		<p> {data.id}</p>-->
 		<p> {description} </p>
 	</div>
 
@@ -47,7 +48,11 @@
 		</div>
 
 		<div class="assigned-user">
-			HW
+			{#if data.assignedUser}
+				XX
+			{:else}
+				ZZ
+			{/if}
 		</div>
 
 	</div>
