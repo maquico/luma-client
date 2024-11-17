@@ -1,21 +1,33 @@
 <script>
+	import { t, locale, locales } from '$lib/translations';
 
+	const handleChange = ({ currentTarget }) => {
+		const { value } = currentTarget;
+
+		document.cookie = `lang=${value} ;`;
+	};
 </script>
 
 <div class="content">
-	<p class="title">Idioma</p>
+	<p class="title">{$t('profile_config_lang.langUI_title')}</p>
 
 	<div class="container">
-		<label for="language">Preferencias de idioma</label>
-		<select id="language">
-			{#each [1,2,3,4,5,6] as value}
-				<option value={value}>  {value} </option>
+		<label for="language">{$t('profile_config_lang.langUI_input_text')}</label>
+		<select bind:value="{$locale}" on:change={handleChange}>
+			{#each $locales as value}
+				<option value="{value}" selected="{$locale === value}">{$t(`lang.${value}`)}</option>
 			{/each}
 		</select>
 
+<!--		<select id="language">-->
+<!--			{#each [1, 2, 3, 4, 5, 6] as value}-->
+<!--				<option value={value}>  {value} </option>-->
+<!--			{/each}-->
+<!--		</select>-->
+
 		<div class="btn-wrapper">
 			<button>
-				GUARDAR
+				{$t('profile_config_lang.langUI_button')}
 			</button>
 		</div>
 	</div>
