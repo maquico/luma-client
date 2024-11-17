@@ -20,13 +20,13 @@
 			const response = await axios.get(
 				`https://luma-server.onrender.com/api/projects/user/${userId}`
 			);
-			projectsOptions = [
-				{ value: 'Todos', label: 'Todos' },
-				...response.data.map((project) => ({
-					value: project.Proyecto_ID,
-					label: project.nombre
-				}))
-			];
+			projectsOptions = response.data.map((project) => ({
+				value: project.Proyecto_ID,
+				label: project.nombre
+			}));
+			if (projectsOptions.length > 0) {
+				selectedProject = projectsOptions[0].value;
+			}
 		} catch (error) {
 			console.error('Error fetching projects:', error);
 		}
@@ -49,7 +49,6 @@
 <nav>
 	{#if showProjectSelect}
 		<select class="select select-bordered w-full max-w-xs" bind:value={selectedProject}>
-			<option value="" disabled>Selecciona un Proyecto</option>
 			{#each projectsOptions as option}
 				<option value={option.value}>{option.label}</option>
 			{/each}
