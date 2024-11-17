@@ -1,15 +1,18 @@
 <script>
-	import Modal from '$components/modal.svelte';
-	import { createEventDispatcher } from 'svelte';
-	import axios from 'axios';
 	import { goto } from '$app/navigation';
+	import { createEventDispatcher } from 'svelte';
+
+	import Modal from '$components/modal.svelte';
+	import axios from 'axios';
 
 	const dispatch = createEventDispatcher();
 
 	export let show = true;
 	let projectName = '';
 	let projectDescription = '';
-	let userId = '37d3b652-d314-4124-9685-add5f0c6fc19';
+	// let userId = '37d3b652-d314-4124-9685-add5f0c6fc19';
+	let userData = JSON.parse(localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token'))
+	let userID = userData.user.id
 	let invalidInput = false;
 
 	const close = () => {
@@ -29,13 +32,15 @@
 			.post('https://luma-server.onrender.com/api/projects', {
 				nombre: projectName,
 				descripcion: projectDescription,
-				userId: userId
+				userId: userID
 			})
 			.then((response) => {
 				const projectId = response.data.proyecto_id;
 				console.log('Proyecto creado con ID:', projectId);
 				goto(`/${projectId}/overview`);
 				console.log('Proyecto creado:', response.data);
+				show = false;
+				dispatch('close');
 			})
 			.catch((error) => {
 				console.error('Error al crear el proyecto:', error);
