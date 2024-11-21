@@ -4,7 +4,7 @@
 	const handleChange = ({ currentTarget }) => {
 		const { value } = currentTarget;
 
-		document.cookie = `lang=${value} ;`;
+		document.cookie = `lang=${value}; path=/;`;
 	};
 </script>
 
