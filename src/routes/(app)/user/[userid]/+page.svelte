@@ -32,8 +32,7 @@
 		axios
 			.get(`https://luma-server.onrender.com/api/badge-obtained/user-client?userId=${userId}`)
 			.then((response) => {
-				userBadges = response.data;
-				badges = userBadges.badges;
+				badges = response.data.badges;
 				console.log('Badges:', badges);
 			})
 			.catch((error) => {
@@ -136,6 +135,7 @@
 					}}
 				>
 					<p>Profile {profile}</p>
+					+ny6
 				</div>
 			{/each}
 		</div>
