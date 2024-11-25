@@ -4,12 +4,13 @@
 	import axios from 'axios';
 	import { filters } from '$src/lib/stores/filterStore.js';
 	import { loadRewardsFunction } from '$src/lib/stores/rewardStore.js';
+	import { selectedProjectStore } from '$src/lib/stores/selectedProjectStore.js';
 
 	export let userId = '37d3b652-d314-4124-9685-add5f0c6fc19';
 
 	let rewards = [];
 	let filteredRewards = [];
-	let selectedProject = '';
+	let selectedProject = null;
 
 	// Función para aplicar los filtros
 	function applyFilters(filterValues) {
@@ -42,34 +43,16 @@
 		applyFilters(filterValues);
 	});
 
-	// Función para traer el primer proyecto
-	const fetchFirstProject = async () => {
-		try {
-			const response = await axios.get(
-				`https://luma-server.onrender.com/api/projects/user/${userId}`
-			);
-			if (response.data.length > 0) {
-				selectedProject = {
-					value: response.data[0].Proyecto_ID,
-					label: response.data[0].nombre
-				};
-			}
-			console.log('Primer proyecto:', selectedProject);
-		} catch (error) {
-			console.error('Error fetching the first project:', error);
-		}
-	};
-
 	// Función para traer recompensas (sincrónica)
 	const loadRewards = () => {
 		console.log('Cargando recompensas...', selectedProject);
 		if (!selectedProject) return; // Nos aseguramos de que selectedProject esté definido
 		axios
-			.get(`https://luma-server.onrender.com/api/rewards/project/${selectedProject.value}`)
+			.get(`https://luma-server.onrender.com/api/rewards/project/${selectedProject}`)
 			.then((response) => {
 				rewards = response.data;
 				filteredRewards = [...rewards];
-				console.log('Recompensas:', response.data, 'ProjectId:', selectedProject.value);
+				console.log('Recompensas:', response.data, 'ProjectId:', selectedProject);
 			})
 			.catch((error) => {
 				console.error('Error al cargar las recompensas:', error);
@@ -91,11 +74,19 @@
 		}
 	};
 
+	$: selectedProjectStore.subscribe((value) => {
+		selectedProject = value;
+		if (selectedProject) {
+			loadRewards(); // Cargar recompensas dinámicamente al cambiar el proyecto
+		}
+	});
+
 	// Lógica en onMount
-	onMount(async () => {
-		loadRewardsFunction.set(loadRewards); // Guardar función para cargar recompensas en el store
-		await fetchFirstProject(); // Traer primero el proyecto de forma asincrónica
-		loadRewards(); // Cargar recompensas después, de manera no bloqueante
+	onMount(() => {
+		if (selectedProject) {
+			//loadRewardsFunction.set(loadRewards); // Guardar función para cargar recompensas en el store
+			loadRewards(); // Cargar recompensas solo si hay un proyecto seleccionado
+		}
 	});
 </script>
 

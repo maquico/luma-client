@@ -1,0 +1,19 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "title": "Who can modify the value in coins, effort, and priority of a task?",
+      "response": "Only project leaders and organization leaders can modify these fields."
+    },
+    {
+      "id": 2,
+      "title": "Can I delete a task within a project?",
+      "response": "Only project leaders and organization leaders have permission to delete tasks."
+    },
+    {
+      "id": 3,
+      "title": "How is the value in coins of a task calculated?",
+      "response": "The system automatically calculates the coin value based on the effort and priority assigned to the task during creation."
+    }
+  ]
+}

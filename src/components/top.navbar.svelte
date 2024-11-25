@@ -51,15 +51,15 @@
 				<div class="links">
 					<a class="menu-link" href="/account/config/profile">
 						<User size={20}/>
-						<p>Perfil</p>
+						<p>{$t('profile_dropdown.profile_text')}</p>
 					</a>
 					<a class="menu-link" href="/account/config/language">
 						<Globe size={20}/>
-						<p>Idioma</p>
+						<p>{$t('profile_dropdown.language_text')}</p>
 					</a>
 					<a class="menu-link" href="/account/config/badge">
 						<Star size={20}/>
-						<p>Insignias</p>
+						<p>{$t('profile_dropdown.badge_text')}</p>
 					</a>
 				</div>
 
@@ -70,7 +70,7 @@
 						<div class="sign-out" on:click={() => {signOut()}}>
 							<a class="menu-link" href="/">
 								<LogOut size={20}/>
-								<p>Salir</p>
+								<p>{$t('profile_dropdown.signOut_text')}</p>
 							</a>
 						</div>
 					</button>
@@ -88,6 +88,7 @@
 	import { Info, ShoppingCart, Gem, Coins, LogOut, User, Star, Globe  } from 'lucide-svelte';
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
+	import { t } from '$lib/translations';
 
  	let userDropdown = false
 	let userName = 'John Doe'

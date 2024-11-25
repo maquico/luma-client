@@ -42,7 +42,7 @@
 	import { Star, Globe, Shield, User } from 'lucide-svelte';
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
-	import { t} from '$lib/translations';
+	import { t } from '$lib/translations';
 
 	let UserName = 'User name'
 	let activeTab;
@@ -50,6 +50,7 @@
 	$: activeTab = $page.url.pathname
 
 	onMount(() => {
+
 		const storedData = localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token');
 
 		if (storedData) {

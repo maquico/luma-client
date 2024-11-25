@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import axios from 'axios';
 	import { filters } from '../lib/stores/filterStore.js';
+	import { selectedProjectStore } from '$src/lib/stores/selectedProjectStore.js';
 
 	export let showProjectSelect; // Recibe la prop desde el componente padre
 
@@ -26,6 +27,7 @@
 			}));
 			if (projectsOptions.length > 0) {
 				selectedProject = projectsOptions[0].value;
+				selectedProjectStore.set(selectedProject); // Actualiza el store
 			}
 		} catch (error) {
 			console.error('Error fetching projects:', error);
@@ -43,12 +45,17 @@
 			availability: selectedAvailability,
 			priceOrder: selectedPriceOrder
 		});
+		selectedProjectStore.set(selectedProject); // Actualiza el store
 	};
 </script>
 
 <nav>
 	{#if showProjectSelect}
-		<select class="select select-bordered w-full max-w-xs" bind:value={selectedProject}>
+		<select
+			class="select select-bordered w-full max-w-xs"
+			bind:value={selectedProject}
+			on:change={() => selectedProjectStore.set(selectedProject)}
+		>
 			{#each projectsOptions as option}
 				<option value={option.value}>{option.label}</option>
 			{/each}

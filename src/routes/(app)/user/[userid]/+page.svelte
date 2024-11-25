@@ -3,17 +3,30 @@
 	import { LockKeyhole } from 'lucide-svelte';
 	import axios from 'axios';
 	import { onMount } from 'svelte';
+	import { page } from '$app/stores';
+	import { goto, invalidate } from '$app/navigation';
 
 	let showModal = false;
 	let selectedBadge;
 	let selectedProfile;
+	let users = [];
+	let userData = [];
+	let userBadges = [];
+	let currentPage = 1;
+	const itemsPerPage = 10; // 2 rows of 5 columns
+	let loading = true;
 	let userId = '37d3b652-d314-4124-9685-add5f0c6fc19';
+	let badges = [];
+
+	onMount(async () => {
+		await getAllUsers();
+		await getUserBadges();
+		await getUserInfo();
+	});
 
 	function handleClose() {
 		showModal = false;
 	}
-
-	let badges = [];
 
 	function loadBadges() {
 		axios
@@ -38,22 +51,16 @@
 
 	const sortedResponse = getUnlockedBadges(badges);
 
-	let currentPage = 1;
-	const itemsPerPage = 10; // 2 rows of 5 columns
-
 	$: getCurrentPageItems(currentPage);
 
 	function getCurrentPageItems(currentPage) {
 		const start = (currentPage - 1) * itemsPerPage;
 		const end = start + itemsPerPage;
-		console.log('start', start);
-		console.log('end', end);
-		console.log(sortedResponse.slice(start, end));
-		return sortedResponse.slice(start, end);
+		return userBadges.slice(start, end);
 	}
 
 	function nextPage() {
-		if (currentPage < Math.ceil(sortedResponse.length / itemsPerPage)) {
+		if (currentPage < Math.ceil(userBadges.length / itemsPerPage)) {
 			currentPage += 1;
 		}
 	}
@@ -62,6 +69,54 @@
 		if (currentPage > 1) {
 			currentPage -= 1;
 		}
+	}
+
+	async function getUserInfo() {
+		await axios
+			.get(`https://luma-server.onrender.com/api/user/${$page.params.userid}`)
+			.then((response) => {
+				console.log(response.data);
+				userData = response.data[0];
+			})
+			.catch((error) => {
+				console.log(response.data);
+			});
+	}
+
+	async function getAllUsers() {
+		await axios
+			.get('https://luma-server.onrender.com/api/user/')
+			.then((response) => {
+				console.log(response.data);
+				users = response.data || [];
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+	}
+
+	async function getUserBadges() {
+		await axios
+			.get(`https://luma-server.onrender.com/api/badge-obtained/user?userId=${$page.params.userid}`)
+			.then((response) => {
+				console.log(response.data);
+				loading = false;
+				userBadges = response.data || [];
+			})
+			.catch((error) => {
+				console.log(error.data);
+				loading = false;
+			});
+	}
+
+	//TODO: dura un poco al momento de refrescar la pagina, validar que es el tema que esta ocasionando
+	//TODO: revisar que alternativa existe para mejorar la experiencia
+	function handleNavigation(userId) {
+		goto(`/user/${userId}`).then(async () => {
+			await getAllUsers();
+			await getUserBadges();
+			await getUserInfo();
+		});
 	}
 </script>
 
@@ -100,13 +155,18 @@
 				</div>
 
 				<div class="user-details">
-					<p class="name">Alejandro Martínez López</p>
-					<p class="mail">alejandro.martinez@example.com</p>
+					{#if loading}
+						<!-- Estado de carga -->
+						<p>Loading user data...</p>
+					{:else}
+						<!-- Datos cargados -->
+						<p class="name">{userData.nombre} {userData.apellido}</p>
+						<p class="mail">{userData.correo}</p>
+					{/if}
 				</div>
 			</div>
 		</div>
 
-		<!--TODO: Analizar cambiar grid con paginacion-->
 		<p class="badge-title">Insignias</p>
 		<div class="scrollable">
 			<div class="badges-pagination">
