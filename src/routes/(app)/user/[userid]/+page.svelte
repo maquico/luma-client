@@ -58,7 +58,7 @@
 				userData = response.data[0]
 			})
 			.catch((error) => {
-				console.log(response.data);
+				console.log(error.data);
 			})
 	}
 
@@ -74,11 +74,11 @@
 	}
 
 	async function getUserBadges(){
-		await axios.get(`https://luma-server.onrender.com/api/badge-obtained/user?userId=${$page.params.userid}`)
+		await axios.get(`https://luma-server.onrender.com/api/badge-obtained/user-client?userId=${$page.params.userid}`)
 			.then((response) => {
-				console.log(response.data);
+				console.log(response.data.badges);
 				loading = false
-				userBadges = response.data || []
+				userBadges = response.data.badges || []
 			})
 			.catch((error) => {
 				console.log(error.data);
@@ -125,7 +125,6 @@
 				<div class="user-profile-picture">
 					<div class="avatar placeholder">
 						<div class="bg-neutral text-neutral-content w-24 rounded-full">
-						<!--TODO: pending user profile-->
 						<span class="text-3xl">
 							{userData.nombre?.[0]}{userData.apellido?.[0]}
 						</span>
@@ -144,7 +143,9 @@
 			</div>
 		</div>
 
-		<p class="badge-title">Insignias</p>
+		<div class="badge-title-container">
+			<p class="badge-title">Insignias</p>
+		</div>
 		<div class="scrollable">
 			<div class="badges-pagination">
 				{#if loading} <!--Loading state-->
@@ -153,7 +154,7 @@
 					{#if userBadges.length > 0} <!-- Check for badges -->
 						{#each getCurrentPageItems(currentPage) as badge}
 							<div class="badge" on:click={() => { showModal = true; selectedBadge = badge }}>
-								{badge.Insignias.nombre}
+								{badge.title}
 							</div>
 						{/each}
 					{:else} <!-- No results (badges) -->
