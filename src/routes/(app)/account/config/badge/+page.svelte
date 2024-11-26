@@ -6,45 +6,37 @@
 
 	let showModal = false;
 	let selectedBadge;
-	let userId = '37d3b652-d314-4124-9685-add5f0c6fc19';
-	let sortedResponse = [];
+	let loading = true;
+	let badges = [];
+	let userData = JSON.parse(localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token'))
+	let userID = userData.user.id
+
+	onMount(async() => {
+		await loadBadges();
+		badges = sortBadges(badges);
+		loading = false;
+	});
 
 	function handleClose() {
 		showModal = false;
 	}
 
-	let badges = [];
-
-	function loadBadges() {
-		axios
-			.get(`https://luma-server.onrender.com/api/badge-obtained/user-client?userId=${userId}`)
+	async function loadBadges() {
+		await axios.get(`https://luma-server.onrender.com/api/badge-obtained/user-client?userId=${userID}`)
 			.then((response) => {
 				badges = response.data.badges;
-				console.log('Badges:', badges);
 			})
 			.catch((error) => {
 				console.error('Error fetching badges:', error);
 			});
 	}
 
-	onMount(() => {
-		loadBadges();
-	});
-
 	function sortBadges(badges) {
 		return badges.sort((a, b) => {
-			if (a.unlocked && !b.unlocked) {
-				return -1;
-			} else if (!a.unlocked && b.unlocked) {
-				return 1;
-			} else {
-				return 0;
-			}
+			return (b.unlocked - a.unlocked);
 		});
 	}
 
-	sortedResponse = sortBadges(badges);
-	console.log('Sorted response:', sortedResponse);
 </script>
 
 <div class="content">
@@ -52,25 +44,32 @@
 
 	<div class="scrollable">
 		<div class="badges-grid">
-			{#each badges as badge}
-				<div
-					class="badge {badge.unlocked ? '' : 'locked'}"
-					on:click={() => {
-						if (badge.unlocked) {
-							showModal = true;
-							selectedBadge = badge;
-						}
-					}}
-				>
-					{badge.title}
-
-					{#if !badge.unlocked}
-						<div class="lock-icon">
-							<LockKeyhole size={140} />
+			{#if loading}  <!-- Loading state-->
+				<div> Loading ... </div>
+			{:else} <!-- Fulfilled state-->
+				{#each badges as badge}
+					<div
+						class="badge {badge.unlocked ? '' : 'locked'}"
+						on:click={() => {
+							if (badge.unlocked) {
+								showModal = true;
+								selectedBadge = badge;
+							}
+						}}
+					>
+						<div class="content-badge">
+							<img src="{badge.icon}" alt="{badge.title} icon">
+							{badge.title}
 						</div>
-					{/if}
-				</div>
-			{/each}
+
+						{#if !badge.unlocked}
+							<div class="lock-icon">
+								<LockKeyhole size={140} />
+							</div>
+						{/if}
+					</div>
+				{/each}
+			{/if}
 		</div>
 	</div>
 </div>
@@ -83,6 +82,17 @@
 		flex-direction: column;
 	}
 
+	.content-badge{
+      display: flex;
+      flex-direction: column;
+			align-items: center;
+			gap: 1rem;
+	}
+
+  .content-badge img{
+			width: 100px;
+	}
+
 	.content .title {
 		font-size: var(--luma-h4-font-size);
 	}
@@ -90,6 +100,7 @@
 	.scrollable {
 		height: 80vh;
 		overflow: auto;
+		padding-bottom: 1rem;
 	}
 
 	.badges-grid {

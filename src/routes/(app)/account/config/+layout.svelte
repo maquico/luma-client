@@ -21,6 +21,5 @@
       background-color: var(--luma-color-gray-50);
       width: 85vw;
 			height: 90vh;
-			overflow: auto;
   }
 </style>
