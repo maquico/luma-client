@@ -1,6 +1,7 @@
 <script>
 	import { projectData } from '$lib/stores/projectStore';
 	import { goto } from '$app/navigation';
+	import { DateTime} from 'luxon';
 
 	console.log($projectData);
 </script>
@@ -12,16 +13,7 @@
 
 		<div class="content">
 			<div class="main-content">
-<!--				<p> {$projectData.descripcion}</p>-->
-				<p>
-					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce sagittis consequat orci vel varius. Aliquam augue lorem, fringilla nec ipsum in, rutrum dignissim enim. Suspendisse eleifend ultrices leo nec luctus. Nulla malesuada massa in porttitor suscipit. Donec sit amet rutrum erat. Donec neque nulla, sollicitudin id eleifend ac, mollis sit amet sem. Etiam finibus, enim porttitor mollis dignissim, tortor mauris convallis lacus, non aliquam massa est vel est. Donec eu massa efficitur, laoreet nibh rhoncus, pulvinar tortor. Sed eget sodales velit.
-				</p>
-
-				<br>
-
-				<p>
-					Suspendisse lacinia interdum magna sed placerat. Proin dignissim, quam ut accumsan viverra, nibh leo mattis neque, eget molestie turpis mauris ac neque. Etiam et dapibus dolor. Vestibulum eu odio laoreet, vehicula ligula sit amet, semper ante. Quisque in accumsan lectus. Vivamus nulla mi, posuere nec lobortis ac, faucibus non ante. Curabitur viverra, sapien id viverra tempor, augue mi gravida lorem, eget auctor quam risus eget metus. Phasellus in ligula facilisis, luctus sapien a, feugiat risus. Vestibulum ut euismod sem
-				</p>
+				<p> {$projectData.descripcion}</p>
 			</div>
 
 			<aside>
@@ -29,8 +21,11 @@
 					<p>MIEMBROS</p>
 
 					<div class="members-grid">
-						{#each [1,2,3,4,5,6] as member}
-							<div class="member" on:click={() => {goto(`/user/${member}`)}}>
+						<!--{#each [1,2,3,4,5,6] as member}-->
+						{#each $projectData.miembros as member}
+<!--							TODO: pendiente añadir bien el routing con el id del miembro-->
+<!--							TODO: pendiente parsear el nombre para mostrar iniciales del usuario-->
+							<div class="member" on:click={() => {goto(`/user/${member.Usuario_ID}`)}}>
 								XX
 							</div>
 						{/each}
@@ -39,17 +34,17 @@
 
 				<div class="creation-date">
 					<p>FECHA DE CREACION</p>
-					<p class="date"> 00/00/2024</p>
+					<p class="date"> {DateTime.fromISO($projectData.fechaRegistro).toFormat('LLL dd, yyyy')} </p>
 				</div>
 
 				<div class="tasks">
 					<div class="completed-tasks">
-						<p>TAREAS COMPLETADAS</p>
-						<p class="value"> 00 </p>
+						<p>TOTAL TAREAS</p>
+						<p class="value"> {$projectData.totalTareas} </p>
 					</div>
 					<div class="approved-tasks">
 						<p>TAREAS APROBADAS</p>
-						<p class="value"> 00 </p>
+						<p class="value"> {$projectData.tareasAprobadas} </p>
 					</div>
 				</div>
 			</aside>
@@ -123,11 +118,15 @@
 				gap: var(--luma-half-element-spacing);
 		}
 
-		.creation-date .date,
-		.tasks .value{
+		.creation-date .date{
 				font-size: var(--luma-paragraph-font-size);
 				font-weight: bold;
 		}
+
+    .tasks .value{
+        font-size: var(--luma-h5-font-size);
+        font-weight: bold;
+    }
 
 		.tasks{
         display: flex;

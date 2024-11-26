@@ -61,7 +61,7 @@
 	async function fetchRewards() {
 		try {
 			const response = await axios.get(
-				`https://luma-server.onrender.com/api/rewards/predefined/${userId}`
+				`https://luma-server.onrender.com/api/rewards-predefined/${userId}`
 			);
 			const redeemedThemes = response.data;
 			console.log('Datos de recompensas canjeadas:', redeemedThemes);
@@ -110,7 +110,7 @@
 	async function redeemTheme(themeId) {
 		try {
 			console.log('Intentando canjear el tema:', themeId, userId);
-			const response = await axios.post('https://luma-server.onrender.com/api/rewards/predefined', {
+			const response = await axios.post('https://luma-server.onrender.com/api/rewards-predefined', {
 				rewardId: themeId,
 				userId: userId,
 				rewardType: 'theme'
