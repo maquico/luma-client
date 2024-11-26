@@ -90,6 +90,7 @@
 	//TODO: revisar que alternativa existe para mejorar la experiencia
 	function handleNavigation(userId) {
 		goto(`/user/${userId}`).then(async () => {
+			loading = true
 			await getAllUsers()
 			await getUserBadges()
 			await getUserInfo()
