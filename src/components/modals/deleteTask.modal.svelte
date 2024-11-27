@@ -7,7 +7,7 @@
 	const dispatch = createEventDispatcher();
 
 	export let show = true;
-	export let data
+	export let data = ''
 
 	const close = () => {
 		show = false;
