@@ -1,54 +1,113 @@
 <script>
-	import InviteModal from '$components/modals/invite.modal.svelte'
-	import { Trash2 } from 'lucide-svelte';
 	import { projectData } from '$lib/stores/projectStore';
+	import InviteModal from '$components/modals/invite.modal.svelte'
+	import DeleteUserModal from '$components/modals/deleteMember.modal.svelte'
+	import { Trash2 } from 'lucide-svelte';
+	import axios from 'axios';
+	import { onMount } from 'svelte';
+	import { page } from '$app/stores';
 
 	console.log($projectData);
 
-	let showModal = false
+	onMount(async () => {
+		await getAllRoles()
+		await getAllMembers()
+		loading = false
+		selectedRoles = projectMembers.map((row) => row.Rol_ID);
+		console.log(selectedRoles);
+	})
 
-	function handleClose(){
-		showModal = false
+	let showInvitationModal = false
+	let showDeleteModal = false
+	let roles = []
+	let projectMembers = []
+	let loading = true
+	let selectedRoles
+	let selectedData = {}
+	// let selectedData = { userId: '', projectId: ''}
+
+	function handleInvitationClose(){
+		showInvitationModal = false
+	}
+
+	function handleDeleteClose(){
+		showDeleteModal = false
+	}
+
+	function handleDeleteMember(memberInfo){
+		showDeleteModal = true
+		selectedData = memberInfo
+		// selectedData.userId = memberInfo.Usuario_ID
+		// selectedData.projectId = memberInfo.Proyecto_ID
+		// console.log(selectedData);
+	}
+
+	async function getAllRoles(){
+		await axios.get('https://luma-server.onrender.com/api/roles/')
+			.then((response) => {
+				roles = response.data || []
+			})
+			.catch((error) => {
+				console.log(error.data);
+			})
+	}
+
+	async function getAllMembers(){
+		await axios.get(`https://luma-server.onrender.com/api/member/project/${$page.params.id}`)
+			.then((response) => {
+				console.log(response.data);
+				projectMembers = response.data || []
+			})
+			.catch((error) => {
+				console.log(error.data);
+			})
 	}
 
 	let columns = ['Miembro', 'Correo', 'Rol', '']
-	let data = [
-		['Louis McCandie','lmccandie3@bloglines.com','Data C3','Data C4'],
-		['Louis McCandie','lmccandie3@bloglines.com','Data C3','Data C4'],
-		['Louis McCandie','lmccandie3@bloglines.com','Data C3','Data C4'],
-		['Louis McCandie','lmccandie3@bloglines.com','Data C3','Data C4'],
-		['Louis McCandie','lmccandie3@bloglines.com','Data C3','Data C4'],
-	]
 </script>
 
 <p class="title">Configuración de equipo</p>
 
 <div class="content">
 	<div class="invite-container">
-		<button class="btn btn-primary" on:click={() => {showModal = true}}>INVITAR MIEMBRO</button>
+		<button class="btn btn-primary" on:click={() => {showInvitationModal = true}}>INVITAR MIEMBRO</button>
 	</div>
 
 	<table>
-		<tr>
-			{#each columns as column}
-					<th class="{column === '' ? 'action' : ''}">{column}</th>
-			{/each}
-		</tr>
-		{#each data as row}
+		<thead>
 			<tr>
-				{#each row as row_element}
-					{#if row_element === 'Data C4'}
-						<td class="center">
-							<button class="icon-container" on:click={() => {}}>
-								<Trash2 size={20}/>
-							</button>
-						</td>
-					{:else}
-						<td>{row_element}</td>
-					{/if}
+				{#each columns as column}
+					<th class="{column === '' ? 'action' : ''}">{column}</th>
 				{/each}
 			</tr>
-		{/each}
+		</thead>
+		<tbody>
+		{#if loading}
+			<tr>
+				<td> loading ... </td>
+			</tr>
+		{:else}
+			{#each projectMembers as row, index}
+				<tr>
+					<td>{row.Usuarios.nombreCompleto}</td>
+					<td>{row.Usuarios.correo}</td>
+					<td>
+						<select name="user-role-{index}" id="user-role-{index}" bind:value={selectedRoles[index]}>
+							{#each roles as role}
+								<option value="{role.Rol_ID}">{role.nombre}</option>
+							{/each}
+						</select>
+					</td>
+					<td class="center">
+						<button class="icon-container" on:click={() => {handleDeleteMember(row)}}>
+							<Trash2 size={20}/>
+						</button>
+					</td>
+				</tr>
+			{/each}
+		{/if}
+
+		</tbody>
 	</table>
 
 	<div class="controls">
@@ -57,7 +116,9 @@
 	</div>
 </div>
 
-<InviteModal show={showModal} on:close={handleClose} />
+<InviteModal show={showInvitationModal} on:close={handleInvitationClose} />
+<DeleteUserModal show={showDeleteModal} on:close={handleDeleteClose} memberInfo={selectedData}/>
+
 
 <style>
 		.title{
@@ -95,9 +156,24 @@
         padding: 0.8rem 1rem;
     }
 
+    table thead tr th:first-child,
+		table tbody tr td:first-child{
+				width: 200px;
+    }
+
+
     table tr td .icon-container{
         cursor: pointer;
     }
+
+    table tr td .icon-container:hover{
+        color: var(--luma-color-red-error);
+    }
+
+		table tr td select{
+				padding: 0.20rem 1rem;
+				border-radius: 5px;
+		}
 
     table tr td.center{
 				display: flex;
