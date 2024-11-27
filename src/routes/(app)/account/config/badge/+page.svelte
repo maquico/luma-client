@@ -3,17 +3,16 @@
 	import { LockKeyhole } from 'lucide-svelte';
 	import axios from 'axios';
 	import { onMount } from 'svelte';
+	import { badgeChannel } from '$lib/badgeChannel.js';
 
 	let showModal = false;
 	let selectedBadge;
-	let userId = '37d3b652-d314-4124-9685-add5f0c6fc19';
-	let sortedResponse = [];
+	let userId = 'c563f82f-cd5b-4187-a8b1-07d7038c74ce';
+	let badges = [];
 
 	function handleClose() {
 		showModal = false;
 	}
-
-	let badges = [];
 
 	function loadBadges() {
 		axios
@@ -21,15 +20,13 @@
 			.then((response) => {
 				badges = response.data.badges;
 				console.log('Badges:', badges);
+				badges = sortBadges(badges);
+				console.log('Badges:', badges);
 			})
 			.catch((error) => {
 				console.error('Error fetching badges:', error);
 			});
 	}
-
-	onMount(() => {
-		loadBadges();
-	});
 
 	function sortBadges(badges) {
 		return badges.sort((a, b) => {
@@ -43,8 +40,41 @@
 		});
 	}
 
-	sortedResponse = sortBadges(badges);
-	console.log('Sorted response:', sortedResponse);
+	// Suscribirse al canal y manejar el desbloqueo de insignias
+	function handleBadgeUnlock(payload) {
+		console.log('Insignia obtenida:', payload);
+
+		// Si la insignia no está en el array de badges, la agregamos
+		const existingBadgeIndex = badges.findIndex((badge) => badge.title === payload.badgeTitle);
+		if (existingBadgeIndex === -1) {
+			badges.push({
+				title: payload.badgeTitle,
+				description: payload.description,
+				unlocked: true,
+				icon: payload.icon
+			});
+		} else {
+			badges[existingBadgeIndex].unlocked = true;
+		}
+
+		// Volver a ordenar las insignias
+		badges = sortBadges(badges);
+
+		// Opcional: Muestra una notificación
+		showNotification(`¡Has desbloqueado una nueva insignia: ${payload.badgeTitle}!`);
+	}
+
+	function showNotification(message) {
+		alert(message); // Cambiar a un sistema de notificaciones más sofisticado si es necesario
+	}
+
+	onMount(() => {
+		loadBadges();
+		// Suscribirse a los cambios del canal de insignias
+		badgeChannel(userId, handleBadgeUnlock);
+	});
+
+	console.log('Badges:', badges);
 </script>
 
 <div class="content">

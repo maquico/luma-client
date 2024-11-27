@@ -1,23 +1,33 @@
-// Initialize the JS client
-import { supabase } from './supabaseClient.js'
+import { supabase } from './supabaseClient.js';
 
-// Create a function to handle inserts
-const handleInserts = (payload) => {
-  console.log('Change received!', payload)
-}
+// Función para suscribirse al canal y manejar las inserciones
+export const badgeChannel = (userId, onBadgeUnlock) => {
+  // Iniciamos el canal
+  const channel = supabase
+    .channel('obtained_badge')
+    .on(
+      'postgres_changes',
+      {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'Insignia_Conseguida',
+        filter: `Usuario_ID=eq.${userId}`,
+      },
+      (payload) => {
+        // Extraemos los datos del payload
+        const badgeData = {
+          badgeTitle: payload.new.title,
+          description: payload.new.description,
+          icon: payload.new.icon,
+        };
+        // Llamamos la función de desbloqueo
+        onBadgeUnlock(badgeData);
+      }
+    )
+    .subscribe();
 
-// Listen to inserts
-export const badgeChannel = async (userId) => {
-    supabase
-      .channel('obtained_badge')
-      .on('postgres_changes', { 
-            event: 'INSERT',
-            schema: 'public',
-            table: 'Insignia_Conseguida',
-            filter: `Usuario_ID=eq.${userId}` }, handleInserts)
-      .subscribe()
-}
-
-// Testing
-// const userId = '37d3b652-d314-4124-9685-add5f0c6fc19' 
-// badgeChannel(userId)
+  // Devuelve una función para cancelar la suscripción si es necesario
+  return () => {
+    channel.unsubscribe();
+  };
+};
