@@ -1,10 +1,9 @@
 <script>
 	import BadgeDetailModal from '$components/modals/badge.detail.svelte';
-	import { LockKeyhole } from 'lucide-svelte';
 	import axios from 'axios';
 	import { onMount } from 'svelte';
-	import { page } from '\$app/stores';
-	import { goto, invalidate } from '$app/navigation';
+	import { page } from '$app/stores';
+	import { goto} from '$app/navigation';
 
 	let showModal = false;
 	let selectedBadge
@@ -12,15 +11,24 @@
 	let users = []
 	let userData = []
 	let userBadges = []
+	let badges = []
 	let currentPage = 1;
 	const itemsPerPage = 10; // 2 rows of 5 columns
 	let loading = true;
 	let searchQuery = "";
 
 	onMount(async () => {
-		await getAllUsers()
-		await getUserBadges()
-		await getUserInfo()
+		try {
+			await Promise.all([
+				getAllUsers(),
+				getUserBadges(),
+				getUserInfo()
+			])
+		} catch (error) {
+			console.error("Error fulfilling promises:", error);
+		} finally {
+			loading = false
+		}
 	})
 
 	$: currentUserID = $page.params.userid ? $page.params.userid : null;
@@ -54,7 +62,7 @@
 	async function getUserInfo(){
 		await axios.get(`https://luma-server.onrender.com/api/user/${$page.params.userid}`)
 			.then((response) => {
-				console.log(response.data);
+				// console.log(response.data);
 				userData = response.data[0]
 			})
 			.catch((error) => {
@@ -65,7 +73,7 @@
 	async function getAllUsers(){
 		await axios.get('https://luma-server.onrender.com/api/user/')
 			.then((response) => {
-				console.log(response.data);
+				// console.log(response.data);
 				users = response.data || []
 			})
 			.catch((error) => {
@@ -76,9 +84,10 @@
 	async function getUserBadges(){
 		await axios.get(`https://luma-server.onrender.com/api/badge-obtained/user-client?userId=${$page.params.userid}`)
 			.then((response) => {
-				console.log(response.data.badges);
 				loading = false
-				userBadges = response.data.badges || []
+				badges = response.data.badges
+				userBadges = sortUnlockedBadges(response.data.badges) || []
+				// console.log(userBadges);
 			})
 			.catch((error) => {
 				console.log(error.data);
@@ -86,17 +95,37 @@
 			})
 	}
 
+	function sortUnlockedBadges(badges) {
+		return badges
+			.filter(badge => badge.unlocked) // Keep only unlocked badges
+			.sort((a, b) => b.unlocked - a.unlocked); // Sort unlocked badges
+	}
+
 	//TODO: dura un poco al momento de refrescar la pagina, validar que es el tema que esta ocasionando
 	//TODO: revisar que alternativa existe para mejorar la experiencia
 	function handleNavigation(userId) {
 		goto(`/user/${userId}`).then(async () => {
 			loading = true
-			await getAllUsers()
-			await getUserBadges()
-			await getUserInfo()
+			try {
+				await Promise.all([
+					getAllUsers(),
+					getUserBadges(),
+					getUserInfo()
+				])
+			} catch (error) {
+				console.error("Error fulfilling promises:", error);
+			} finally {
+				loading = false
+			}
 		});
 	}
 </script>
+
+{#if loading}
+	<div class="overlay">
+		<span class="loader"></span>
+	</div>
+{/if}
 
 <div class="main">
 	<div class="side-bar">
@@ -145,6 +174,7 @@
 
 		<div class="badge-title-container">
 			<p class="badge-title">Insignias</p>
+			<p> {userBadges.length} / {badges.length} </p>
 		</div>
 		<div class="scrollable">
 			<div class="badges-pagination">
@@ -280,6 +310,13 @@
   .profile-info .user-details .mail{
   }
 
+	.badge-title-container{
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+      font-size: var(--luma-h5-font-size);
+	}
+
 	.badge-title{
 			font-size: var(--luma-h4-font-size);
 	}
@@ -331,24 +368,48 @@
       position: relative;
   }
 
-  .locked::after{
-      content: '';
-      background-color: var(--luma-color-gray-500);
-      width: 100%;
-      height: 100%;
-      border-radius: 8px;
-      position: absolute;
+  .overlay {
+      position: fixed;
       top: 0;
       left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-size: 1.5rem;
+      z-index: 1000;
   }
 
-  .locked .lock-icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+  .loader {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      position: relative;
+      animation: rotate 1s linear infinite
+  }
+  .loader::before {
+      content: "";
+      box-sizing: border-box;
       position: absolute;
-      color: white;
-      z-index: 2;
+      inset: 0px;
+      border-radius: 50%;
+      border: 5px solid #FFF;
+      animation: prixClipFix 2s linear infinite ;
+  }
+
+  @keyframes rotate {
+      100%   {transform: rotate(360deg)}
+  }
+
+  @keyframes prixClipFix {
+      0%   {clip-path:polygon(50% 50%,0 0,0 0,0 0,0 0,0 0)}
+      25%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 0,100% 0,100% 0)}
+      50%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,100% 100%,100% 100%)}
+      75%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,0 100%,0 100%)}
+      100% {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,0 100%,0 0)}
   }
 
 </style>
