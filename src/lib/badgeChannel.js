@@ -15,13 +15,9 @@ export const badgeChannel = (userId, onBadgeUnlock) => {
       },
       (payload) => {
         // Extraemos los datos del payload
-        const badgeData = {
-          badgeTitle: payload.new.title,
-          description: payload.new.description,
-          icon: payload.new.icon,
-        };
+        console.log('Nueva insignia desbloqueada:', payload.new.Insignia_ID);
         // Llamamos la función de desbloqueo
-        onBadgeUnlock(badgeData);
+        onBadgeUnlock(payload.new.Insignia_ID);
       }
     )
     .subscribe();

@@ -7,7 +7,7 @@
 
 	let showModal = false;
 	let selectedBadge;
-	let userId = 'c563f82f-cd5b-4187-a8b1-07d7038c74ce';
+	let userId = '9f44dcbd-7c8a-4e70-b8ce-c25e54435bbb';
 	let badges = [];
 
 	function handleClose() {
