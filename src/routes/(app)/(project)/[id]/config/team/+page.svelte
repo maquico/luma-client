@@ -6,6 +6,7 @@
 	import axios from 'axios';
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
+	import { showToast } from '$lib/stores/toastStore.js';
 
 	console.log($projectData);
 
@@ -22,6 +23,8 @@
 			loading = false
 		}
 		selectedRoles = projectMembers.map((row) => row.Rol_ID);
+		initialRoles = [...selectedRoles]
+		isInitialLoad = false;
 		// console.log(selectedRoles);
 	})
 
@@ -30,9 +33,13 @@
 	let roles = []
 	let projectMembers = []
 	let loading = true
-	let selectedRoles
+	let isInitialLoad = true;
+	let selectedRoles = projectMembers.map(member => member.Rol_ID);
+	let initialRoles = [];
 	let selectedData = {}
-	// let selectedData = { userId: '', projectId: ''}
+	let columns = ['Miembro', 'Correo', 'Rol', '']
+	let loggedUserData = JSON.parse(localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token'))
+	let loggedUserID = loggedUserData.user.id
 
 	function handleInvitationClose(){
 		showInvitationModal = false
@@ -45,9 +52,6 @@
 	function handleDeleteMember(memberInfo){
 		showDeleteModal = true
 		selectedData = memberInfo
-		// selectedData.userId = memberInfo.Usuario_ID
-		// selectedData.projectId = memberInfo.Proyecto_ID
-		// console.log(selectedData);
 	}
 
 	async function getAllRoles(){
@@ -71,7 +75,34 @@
 			})
 	}
 
-	let columns = ['Miembro', 'Correo', 'Rol', '']
+	async function handleRoleChange(newRole, index) {
+		await axios.put('https://luma-server.onrender.com/api/member/role', {
+			projectId: projectMembers[index].Proyecto_ID,
+			userId: projectMembers[index].Usuario_ID,
+			roleId: newRole,
+			requestUserId: loggedUserID
+		})
+			.then((response) => {
+				console.log(response);
+				showToast('Rol modificado exitosamente', { type: 'success', duration: 5000 });
+			})
+			.catch((error) => {
+				console.log(error);
+				showToast('No tienes permiso para modificar roles', { type: 'error', duration: 5000 });
+			})
+	}
+
+	$: {
+		if (!isInitialLoad) {
+			selectedRoles.forEach((role, index) => {
+				if (role !== null && role !== initialRoles[index]) {
+					handleRoleChange(role, index);
+					initialRoles[index] = role;
+				}
+			});
+		}
+	}
+
 </script>
 
 {#if loading}
@@ -124,15 +155,14 @@
 		</tbody>
 	</table>
 
-	<div class="controls">
-		<button class="btn btn-outline">CANCELAR</button>
-		<button class="btn btn-primary">GUARDAR</button>
-	</div>
+<!--	<div class="controls">-->
+<!--		<button class="btn btn-outline">CANCELAR</button>-->
+<!--		<button class="btn btn-primary" on:click={saveRoleChanges}>GUARDAR</button>-->
+<!--	</div>-->
 </div>
 
 <InviteModal show={showInvitationModal} on:close={handleInvitationClose} />
 <DeleteUserModal show={showDeleteModal} on:close={handleDeleteClose} memberInfo={selectedData}/>
-
 
 <style>
 		.title{
