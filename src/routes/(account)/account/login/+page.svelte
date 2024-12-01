@@ -51,6 +51,7 @@
 		if (email.match(validRegex) && password){
 			// console.log(getSession());
 
+			//TODO: add coin call to database
 			await logIn(email, password)
 				.then(async response => {
 					console.log(response.data);
