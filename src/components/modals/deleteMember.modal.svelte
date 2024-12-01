@@ -7,14 +7,29 @@
 
 	export let show = true;
 	export let memberInfo
+	let userData = JSON.parse(localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token'))
+
+	// $: console.log(memberInfo);
 
 	const close = () => {
 		show = false;
 		dispatch('close')
 	}
 
-	function deleteMember() {
-		console.log("User deleted")
+	async function deleteMember() {
+		console.log(memberInfo.Proyecto_ID, memberInfo.Usuario_ID, userData.user.id);
+
+		// await axios.delete('https://luma-server.onrender.com/api/member/client', {
+		// 	"projectId": memberInfo.Proyecto_ID,
+		// 	"userId": memberInfo.Usuario_ID,
+		// 	"requestUserId": userData.user.id
+		// })
+		// 	.then((response) => {
+		// 		console.log('Delete successful:', response.data);
+		// 	})
+		// 	.catch((error) => {
+		// 		console.error('Error during delete request:', error);
+		// 	})
 	}
 
 </script>
