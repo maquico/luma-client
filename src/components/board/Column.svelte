@@ -18,6 +18,20 @@
 	export let items;
 	export let onDrop;
 	export let statusId;
+	let isLeader = true
+
+	// Function to open the modal and await user response
+	function openApprovalModal() {
+		return new Promise((resolve) => {
+			showModal = true;
+			const handleClose = (event) => {
+				// Check the result from the modal, either approved or denied
+				showModal = false;
+				resolve(event.detail); // Resolve to true if approved, else false
+			};
+			document.addEventListener('close', handleClose, { once: true });
+		});
+	}
 
 	function handleDndConsiderCards(e) {
 		const { items: newItems, info: { id, trigger } } = e.detail;
@@ -37,12 +51,20 @@
 
 		//TODO: validaciones a lugar: para el estado APPROVED, el usuario que lo hace tiene que tener rol de Lider, y la tarea debe de tener un usuario asignado
 		//TODO: dropped item deleted from the UI, fix this issue
-		if (statusId === 4) {
-			// Reset items to the original state before the drop to prevent deletion in the UI
-			//TODO: añadir la validacion de si el usuario loggeado, tiene rol de LIDER para aprobar tarea. De no tenerlo, mostrar mensaje de error que no tiene permisos suficientes
-			//TODO: añadir una forma, de que el sistema espere a lo que se haga en el modal, y continue el flujo de ejecucion
-			items = items.map(item => item); // Restore items to original list
+		// Check if we're dropping in the "Approved" status column and if the user has leader role
+		if (statusId === 4 && isLeader) {
+			// TODO: hay un error, que cuando cambio una tarea de APPROVED a DONE, me sale nuevamente el modal
+			// TODO: tambien, cuando declino la aprobacion, el card se elimina de la ui
+			const approved = await openApprovalModal();
+			if (!approved) {
+				// If not approved, show a toast and reset items
+				showToast('Task approval was not granted.', { type: 'warning', duration: 5000 });
+				items = [...items]; // Revert items to the original state
+				return;
+			}
+		} else if (statusId === 4 && !isLeader) {
 			showToast('This status requires leader approval and cannot accept items.', { type: 'warning', duration: 5000 });
+			items = [...items]; // Revert items to the original state
 			return;
 		}
 
@@ -55,7 +77,6 @@
 			console.log('cambiaste de estado la tarea ' + items[itemIdx].id + ' al estado ' + statusId + ' ' + name);
 
 			let taskID = items[itemIdx].id
-			// console.table([projectID, statusId, userID, taskID.id]);
 
 			await axios.put(`https://luma-server.onrender.com/api/task/status/${taskID}`, {
 				projectId: projectID,
@@ -79,12 +100,17 @@
 					}
 
 					showToast('KBOOM! 💣', { type: 'error', duration: 5000 })
+					return
 				})
 		}
 	}
 
-	function handleClose() {
+	function handleClose(event) {
 		showModal = false;
+		let approvalStatus = false; // Update based on user action in the modal
+
+		approvalStatus = event.detail.detail === "approved"; // true if "approved", false if "denied"
+		document.dispatchEvent(new CustomEvent('close', { detail: approvalStatus }));
 	}
 
 </script>
