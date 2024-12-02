@@ -1,31 +1,70 @@
 <script>
 	import { goto } from '$app/navigation';
-	import { ListFilter } from 'lucide-svelte';
+	import { Import, ListFilter } from 'lucide-svelte';
 	import CreateProjectModal from '$components/modals/createProject.modal.svelte';
-	import noContent from '$lib/assets/no-content.png'
+	import noContent from '$lib/assets/no-content.png';
 	import { onMount } from 'svelte';
 	import axios from 'axios';
+	import { badgeChannel } from '$lib/badgeChannel.js';
+	import { showToast } from '$lib/stores/toastStore';
 
 	let frequentProjects = [];
 	let otherProjects = [];
 	let searchValue = '';
 	let showModal = false;
 	let loading = true;
-	let userId
+	let userId;
+	let badge;
+	let badgeName;
+	let badgeDescription;
+	let badgeIcon;
 
 	$: filter(searchValue);
 
 	async function loadProjects() {
 		try {
-			const response = await axios.get(`https://luma-server.onrender.com/api/projects/user/${userId}`);
+			const response = await axios.get(
+				`https://luma-server.onrender.com/api/projects/user/${userId}`
+			);
 			const projects = response.data || [];
 			frequentProjects = projects.slice(0, 3);
 			otherProjects = projects.slice(3);
 		} catch (err) {
-			console.error("Error while fetching projects: ", err);
+			console.error('Error while fetching projects: ', err);
 		} finally {
 			loading = false;
 		}
+	}
+
+	// Suscribirse al canal y manejar el desbloqueo de insignias
+	function handleBadgeUnlock(payload) {
+		console.log('Insignia obtenida:', payload);
+
+		axios
+			.get(`https://luma-server.onrender.com/api/badge/${payload}`)
+			.then((response) => {
+				badge = response.data[0];
+				console.log(
+					'Nombre:',
+					badge.nombre,
+					'Descripcion:',
+					badge.descripcion,
+					'Icon:',
+					badge.foto
+				);
+				badgeName = badge.nombre;
+				badgeDescription = badge.descripcion;
+				badgeIcon = badge.foto;
+
+				showToast(`Nueva insignia desbloqueda: ${badgeName}`, {
+					type: 'info',
+					duration: 5000,
+					theme: 'dark'
+				});
+			})
+			.catch((error) => {
+				console.error('Error fetching badges:', error);
+			});
 	}
 
 	onMount(() => {
@@ -36,9 +75,11 @@
 			const sessionData = JSON.parse(storedData);
 
 			userId = sessionData.user.id;
+
+			badgeChannel(userId, handleBadgeUnlock);
 		}
 
-		loadProjects()
+		loadProjects();
 	});
 
 	function filter(searchValue) {
@@ -64,16 +105,15 @@
 	<div class="page-content">
 		{#if loading}
 			<div class="flex items-center justify-center w-full">
-				<div class="loading loading-dots loading-lg"/>
+				<div class="loading loading-dots loading-lg" />
 			</div>
 		{:else}
-
 			<div class="controls">
 				Proyectos
 
 				<!--TOOD: cambiar la condicional para cuando se pase al flujo normal -->
 				{#if frequentProjects.length !== 0}
-				<!--{#if frequentProjects.length === 0}-->
+					<!--{#if frequentProjects.length === 0}-->
 					<div class="left">
 						<label class="input input-bordered flex items-center gap-2">
 							<ListFilter />
@@ -89,37 +129,36 @@
 						<button
 							class="btn btn-primary"
 							on:click={() => {
-							showModal = true;
-						}}
+								showModal = true;
+							}}
 						>
 							NUEVO PROYECTO
 						</button>
 					</div>
 				{/if}
-
 			</div>
 
 			<!--TOOD: cambiar la condicional para cuando se pase al flujo normal -->
 			{#if frequentProjects.length === 0}
-			<!--{#if frequentProjects.length !== 0} &lt;!&ndash;No content&ndash;&gt;-->
+				<!--{#if frequentProjects.length !== 0} &lt;!&ndash;No content&ndash;&gt;-->
 				<div class="no-content">
 					<div class="right">
-						<p class="title"> No hay nada por aquí... aún. </p>
-						<p>Comienza creando un nuevo proyecto para empezar. <br>
-							Tus proyectos aparecerán aquí una vez crees uno o te inviten para formar parte</p>
+						<p class="title">No hay nada por aquí... aún.</p>
+						<p>
+							Comienza creando un nuevo proyecto para empezar. <br />
+							Tus proyectos aparecerán aquí una vez crees uno o te inviten para formar parte
+						</p>
 						<button
 							class="btn btn-primary"
 							on:click={() => {
-							showModal = true;
-						}}
+								showModal = true;
+							}}
 						>
 							NUEVO PROYECTO
 						</button>
 					</div>
 
-					<img src="{noContent}" alt="no-content image" />
-
-
+					<img src={noContent} alt="no-content image" />
 				</div>
 			{:else}
 				<!--		Projects-->
@@ -128,21 +167,23 @@
 						<button
 							class="card frequent-projects cursor-pointer"
 							on:click={() => {
-							goto(`/${project.Proyecto_ID}/overview`);
-						}}
+								goto(`/${project.Proyecto_ID}/overview`);
+							}}
 						>
-						<span class="top">
-							<div class="avatar placeholder">
-								<div class="text-neutral-content w-10 p-2 border-2 rounded-l">
-									<span class="text-xl">XX</span>
+							<span class="top">
+								<div class="avatar placeholder">
+									<div class="text-neutral-content w-10 p-2 border-2 rounded-l">
+										<span class="text-xl">XX</span>
+									</div>
 								</div>
-							</div>
-							<p class="title">{project.nombre}</p></span
-						>
+								<p class="title">{project.nombre}</p></span
+							>
 							<span class="down">
-							<p class="description">{project.descripcion}</p>
-							<p class="create-details">{project.creator} • {formatDate(project.fechaRegistro)}</p>
-						</span>
+								<p class="description">{project.descripcion}</p>
+								<p class="create-details">
+									{project.creator} • {formatDate(project.fechaRegistro)}
+								</p>
+							</span>
 						</button>
 					{/each}
 				</div>
@@ -152,15 +193,14 @@
 							<button
 								class="projects cursor-pointer"
 								on:click={() => {
-								goto(`/${project.Proyecto_ID}/overview`);
-							}}
+									goto(`/${project.Proyecto_ID}/overview`);
+								}}
 							>
 								{project.nombre}
 							</button>
 						{/each}
 					</div>
 				{/if}
-
 			{/if}
 		{/if}
 	</div>
@@ -190,8 +230,8 @@
 		gap: 1rem;
 	}
 
-	.controls .left button{
-			color: white;
+	.controls .left button {
+		color: white;
 	}
 
 	.card {
@@ -203,39 +243,39 @@
 		padding: 1rem 2rem;
 	}
 
-	.no-content{
-      background-color: white;
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 1rem 2rem;
-			height: 65vh;
-			gap: 2rem;
+	.no-content {
+		background-color: white;
+		border-radius: 4px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 1rem 2rem;
+		height: 65vh;
+		gap: 2rem;
 	}
 
-	.no-content .right{
-			display: flex;
-			flex-direction: column;
-			text-align: center;
-			gap: 1rem;
-			width: 30vw;
+	.no-content .right {
+		display: flex;
+		flex-direction: column;
+		text-align: center;
+		gap: 1rem;
+		width: 30vw;
 	}
 
-	.no-content .right button{
-			margin-top: 1rem;
-			color: var(--luma-color-gray-50);
+	.no-content .right button {
+		margin-top: 1rem;
+		color: var(--luma-color-gray-50);
 	}
 
-	.no-content .title{
-			color: var(--luma-color-gray-500);
-			font-weight: bold;
-			font-size: 2rem;
-      margin-bottom: 1rem;
+	.no-content .title {
+		color: var(--luma-color-gray-500);
+		font-weight: bold;
+		font-size: 2rem;
+		margin-bottom: 1rem;
 	}
 
-	.no-content img{
-      width: 30rem;
+	.no-content img {
+		width: 30rem;
 	}
 
 	.frequent-projects-container {
