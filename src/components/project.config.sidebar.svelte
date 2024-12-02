@@ -1,41 +1,58 @@
 <nav>
 	<div class="top">
 		<div class="details">
-			<p>Configuraciones de proyecto</p>
+			<p>{$t('project_config.config_title')}</p>
+<!--			<p>Configuraciones de proyecto</p>-->
 			<p>{ProyectName}</p>
 		</div>
 
 		<div class="tabs-container">
 			<p><strong>General</strong></p>
-			<a class="tab {activeTab === '/config' ? 'active' : ''}"
-				 href="/config">
+			<a class="tab {activeTab === 'config' ? 'active' : ''}"
+				 href={`/${projectID}/config`}>
 				<Text size={20}/>
-				Resumen
+				{$t('project_config.summary_text')}
+<!--				Resumen-->
 			</a>
 
-			<a class="tab {activeTab === '/config/team' ? 'active' : ''}"
-				 href="/config/team">
+			<a class="tab {activeTab === 'config/team' ? 'active' : ''}"
+				 href={`/${projectID}/config/team`}>
 				<Users size={20}/>
-				Equipo
+				{$t('project_config.team_text')}
+
+<!--				Equipo-->
 			</a>
 		</div>
 	</div>
 
-	<a class="settings" href="/overview">
+	<a class="settings" href={`/${projectID}/overview`}>
 		<LogOut size={20}/>
-		Cerrar configuración
+		{$t('project_config.exit_config_text')}
+<!--		Cerrar configuración-->
 	</a>
 </nav>
 
 <script>
 	import { LogOut, Text, Users } from 'lucide-svelte';
 	import { page } from '$app/stores';
+	import { t } from '$lib/translations'
+	import { projectData } from '$lib/stores/projectStore';
 
-	let ProyectName = 'Nombre de proyecto'
+	let ProyectName = $projectData.nombre
 
 	let activeTab;
+	let projectID;
 
-	$: activeTab = $page.url.pathname
+	$: page.subscribe(($page) => {
+		const segments = $page.url.pathname.split('/');
+		projectID = segments[1];
+		if(segments.length == 4){
+			activeTab = `${segments[2]}/${segments[3]}`;
+		}else{
+			activeTab = segments[2]
+		}
+	});
+
 </script>
 
 <style>

@@ -4,6 +4,7 @@
 	import { goto } from '$app/navigation';
 	import ButtonComponent from '$components/button.svelte';
 	import axios from 'axios';
+	import { showToast } from '$lib/stores/toastStore';
 
 	let name;
 	let lastName;
@@ -13,28 +14,34 @@
 	let invalidInput = false;
 	let validRegex = /^[\w-]+@[a-zA-Z\dx-]+\.[a-zA-Z]{2,}$/;
 
-	function register() {
-		if (email.match(validRegex) && password && password === confirmPassword) {
-			axios
-				.post('https://luma-server.onrender.com/api/user/', {
+	async function register() {
+		//TODO: add toast to show error messages
+		try {
+			if (email.match(validRegex) && password && password === confirmPassword) {
+				await axios.post('https://luma-server.onrender.com/api/user/', {
 					email: email,
 					password: password,
 					first_name: name,
 					last_name: lastName
 				})
-				.then((response) => {
-					console.log(response.data);
-					// goto('/account/register/checkemail');
-					console.log('successfull register');
-				})
-				.catch((error) => {
-					console.error('Error:', error);
-				});
-
-			invalidInput = false;
-		} else {
-			console.log('error register');
-			console.error('Error:', error.response ? error.response.data : error.message);
+					.then((response) => {
+						console.log(response.data);
+						// Optionally redirect after successful registration
+						// goto('/account/register/checkemail');
+						console.log('successfull register');
+					})
+					.catch((error) => {
+						console.error('Error:', error);
+					});
+				invalidInput = false;
+			} else {
+				console.error('Validation error: Invalid input');
+				showToast('Invalid input. Please check your email or password.', { type: 'error', duration: 5000 });
+				invalidInput = true;
+			}
+		} catch (error) {
+			showToast(`Error registering user: ${error.response ? error.response.data.message : error.message}`, { type: 'error', duration: 5000 });
+			console.error('Error during registration:', error.response ? error.response.data : error.message);
 			invalidInput = true;
 		}
 	}
@@ -142,7 +149,7 @@
 					<div class="swap-off"><EyeOff /></div>
 				</label>
 			</label>
-			<ButtonComponent label="Registrarse" isPrimary="true" href="/account/register/checkemail" />
+			<ButtonComponent label="Registrarse" isPrimary="true"/>
 		</form>
 	</div>
 	<div class="card">

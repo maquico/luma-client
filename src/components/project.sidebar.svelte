@@ -1,38 +1,50 @@
 <nav>
 	<div>
-		<a class="tab {activeTab === '/overview' ? 'active' : ''}"
-			 href="/overview">
+<!--		TODO: pendiente analizar si agregar nombre de proyecto en sidebar-->
+<!--		<div class="details">-->
+<!--			Project Name-->
+<!--		</div>-->
+
+		<a class="tab {activeTab === 'overview' ? 'active' : ''}"
+			 href={`/${projectID}/overview`}>
 			<Text size={20}/>
-			Resumen
+			{$t('project_sidebar.overview_text')}
+<!--			Resumen-->
 		</a>
 
-		<a class="tab {activeTab === '/board' ? 'active' : ''}"
-			 href="/board" >
+		<a class="tab {activeTab === 'board' ? 'active' : ''}"
+			 href={`/${projectID}/board`}>
 			<SquareKanban size={20}/>
-			Tablero
+			{$t('project_sidebar.board_text')}
+<!--			Tablero-->
 		</a>
 
-		<a class="tab {activeTab === '/dashboard' ? 'active' : ''}"
-			 href="/dashboard" >
+		<a class="tab {activeTab === 'dashboard' ? 'active' : ''}"
+			 href={`/${projectID}/dashboard`}>
 			<LayoutPanelLeft size={20}/>
-			Graficos
+			{$t('project_sidebar.dashboard_text')}
+<!--			Graficos-->
 		</a>
 	</div>
 
 
-	<a class="settings" href="/config">
+	<a class="settings"
+		 href={`/${projectID}/config`}>
 		<Settings size={20}/>
-		Configuración
+		{$t('project_sidebar.config_text')}
 	</a>
 </nav>
 
 <script>
 	import { LayoutPanelLeft, Settings, SquareKanban, Text } from 'lucide-svelte';
 	import { page } from '$app/stores';
+	import { t } from "$lib/translations"
 
 	let activeTab;
+	let projectID;
 
-	$: activeTab = $page.url.pathname
+	$: projectID = $page.url.pathname.split('/')[1]
+	$: activeTab = $page.url.pathname.split('/')[2]
 </script>
 
 <style>
@@ -52,6 +64,14 @@
 				display: flex;
 				flex-direction: column;
 		}
+
+    /*.details{*/
+		/*		padding: var(--luma-half-element-spacing) 0 1rem 1rem;*/
+		/*		border-bottom: 1px solid var(--luma-color-gray-400);*/
+		/*		margin-bottom: 1rem;*/
+    /*    color: var(--luma-color-gray-400);*/
+    /*    font-weight: bold;*/
+    /*}*/
 
 		.tab{
 				display: flex;

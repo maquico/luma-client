@@ -1,33 +1,39 @@
 <nav>
 	<div class="details">
-		<p>Configuraciones de proyecto</p>
+		<p>{$t('profile_sidebar.navbar_title')}</p>
 		<p>{UserName}</p>
 	</div>
 
 	<div class="tabs-container">
-		<p><strong>General</strong></p>
+<!--		<p><strong>General</strong></p>-->
+		<p><strong>{$t('profile_sidebar.general_title')}</strong></p>
+
 		<a class="tab {activeTab === '/account/config/profile' ? 'active' : ''}"
 			 href="/account/config/profile">
 			<User size={20}/>
-			Perfil
+<!--			Perfil-->
+			{$t('profile_sidebar.profile')}
 		</a>
 
 		<a class="tab {activeTab === '/account/config/language' ? 'active' : ''}"
 			 href="/account/config/language">
 			<Globe size={20}/>
-			Idioma
+<!--			Idioma-->
+			{$t('profile_sidebar.language')}
 		</a>
 
 		<a class="tab {activeTab === '/account/config/badge' ? 'active' : ''}"
 			 href="/account/config/badge">
 			<Star size={20}/>
-			Insignias
+<!--			Insignias-->
+			{$t('profile_sidebar.badges')}
 		</a>
 
 		<a class="tab {activeTab === '/account/config/security' ? 'active' : ''}"
 			 href="/account/config/security">
 			<Shield size={20}/>
-			Seguridad
+<!--			Seguridad-->
+			{$t('profile_sidebar.security')}
 		</a>
 	</div>
 </nav>
@@ -35,11 +41,26 @@
 <script>
 	import { Star, Globe, Shield, User } from 'lucide-svelte';
 	import { page } from '$app/stores';
+	import { onMount } from 'svelte';
+	import { t } from '$lib/translations';
 
 	let UserName = 'User name'
 	let activeTab;
 
 	$: activeTab = $page.url.pathname
+
+	onMount(() => {
+
+		const storedData = localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token');
+
+		if (storedData) {
+			// Parse the JSON data to access user info
+			const sessionData = JSON.parse(storedData);
+			console.log(sessionData);
+
+			UserName = `${sessionData.user.user_metadata.first_name} ${sessionData.user.user_metadata.last_name}`;
+		}
+	})
 </script>
 
 <style>
@@ -50,7 +71,7 @@
         padding: 1.5rem 1rem 1rem 1rem;
         display: flex;
         flex-direction: column;
-        gap: calc(var(--luma-element-spacing) * 1.5);
+        gap: var(--luma-element-spacing);
         border-right: 3px solid var(--luma-color-gray-200);
     }
 

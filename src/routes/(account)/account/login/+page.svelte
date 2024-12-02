@@ -1,7 +1,8 @@
 <div class="login-container">
 	<div class="card login">
 		<img src={logo} alt="luma-logo"/>
-		<form on:submit|preventDefault={validate}>
+<!--		<form on:submit={validate} action="?/login" method="POST">-->
+		<form on:submit={validate} action="?/login" method="POST">
 			<label class="input input-bordered flex items-center gap-2 {invalidInput? 'input-error': ''}">
 				<input type="text" name="email" id="email" placeholder="Correo" bind:value={email} size="30" required/>
 				<Mail />
@@ -25,6 +26,7 @@
 			<button type="submit" class="btn btn-primary">
 				Ingresar
 			</button>
+
 		</form>
 		<div class="divider">O</div>
 		<a href="/account/password/reset">¿Has olvidado la contraseña?</a>
@@ -36,37 +38,43 @@
 </div>
 
 <script>
+	import { supabase } from "$lib/supabaseClient";
 	import logo from '$lib/assets/luma-logo.png'
 	import { CircleAlert, Eye, EyeOff, Mail } from 'lucide-svelte';
-	import { goto } from '$app/navigation';
-	import axios from 'axios';
 
-	let email
-	let password
+	let email = 'huanhaowu28@gmail.com'
+	let password = 'Abc123456!'
 	let invalidInput=false
 	let validRegex = /^[\w-]+@[a-zA-Z\dx-]+\.[a-zA-Z]{2,}$/
 
-	function validate() {
-		// console.log("I'm the validate() function")
+	async function validate() {
 		if (email.match(validRegex) && password){
-			axios.post('https://luma-server.onrender.com/api/session/', {
-				email: email,
-				password: password,
-			})
-				.then(response => {
+			// console.log(getSession());
+
+			//TODO: add coin call to database
+			await logIn(email, password)
+				.then(async response => {
 					console.log(response.data);
-					console.log('successfull login');
-					goto('/');
 				})
 				.catch(error => {
 					console.error('Error:', error);
-				});
+				})
 
+			// console.log(getSession());
 			invalidInput=false
 		}else{
 			console.log('error login');
 			invalidInput=true
 		}
+	}
+
+	//Supabase native singIn
+	async function logIn(_email, _password){
+		const { data, error } = await supabase.auth.signInWithPassword({
+			email: _email,
+			password: _password,
+		});
+		return { data, error };
 	}
 
 	function showPassword() {
@@ -77,6 +85,7 @@
 			x.type = "password";
 		}
 	}
+
 </script>
 
 <style>

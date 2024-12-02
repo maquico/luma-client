@@ -1,21 +1,33 @@
 <script>
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
+	import { createEventDispatcher } from 'svelte';
+	import CreateRewardModal from '$components/modals/createReward.modal.svelte';
 
+	const dispatch = createEventDispatcher(); // Crear un despachador de eventos
 	let currentPath;
+
+	let isProjectLeader = true;
 
 	onMount(() => {
 		currentPath = window.location.pathname;
 	});
 
+	let showModal = false;
+
+	function handleClose() {
+		showModal = false;
+	}
+
 	function handleTabClick(path) {
 		goto(path);
 		currentPath = path;
+		dispatch('tabChange', path); // Emitir el evento tabChange con la ruta
 	}
 </script>
 
 <section role="tablist" class="tabs tabs-bordered flex items-center bg-gray-50">
-	<div class="tabs-container flex space-x-4 ml-72">
+	<div class="tabs-container ml-72">
 		<a
 			role="tab"
 			class="tab {currentPath === '/shop/general' ? 'tab-active' : ''}"
@@ -34,7 +46,22 @@
 			RECOMPENSAS PERSONALIZADAS
 		</a>
 	</div>
+
+	{#if currentPath === '/shop/customize' && isProjectLeader}
+		<div class="controls ml-auto mr-5">
+			<button
+				class="create-reward-btn"
+				on:click={() => {
+					showModal = true;
+				}}
+			>
+				+
+			</button>
+		</div>
+	{/if}
 </section>
+
+<CreateRewardModal show={showModal} on:close={handleClose} />
 
 <style>
 	.tab {
@@ -52,5 +79,28 @@
 
 	.tabs-bordered {
 		border-bottom: 1px solid #ddd;
+	}
+
+	.create-reward-btn {
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		background-color: #692dd7;
+		color: white;
+		font-size: 1.5rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border: none;
+		cursor: pointer;
+		transition:
+			background-color 0.3s,
+			box-shadow 0.3s;
+		box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+	}
+
+	.create-reward-btn:hover {
+		background-color: #571bb2;
+		box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.3);
 	}
 </style>

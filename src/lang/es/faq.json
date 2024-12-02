@@ -1,0 +1,19 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "title": "¿Quién puede modificar el valor en monedas, el esfuerzo y la prioridad de una tarea?",
+      "response": "Solo los líderes de proyecto y de la organización pueden modificar estos campos."
+    },
+    {
+      "id": 2,
+      "title": "¿Puedo eliminar una tarea dentro de un proyecto?",
+      "response": "Solo los líderes de proyecto y de la organización tienen permisos para eliminar tareas."
+    },
+    {
+      "id": 3,
+      "title": "¿Cómo se calcula el valor en monedas de una tarea?",
+      "response": "El sistema calcula automáticamente el valor en monedas basado en el esfuerzo y la prioridad asignados a la tarea al momento de su creación."
+    }
+  ]
+}

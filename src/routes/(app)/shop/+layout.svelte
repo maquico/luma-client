@@ -1,11 +1,17 @@
 <script>
 	import ShopNavBar from '$components/shop.navbar.svelte';
 	import ShopSideBar from '$components/shop.sidebar.svelte';
+
+	let showProjectSelect = false;
+
+	function handleTabChange(event) {
+		showProjectSelect = event.detail === '/shop/customize'; // Cambia la visibilidad según la ruta
+	}
 </script>
 
-<ShopNavBar />
+<ShopNavBar on:tabChange={handleTabChange} />
 <div class="container">
-	<ShopSideBar />
+	<ShopSideBar {showProjectSelect} />
 	<div class="main-content">
 		<section>
 			<slot />
@@ -16,7 +22,6 @@
 <style>
 	.container {
 		display: flex;
-		height: 100vh;
 	}
 
 	.main-content {

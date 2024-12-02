@@ -5,14 +5,14 @@
 
 	<div class="left">
 		<div class="currency-container">
-			<div class="gem currency">
-			<span>
-				XXX,XXX
-			</span>
-				<div class="icon-container">
-					<Gem />
-				</div>
-			</div>
+<!--			<div class="gem currency">-->
+<!--			<span>-->
+<!--				XXX,XXX-->
+<!--			</span>-->
+<!--				<div class="icon-container">-->
+<!--					<Gem />-->
+<!--				</div>-->
+<!--			</div>-->
 			<div class="coins currency">
 			<span>
 				XXX,XXX
@@ -42,35 +42,39 @@
 		<div class="dropdown-menu-container {userDropdown ? 'open' : ''}">
 			<div class="dropdown-menu">
 				<div class="user-info">
-					<h3>John Doe</h3>
-					<p>jdoe@acme.com</p>
+					<h3>{userName}</h3>
+					<p>{userMail}</p>
 				</div>
 
 				<div class="divider"/>
 
 				<div class="links">
+					<a class="menu-link" href="/account/config/profile">
+						<User size={20}/>
+						<p>{$t('profile_dropdown.profile_text')}</p>
+					</a>
 					<a class="menu-link" href="/account/config/language">
 						<Globe size={20}/>
-						<p>Idioma</p>
+						<p>{$t('profile_dropdown.language_text')}</p>
 					</a>
 					<a class="menu-link" href="/account/config/badge">
 						<Star size={20}/>
-						<p>Insignias</p>
-					</a>
-					<a class="menu-link" href="/account/config/profile">
-						<User size={20}/>
-						<p>Perfil</p>
+						<p>{$t('profile_dropdown.badge_text')}</p>
 					</a>
 				</div>
 
 				<div class="divider"/>
 
-				<div class="sign-out">
-					<a class="menu-link" href="/account/login">
-						<LogOut size={20}/>
-						<p>Salir</p>
-					</a>
-				</div>
+				<form action="/logout" method="POST">
+					<button>
+						<div class="sign-out" on:click={() => {signOut()}}>
+							<a class="menu-link" href="/">
+								<LogOut size={20}/>
+								<p>{$t('profile_dropdown.signOut_text')}</p>
+							</a>
+						</div>
+					</button>
+				</form>
 			</div>
 		</div>
 
@@ -78,11 +82,56 @@
 </div>
 
 <script>
+	import { supabase } from "$lib/supabaseClient";
 	import {clickOutside} from '$lib/clickOutside.js';
 	import logo from '$assets/luma-logo.png'
 	import { Info, ShoppingCart, Gem, Coins, LogOut, User, Star, Globe  } from 'lucide-svelte';
+	import { goto } from '$app/navigation';
+	import { onMount } from 'svelte';
+	import { t } from '$lib/translations';
 
  	let userDropdown = false
+	let userName = 'John Doe'
+	let userMail = 'jdoe@acme.com'
+
+	onMount(() => {
+		const storedData = localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token');
+
+		if (storedData) {
+			// Parse the JSON data to access user info
+			const sessionData = JSON.parse(storedData);
+			console.log(sessionData);
+
+			userName = `${sessionData.user.user_metadata.first_name} ${sessionData.user.user_metadata.last_name}`;
+			userMail = sessionData.user.user_metadata.email
+		}
+	})
+
+	async function signOut(){
+		// console.log(getSession());
+
+		const { error } = await supabaseSignOut();
+		if (!error) {
+			// Request to delete the auth cookie
+			await fetch('/account/logout', {
+				method: 'POST'
+			});
+
+			goto('/account/login');
+		} else {
+			console.error('Error signing out:', error.message);
+		}
+
+		// console.log(getSession());
+	}
+
+	//Supabase native signOut function
+	async function supabaseSignOut(){
+		const { error } = await supabase.auth.signOut({
+		});
+		return { error };
+	}
+
 </script>
 
 <style>
@@ -100,7 +149,7 @@
       position: absolute;
       top: 80%;
       right: 1.3rem;
-      width: 220px;
+      width: 250px;
 			max-height: 0px;
 			overflow: hidden;
 			z-index: 9999;
@@ -120,7 +169,7 @@
 
 	.left{
 			display: flex;
-			gap: 10px;
+			gap: 1rem;
 	}
 
 	.left .currency{

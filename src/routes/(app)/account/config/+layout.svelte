@@ -15,8 +15,11 @@
 	}
 
   section{
-      padding: calc(var(--luma-element-spacing) * 1.5);
+			padding-block: 1.5rem;
+			padding-inline: 3rem;
+      /*padding: 1.5rem 1rem 1rem 1rem;*/
       background-color: var(--luma-color-gray-50);
       width: 85vw;
+			height: 90vh;
   }
 </style>

@@ -1,88 +1,99 @@
 <script>
-	import Modal from '$components/modal.svelte'
-	import {createEventDispatcher} from 'svelte';
-	import axios from 'axios';
 	import { goto } from '$app/navigation';
+	import { createEventDispatcher } from 'svelte';
+
+	import Modal from '$components/modal.svelte';
+	import axios from 'axios';
 
 	const dispatch = createEventDispatcher();
 
 	export let show = true;
+	let projectName = '';
+	let projectDescription = '';
+	// let userId = '37d3b652-d314-4124-9685-add5f0c6fc19';
+	let userData = JSON.parse(localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token'))
+	let userID = userData.user.id
+	let invalidInput = false;
 
 	const close = () => {
 		show = false;
-		dispatch('close')
-	}
+		dispatch('close');
+	};
 
 	function validate() {
-		console.log("I'm the validate() function")
-		goto('/overview')
-		// TODO: validate password with db data
-		// if (email.match(validRegex) && password){
-		//
-		// 	axios.post('http://localhost:3000/api/session', {
-		// 		email: email,
-		// 		password: password,
-		// 	})
-		// 		.then(response => {
-		// 			console.log(response.data);
-		// 			console.log('successfull login');
-		// 			goto('/');
-		// 		})
-		// 		.catch(error => {
-		// 			console.error('Error:', error);
-		// 		});
-		//
-		// 	invalidInput=false
-		// }else{
-		// 	console.log('error login');
-		// 	invalidInput=true
-		// }
-	}
+		invalidInput = false;
+		if (projectName.length > 50) {
+			console.error('El nombre del proyecto no debe exceder 50 caracteres.');
+			invalidInput = true;
+			return;
+		}
 
+		axios
+			.post('https://luma-server.onrender.com/api/projects', {
+				nombre: projectName,
+				descripcion: projectDescription,
+				userId: userID
+			})
+			.then((response) => {
+				const projectId = response.data.proyecto_id;
+				console.log('Proyecto creado con ID:', projectId);
+				goto(`/${projectId}/overview`);
+				console.log('Proyecto creado:', response.data);
+				show = false;
+				dispatch('close');
+			})
+			.catch((error) => {
+				console.error('Error al crear el proyecto:', error);
+			});
+	}
 </script>
 
 {#if show}
-	<Modal
-		header
-		closeByBackgroundClick
-		title="Crear nuevo proyecto"
-		on:close={close}
-	>
+	<Modal header closeByBackgroundClick title="Crear nuevo proyecto" on:close={close}>
 		<form on:submit|preventDefault={validate}>
 			<label class="form-control w-full">
 				<div class="label">
 					<span class="label-text">Nombre de proyecto</span>
 				</div>
-				<input type="text" placeholder="Type here" class="input input-bordered w-full " />
+				<input
+					type="text"
+					bind:value={projectName}
+					placeholder="Escribe aquí"
+					class="input input-bordered w-full"
+				/>
+				{#if invalidInput}
+					<span style="color:red;">El nombre no debe exceder los 50 caracteres</span>
+				{/if}
 			</label>
 			<label class="form-control">
 				<div class="label">
-					<span class="label-text">Descripcion</span>
+					<span class="label-text">Descripción</span>
 				</div>
-				<textarea class="textarea textarea-bordered h-24" placeholder="Type here" style="resize: none"/>
+				<textarea
+					bind:value={projectDescription}
+					class="textarea textarea-bordered h-24"
+					placeholder="Escribe aquí"
+					style="resize: none"
+				/>
 			</label>
 
 			<div class="controls">
-				<button class="btn btn-outline" on:click={close}>
-					Cancelar
-				</button>
-				<button type="submit" class="btn btn-primary">
-					Ingresar
-				</button>
+				<button class="btn btn-outline" on:click={close}> Cancelar </button>
+				<button type="submit" class="btn btn-primary"> Crear </button>
 			</div>
 		</form>
 	</Modal>
 {/if}
 
 <style>
-	.controls{
-			text-align: right;
+	.controls {
+		text-align: right;
 	}
 
-	form{
-			margin-top: 1rem;
-			display: flex;
-			flex-direction: column;
-      gap: 1rem;
+	form {
+		margin-top: 1rem;
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
 	}
 </style>
