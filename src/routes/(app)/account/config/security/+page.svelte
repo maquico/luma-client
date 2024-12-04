@@ -1,32 +1,32 @@
 <script>
 	import axios from 'axios';
-	import bcrypt from 'bcryptjs'; 
+	import { showToast } from '$lib/stores/toastStore';  // Import your toast store
+	import bcrypt from 'bcryptjs';
 
 	const API_BASE_URL = 'https://luma-server.onrender.com/api';
 	let userPassword = '';
 	let newPassword = '';
 	let confirmNewPassword = '';
-	const userId = '37d3b652-d314-4124-9685-add5f0c6fc19'; 
+	const userId = JSON.parse(localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token')).user.id;;
 
 	// Function to change password
 	async function changePassword() {
 		try {
 			// Check if the new password and confirmation match
 			if (newPassword !== confirmNewPassword) {
-				alert('Nueva contraseña y confirmación no coinciden');
+				showToast('Las contraseñas no coinciden.', { type: 'warning', duration: 5000 });
 				return;
 			}
 
 			// Fetch the encrypted password using axios
 			const { data } = await axios.get(`${API_BASE_URL}/user/password/${userId}`);
-			
 			const encryptedPassword = data;
 			console.log('Encrypted password:', encryptedPassword);
 
 			// Compare user-provided password with the encrypted password
 			const isPasswordCorrect = await bcrypt.compare(userPassword, encryptedPassword);
 			if (!isPasswordCorrect) {
-				alert('Contraseña actual incorrecta');
+				showToast('Contraseña actual incorrecta', { type: 'error', duration: 5000 });
 				return;
 			}
 
@@ -36,11 +36,11 @@
 				newPassword: newPassword,
 			});
 
-			alert('Contraseña actualizada exitosamente');
+			showToast('Contraseña actualizada exitosamente', { type: 'success', duration: 5000 });
 			clearInputs();
 		} catch (error) {
 			console.error('Error changing password:', error);
-			alert('Error inesperado');
+			showToast('Error inesperado', { type: 'error', duration: 5000 });
 		}
 	}
 
@@ -51,7 +51,6 @@
 		confirmNewPassword = '';
 	}
 </script>
-
 
 <div class="content">
 	<p class="title">Seguridad</p>
