@@ -1,20 +1,55 @@
 <script>
-	let userPassword
-	let newPassword
-	let confirmNewPassword
+	import axios from 'axios';
+	import { showToast } from '$lib/stores/toastStore';  // Import your toast store
+	import bcrypt from 'bcryptjs';
 
-	function changePassword(){
-		console.log('userPassword', userPassword);
-		console.log('newPassword', newPassword);
-		console.log('confirmNewPassword', confirmNewPassword);
+	const API_BASE_URL = 'https://luma-server.onrender.com/api';
+	let userPassword = '';
+	let newPassword = '';
+	let confirmNewPassword = '';
+	const userId = JSON.parse(localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token')).user.id;;
+
+	// Function to change password
+	async function changePassword() {
+		try {
+			// Check if the new password and confirmation match
+			if (newPassword !== confirmNewPassword) {
+				showToast('Las contraseñas no coinciden.', { type: 'warning', duration: 5000 });
+				return;
+			}
+
+			// Fetch the encrypted password using axios
+			const { data } = await axios.get(`${API_BASE_URL}/user/password/${userId}`);
+			const encryptedPassword = data;
+			console.log('Encrypted password:', encryptedPassword);
+
+			// Compare user-provided password with the encrypted password
+			const isPasswordCorrect = await bcrypt.compare(userPassword, encryptedPassword);
+			if (!isPasswordCorrect) {
+				showToast('Contraseña actual incorrecta', { type: 'error', duration: 5000 });
+				return;
+			}
+
+			// Send the new password to the backend using axios
+			await axios.put(`${API_BASE_URL}/user/password/reset`, {
+				userId,
+				newPassword: newPassword,
+			});
+
+			showToast('Contraseña actualizada exitosamente', { type: 'success', duration: 5000 });
+			clearInputs();
+		} catch (error) {
+			console.error('Error changing password:', error);
+			showToast('Error inesperado', { type: 'error', duration: 5000 });
+		}
 	}
 
-	function clearInputs(){
-		userPassword = ''
-		newPassword = ''
-		confirmNewPassword = ''
+	// Function to clear inputs
+	function clearInputs() {
+		userPassword = '';
+		newPassword = '';
+		confirmNewPassword = '';
 	}
-
 </script>
 
 <div class="content">
@@ -24,17 +59,17 @@
 
 			<label for="user-password">
 				<span>Contraseña actual</span>
-				<input id="user-password" type="text" placeholder="type here" required bind:value={userPassword}>
+				<input id="user-password" type="password" placeholder="type here" required bind:value={userPassword}>
 			</label>
 
 			<label for="new-password">
 				<span>Nueva contraseña</span>
-				<input id="new-password" type="text" placeholder="type here" required bind:value={newPassword}>
+				<input id="new-password" type="password" placeholder="type here" required bind:value={newPassword}>
 			</label>
 
 			<label for="confirm-password">
 				<span>Confirmar nueva contraseña</span>
-				<input id="confirm-password" type="text" placeholder="type here" required bind:value={confirmNewPassword}>
+				<input id="confirm-password" type="password" placeholder="type here" required bind:value={confirmNewPassword}>
 			</label>
 
 			<div class="controls">
