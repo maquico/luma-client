@@ -14,7 +14,8 @@
 	export let show = true;
 	export let data;
 
-	let userId = '37d3b652-d314-4124-9685-add5f0c6fc19';
+	let userData = JSON.parse(localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token'));
+	let userId = userData.user.id;
 
 	const close = () => {
 		show = false;

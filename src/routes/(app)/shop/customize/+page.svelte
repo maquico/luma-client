@@ -1,16 +1,26 @@
 <script>
 	import { onMount } from 'svelte';
-	import { ImageIcon, Info } from 'lucide-svelte';
+	import { ImageIcon, Info, Edit } from 'lucide-svelte';
 	import axios from 'axios';
 	import { filters } from '$src/lib/stores/filterStore.js';
 	import { loadRewardsFunction } from '$src/lib/stores/rewardStore.js';
 	import { selectedProjectStore } from '$src/lib/stores/selectedProjectStore.js';
+	import CreateRewardModal from '$components/modals/createReward.modal.svelte';
 
-	export let userId = '37d3b652-d314-4124-9685-add5f0c6fc19';
+	let isProjectLeader = true;
+
+	let userData = JSON.parse(localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token'));
+	let userId = userData.user.id;
 
 	let rewards = [];
 	let filteredRewards = [];
 	let selectedProject = null;
+	let showModal = false;
+	let rewardIdModal;
+
+	function handleClose() {
+		showModal = false;
+	}
 
 	// Función para aplicar los filtros
 	function applyFilters(filterValues) {
@@ -93,15 +103,24 @@
 <div class="h-screen w-full overflow-y-auto p-4 bg-white">
 	<div class="grid grid-cols-4 gap-[var(--luma-element-spacing)]">
 		{#each filteredRewards as reward}
-			<div class="bg-white rounded-lg custom-shadow overflow-hidden flex flex-col justify-between">
+			<div
+				class="bg-white rounded-lg custom-shadow overflow-hidden flex flex-col justify-between"
+				on:click={() => {
+					showModal = true;
+					rewardIdModal = reward.Recompensa_ID;
+					console.log('rewardIdModal:', rewardIdModal);
+				}}
+			>
 				<div class="flex justify-between items-center p-2 bg-white text-gray-700">
 					<span>{reward.nombre}</span>
-					<button class="text-gray-500 hover:text-gray-700">
-						<Info class="w-5 h-5" />
-					</button>
+					<div class="flex items-center space-x-2">
+						<button class="text-gray-500 hover:text-gray-700">
+							<Info class="w-5 h-5" />
+						</button>
+					</div>
 				</div>
 
-				<div class="flex justify-center items-center h-24 bg0-gray-300">
+				<div class="flex justify-center items-center h-24 bg-gray-300">
 					<ImageIcon class="w-12 h-12 text-gray-400" />
 				</div>
 
@@ -134,6 +153,8 @@
 		{/each}
 	</div>
 </div>
+
+<CreateRewardModal show={showModal} rewardId={rewardIdModal} on:close={handleClose} />
 
 <style>
 	.custom-shadow {
