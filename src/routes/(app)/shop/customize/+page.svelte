@@ -106,9 +106,11 @@
 			<div
 				class="bg-white rounded-lg custom-shadow overflow-hidden flex flex-col justify-between"
 				on:click={() => {
-					showModal = true;
-					rewardIdModal = reward.Recompensa_ID;
-					console.log('rewardIdModal:', rewardIdModal);
+					if (isProjectLeader) {
+						showModal = true;
+						rewardIdModal = reward.Recompensa_ID;
+						console.log('rewardIdModal:', rewardIdModal);
+					}
 				}}
 			>
 				<div class="flex justify-between items-center p-2 bg-white text-gray-700">
