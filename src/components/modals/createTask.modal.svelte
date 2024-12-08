@@ -1,20 +1,44 @@
 <script>
 	import Modal from '$components/modal.svelte';
-	import { createEventDispatcher } from 'svelte';
+	import { createEventDispatcher, onMount } from 'svelte';
 	import axios from 'axios';
 	import { Tags, User } from 'lucide-svelte';
 	import { DatePicker } from 'date-picker-svelte';
+	import { projectData } from '$lib/stores/projectStore';
+
 	let showDatePickerStart = false;
 	let showDatePickerEnd = false;
 	let startDate = new Date();
 	let endDate = new Date();
+    let selectedUserId = ""; // To bind selected user ID
+	let projectMembers= $projectData.miembros;
 
 	const dispatch = createEventDispatcher();
 
 	export let show = true;
-	export let data;
+	export let data = null;
+	export let isEdit = false; 
 
-	let userId = '37d3b652-d314-4124-9685-add5f0c6fc19';
+	const userId = JSON.parse(localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token')).user.id;
+	const taskId = data?.id;
+
+	const initialFormData = {
+		id: data?.id,
+        projectId: '',
+        name: '',
+        priority: '',
+        time: '',
+        state: '',
+        startDate: '',
+        endDate: '',
+        tags: '',
+        description: '',
+        comment: ''
+    };
+
+	let formData = { ...initialFormData };
+    let isLoading = false; // Track loading state
+    let errorMessage = ''; // Track error messages
 
 	const close = () => {
 		show = false;
@@ -34,48 +58,86 @@
 		return date.toISOString().split('T')[0]; // Devuelve solo YYYY-MM-DD
 	}
 
-	const initialFormData = {
-		projectId: 1,
-		name: '',
-		priority: '',
-		time: '',
-		state: '',
-		startDate: '',
-		endDate: '',
-		description: '',
-		tags: '',
-		comment: ''
-	};
+	async function fetchTaskData() {
+        if (!taskId || !isEdit) return;
 
-	let formData = { ...initialFormData };
+        try {
+            isLoading = true;
+            const response = await axios.get(`https://luma-server.onrender.com/api/task/${taskId}`);
+            const task = response.data[0]; 
 
-	function validate() {
-		console.log('Validating form data...');
+            // Map response to `formData`
+            formData = {
+                projectId: task.Proyecto_ID,
+                name: task.nombre,
+                priority: task.prioridad,
+                time: task.tiempo,
+                state: task.Estado_Tarea_ID,
+                startDate: new Date(task.fechaInicio),
+                endDate: new Date(task.fechaFin),
+                tags: task.etiquetas,
+                description: task.descripcion,
+                comment: '', // Assuming comments aren't part of the task object
+            };
 
-		try {
-			const response = axios.post('https://luma-server.onrender.com/api/task', {
-				projectId: formData.projectId,
-				name: formData.name,
-				priority: formData.priority,
-				startDate: formatDateForDB(startDate),
-				endDate: formatDateForDB(endDate),
-				time: formData.time,
-				userId: userId,
-				tags: formData.tags,
-				description: formData.description
-			});
+            // Set additional states
+            selectedUserId = task.Usuario_ID;
+            startDate = new Date(task.fechaInicio);
+            endDate = new Date(task.fechaFin);
 
-			console.log('Task created successfully:', response.data);
+        } catch (error) {
+            console.error('Error fetching task data:', error);
+            errorMessage = 'Failed to load task data. Please try again.';
+        } finally {
+            isLoading = false;
+        }
+    }
 
-			close();
-		} catch (error) {
-			console.error('Error creating task:', error);
-		}
+	async function validate() {
+      try {
+          if (isEdit) {
+			const taskObj = {
+            	Proyecto_ID: formData.projectId,
+            	Task_ID: taskId,
+            	nombre: formData.name,
+            	prioridad: formData.priority,
+            	tiempo: formData.time,
+            	etiquetas: formData.tags,
+            	descripcion: formData.description,
+            	fechaInicio: formatDateForDB(startDate),
+            	fechaFin: formatDateForDB(endDate),
+            	Usuario_ID: selectedUserId // Bind selected user
+        	};
+
+        	const response = await axios.put(
+        	    `https://luma-server.onrender.com/api/task/byRol/${userId}`, taskObj
+        	);
+            console.log('Task updated successfully:', response.data);
+          } else {
+              const response = await axios.post('https://luma-server.onrender.com/api/task', {
+                  ...formData,
+                  startDate: formatDateForDB(startDate),
+                  endDate: formatDateForDB(endDate),
+                  userId: userId
+              });
+              console.log('Task created successfully:', response.data);
+          }
+          close();
+      } catch (error) {
+          console.error(isEdit ? 'Error updating task:' : 'Error creating task:', error);
+      }
 	}
+
+	// Fetch task data on mount when editing
+    onMount(() => {
+        if (isEdit) {
+            fetchTaskData();
+        }
+    });
 </script>
 
 {#if show}
-	<Modal header controls controlsOptions on:close={close}>
+	<Modal title={isEdit ? 'Edit Task' : 'Create Task'} header controls controlsOptions on:close={close}>
 		<form on:submit|preventDefault={validate}>
 			<div class="overview">
 				<p class="project-name">Project name</p>
@@ -86,10 +148,22 @@
 			</label>
 
 			<div class="task-details">
-				<label class="input input-bordered flex items-center gap-2 w-full">
-					<User />
-					<input type="text" class="grow" placeholder="User" />
-				</label>
+				<!-- Dropdown for selecting a user -->
+                <label class="form-control">
+                    <div class="label">
+                        <span class="label-text">Asignar Usuario</span>
+                    </div>
+                    <select
+                        class="select select-bordered w-full"
+                        bind:value={selectedUserId}
+                        required
+                    >
+                        <option value="" disabled selected>Seleccionar Usuario</option>
+                        {#each projectMembers as member}
+                            <option value={member.Usuario_ID}>{member.nombreCompleto} - {member.nombreRol}</option>
+                        {/each}
+                    </select>
+                </label>
 
 				<label class="input input-bordered flex items-center gap-2 w-full">
 					<Tags />
@@ -184,6 +258,7 @@
 				></textarea>
 			</label>
 
+			<!--
 			<label class="form-control">
 				<div class="label">
 					<span class="label-text">Comentario</span>
@@ -194,9 +269,10 @@
 					placeholder="Comentario de la tarea"
 				></textarea>
 			</label>
+			-->
 
 			<div class="controls">
-				<button type="submit" class="btn btn-primary"> Guardar </button>
+				<button type="submit" class="btn btn-primary">{isEdit ? 'Actualizar' : 'Guardar'}</button>
 			</div>
 		</form>
 		<!--		{#if data}-->

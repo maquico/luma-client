@@ -7,7 +7,7 @@
 	let userPassword = '';
 	let newPassword = '';
 	let confirmNewPassword = '';
-	const userId = JSON.parse(localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token')).user.id;;
+	const userId = JSON.parse(localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token')).user.id;
 
 	// Function to change password
 	async function changePassword() {

@@ -91,7 +91,7 @@
 				})
 				.catch((error) => {
 					// console.log(error.data);
-					console.log('arregle su diparate');
+					console.log('Error updating task status');
 					console.log(error);
 
 					if (error.response.data === "Task already has the new status"){
@@ -126,7 +126,7 @@
 		{#each items as item (item.id)}
 			<!--Al consultar item, obtengo toda la informacion de la tarjeta-->
 			<div animate:flip="{{duration: flipDurationMs}}" >
-				<Card data={item}/>
+				<Card data={item} />
 			</div>
 		{/each}
 	</div>
