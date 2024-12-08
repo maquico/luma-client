@@ -28,7 +28,7 @@
         name: '',
         priority: '',
         time: '',
-        state: '',
+        state: '0',
         startDate: '',
         endDate: '',
         tags: '',
@@ -58,6 +58,13 @@
 		return date.toISOString().split('T')[0]; // Devuelve solo YYYY-MM-DD
 	}
 
+	// Reactive statement to fetch task data when `data` changes and modal is shown
+	$: {
+		if (isEdit && show) {
+			fetchTaskData();
+		}
+	}
+
 	async function fetchTaskData() {
         if (!taskId || !isEdit) return;
 
@@ -70,9 +77,9 @@
             formData = {
                 projectId: task.Proyecto_ID,
                 name: task.nombre,
-                priority: task.prioridad,
-                time: task.tiempo,
-                state: task.Estado_Tarea_ID,
+                priority: String(task.prioridad),
+                time: String(task.tiempo),
+                state: String(task.Estado_Tarea_ID),
                 startDate: new Date(task.fechaInicio),
                 endDate: new Date(task.fechaFin),
                 tags: task.etiquetas,
@@ -100,8 +107,8 @@
             	Proyecto_ID: formData.projectId,
             	Task_ID: taskId,
             	nombre: formData.name,
-            	prioridad: formData.priority,
-            	tiempo: formData.time,
+            	prioridad: parseInt(formData.priority),
+            	tiempo: parseInt(formData.time),
             	etiquetas: formData.tags,
             	descripcion: formData.description,
             	fechaInicio: formatDateForDB(startDate),
@@ -170,8 +177,8 @@
 					<input type="text" bind:value={formData.tags} class="grow" placeholder="Tags" />
 				</label>
 
-				<select class="select select-bordered w-full">
-					<option value="" disabled selected>Estado</option>
+				<select class="select select-bordered w-full" bind:value={formData.state}>
+					<option value="0" disabled selected>Estado</option>
 					<!-- Placeholder visible por defecto -->
 					<option value="1">Nuevo</option>
 					<option value="2">En Progreso</option>
