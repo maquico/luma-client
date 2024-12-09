@@ -58,7 +58,7 @@
 	</div>
 </div>
 
-<CreateTaskModal data={data} show={showModal} on:close={handleClose}/>
+<CreateTaskModal data={data} isEdit={true} show={showModal} on:close={handleClose}/>
 
 <style>
     .inline-spacing{
