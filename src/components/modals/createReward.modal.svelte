@@ -8,10 +8,12 @@
 	const dispatch = createEventDispatcher();
 
 	export let show = true;
-	export let data;
+	export let rewardId;
 
-	let userId = '37d3b652-d314-4124-9685-add5f0c6fc19';
+	let userData = JSON.parse(localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token'));
+	let userId = userData.user.id;
 	let loadRewards;
+	let data;
 
 	const close = () => {
 		show = false;
@@ -52,6 +54,33 @@
 			console.error('Error fetching projects:', error);
 		}
 	};
+
+	const fetchRewardData = async () => {
+		console.log('Fetching reward data...');
+
+		await axios
+			.get(`https://luma-server.onrender.com/api/rewards/${rewardId}`)
+			.then((response) => {
+				data = response.data[0];
+				formData.projectId = data.Proyecto_ID;
+				formData.name = data.nombre;
+				formData.quantity = data.cantidad;
+				formData.capacity = data.limite;
+				formData.icon = data.Icono_ID;
+				formData.price = data.precio;
+				formData.description = data.descripcion;
+
+				console.log('rewardDATA', response.data);
+			})
+			.catch((error) => {
+				console.error('Error fetching user data:', error);
+			});
+	};
+
+	$: if (show && rewardId) {
+		console.log('Modal abierto, ejecutando fetchRewardData');
+		fetchRewardData();
+	}
 
 	onMount(() => {
 		fetchProjectsByUser();

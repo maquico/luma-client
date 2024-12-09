@@ -1,6 +1,7 @@
 <script>
 	import axios from 'axios';
 	import { onMount } from 'svelte';
+	import { showToast } from '$lib/stores/toastStore';
 
 	let name;
 	let lastName;
@@ -23,7 +24,7 @@
 				console.log('email', email);
 			})
 			.catch((error) => {
-				console.error('Error fetching badges:', error);
+				console.error('Error fetching user data:', error);
 			});
 	}
 
@@ -41,6 +42,12 @@
 			});
 
 			console.log('ready');
+
+			showToast(`Informacion actualizada`, {
+				type: 'info',
+				duration: 5000,
+				theme: 'dark'
+			});
 		} catch (error) {
 			console.error('Error creating reward:', error);
 		}
