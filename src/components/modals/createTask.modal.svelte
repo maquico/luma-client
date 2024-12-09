@@ -105,21 +105,6 @@
 
 	async function validate() {
     try {
-		// Check if the status has changed and update the task status
-		if (formData.state !== loadedFormData.state) {
-			try {
-				const statusResponse = await axios.put(`https://luma-server.onrender.com/api/task/status/${taskId}`, {
-					projectId: parseInt(formData.projectId),
-					newStatusId: parseInt(formData.state), // Use the new status ID from formData
-					userId: userId
-				});
-				console.log('Task status updated:', statusResponse.data);
-				showToast('Status updated successfully', { type: 'success', duration: 5000 });
-			} catch (error) {
-				console.error('Error updating task status:', error);
-				showToast('Error updating task status', { type: 'error', duration: 5000 });
-			}
-		}
 		// Update or create the task based on the isEdit flag
         try {
 			// Check if form data has changed before sending the other update request
@@ -146,8 +131,25 @@
                 const taskUpdateResponse = await axios.put(
 					`https://luma-server.onrender.com/api/task/byRol/${userId}`, taskObj
                 );
-                console.log('Task updated successfully:', taskUpdateResponse.data);
+				console.log('Task updated successfully:', taskUpdateResponse.data);
                 showToast('Task updated successfully', { type: 'success', duration: 5000 });
+
+				// Check if the status has changed and update the task status
+				if (formData.state !== loadedFormData.state) {
+					try {
+						const statusResponse = await axios.put(`https://luma-server.onrender.com/api/task/status/${taskId}`, {
+							projectId: parseInt(formData.projectId),
+							newStatusId: parseInt(formData.state), // Use the new status ID from formData
+							userId: userId
+						});
+						console.log('Task status updated:', statusResponse.data);
+						showToast('Status updated successfully', { type: 'success', duration: 5000 });
+					} catch (error) {
+						console.error('Error updating task status:', error);
+						showToast('Error updating task status', { type: 'error', duration: 5000 });
+					}
+				}
+ 
             } else if (!isEdit) {
 				const taskCreateResponse = await axios.post('https://luma-server.onrender.com/api/task', {
 					...formData,
