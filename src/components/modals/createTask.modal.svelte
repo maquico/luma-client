@@ -5,6 +5,7 @@
 	import { Tags, User } from 'lucide-svelte';
 	import { DatePicker } from 'date-picker-svelte';
 	import { projectData } from '$lib/stores/projectStore';
+	import { showToast } from '$lib/stores/toastStore';
 
 	let showDatePickerStart = false;
 	let showDatePickerEnd = false;
@@ -12,6 +13,7 @@
 	let endDate = new Date();
     let selectedUserId = ""; // To bind selected user ID
 	let projectMembers= $projectData.miembros;
+	let loadedFormData = {}; // Track loaded form data for comparison
 
 	const dispatch = createEventDispatcher();
 
@@ -91,6 +93,7 @@
             selectedUserId = task.Usuario_ID;
             startDate = new Date(task.fechaInicio);
             endDate = new Date(task.fechaFin);
+			loadedFormData = { ...formData }; // Save loaded form data for comparison
 
         } catch (error) {
             console.error('Error fetching task data:', error);
@@ -101,46 +104,72 @@
     }
 
 	async function validate() {
-      try {
-          if (isEdit) {
-			const taskObj = {
-            	Proyecto_ID: formData.projectId,
-            	Task_ID: taskId,
-            	nombre: formData.name,
-            	prioridad: parseInt(formData.priority),
-            	tiempo: parseInt(formData.time),
-            	etiquetas: formData.tags,
-            	descripcion: formData.description,
-            	fechaInicio: formatDateForDB(startDate),
-            	fechaFin: formatDateForDB(endDate),
-            	Usuario_ID: selectedUserId // Bind selected user
+    try {
+		// Check if the status has changed and update the task status
+		if (formData.state !== loadedFormData.state) {
+			try {
+				const statusResponse = await axios.put(`https://luma-server.onrender.com/api/task/status/${taskId}`, {
+					projectId: parseInt(formData.projectId),
+					newStatusId: parseInt(formData.state), // Use the new status ID from formData
+					userId: userId
+				});
+				console.log('Task status updated:', statusResponse.data);
+				showToast('Status updated successfully', { type: 'success', duration: 5000 });
+			} catch (error) {
+				console.error('Error updating task status:', error);
+				showToast('Error updating task status', { type: 'error', duration: 5000 });
+			}
+		}
+		// Update or create the task based on the isEdit flag
+        try {
+			// Check if form data has changed before sending the other update request
+			const formHasChanged = () => {
+				return Object.keys(formData)
+                .filter(key => key !== 'state')
+                .some(key => formData[key] !== loadedFormData[key]);
         	};
-
-        	const response = await axios.put(
-        	    `https://luma-server.onrender.com/api/task/byRol/${userId}`, taskObj
-        	);
-            console.log('Task updated successfully:', response.data);
-          } else {
-              const response = await axios.post('https://luma-server.onrender.com/api/task', {
-                  ...formData,
-                  startDate: formatDateForDB(startDate),
-                  endDate: formatDateForDB(endDate),
-                  userId: userId
-              });
-              console.log('Task created successfully:', response.data);
-          }
-          close();
-      } catch (error) {
-          console.error(isEdit ? 'Error updating task:' : 'Error creating task:', error);
-      }
-	}
-
-	// Fetch task data on mount when editing
-    onMount(() => {
-        if (isEdit) {
-            fetchTaskData();
+			
+            if (isEdit && formHasChanged()) {
+                const taskObj = {
+                    Proyecto_ID: formData.projectId,
+                    Task_ID: taskId,
+                    nombre: formData.name,
+                    prioridad: parseInt(formData.priority),
+                    tiempo: parseInt(formData.time),
+                    etiquetas: formData.tags,
+                    descripcion: formData.description,
+                    fechaInicio: formatDateForDB(startDate),
+                    fechaFin: formatDateForDB(endDate),
+                    Usuario_ID: selectedUserId // Bind selected user
+                };
+				
+                const taskUpdateResponse = await axios.put(
+					`https://luma-server.onrender.com/api/task/byRol/${userId}`, taskObj
+                );
+                console.log('Task updated successfully:', taskUpdateResponse.data);
+                showToast('Task updated successfully', { type: 'success', duration: 5000 });
+            } else if (!isEdit) {
+				const taskCreateResponse = await axios.post('https://luma-server.onrender.com/api/task', {
+					...formData,
+                    startDate: formatDateForDB(startDate),
+                    endDate: formatDateForDB(endDate),
+                    userId: userId
+                });
+                console.log('Task created successfully:', taskCreateResponse.data);
+                showToast('Task created successfully', { type: 'success', duration: 5000 });
+            }
+            close();
+        } catch (error) {
+			console.error(isEdit ? 'Error updating task:' : 'Error creating task:', error);
+            showToast('Error saving task', { type: 'error', duration: 5000 });
         }
-    });
+
+		
+    } catch (error) {
+		console.error('Unexpected error occurred:', error);
+        showToast('Unexpected error occurred', { type: 'error', duration: 5000 });
+    }
+}
 </script>
 
 {#if show}

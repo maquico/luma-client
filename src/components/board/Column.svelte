@@ -99,7 +99,7 @@
 						return
 					}
 
-					showToast('KBOOM! 💣', { type: 'error', duration: 5000 })
+					showToast('Error updating task status', { type: 'error', duration: 5000 })
 					return
 				})
 		}
