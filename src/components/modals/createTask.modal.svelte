@@ -208,7 +208,6 @@ const isFieldRestricted = (fieldName) => {
     				        showToast('Error updating task status', { type: 'error', duration: 5000 });
     				    });
 				}
-				dispatch('update');
             } else if (!isEdit) {
 				const requestBody = {	
     				projectId: projectId,
@@ -242,13 +241,12 @@ const isFieldRestricted = (fieldName) => {
     				        showToast('Error creating task', { type: 'error', duration: 5000 });
     				    });
             }
+			dispatch('update');
             close();
         } catch (error) {
 			console.error(isEdit ? 'Error updating task:' : 'Error creating task:', error);
             showToast('Error saving task', { type: 'error', duration: 5000 });
         }
-
-		
     } catch (error) {
 		console.error('Unexpected error occurred:', error);
         showToast('Unexpected error occurred', { type: 'error', duration: 5000 });

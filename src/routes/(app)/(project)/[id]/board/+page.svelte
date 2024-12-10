@@ -89,6 +89,18 @@
 		}
 
 	}
+
+	// Receive the update event from Board component
+	function handleUpdate(event) {
+		console.log('Update event received on Board Page:', event);
+		getBoardTasks(projectId);
+	}
+
+	// Receive the create event directly from the CreateTaskModal
+		function handleCreate(event) {
+		console.log('Task Created on Board Page:', event);
+		getBoardTasks(projectId);
+	}
 </script>
 
 {#if loading}
@@ -129,11 +141,11 @@
 		<p>Loading tasks...</p>
 	{:else}
 <!--		<Board columns={projectTasks} onFinalUpdate={handleBoardUpdated}/>-->
-		<Board columns={filteredProjectTasks}/>
+		<Board columns={filteredProjectTasks} on:update={handleUpdate}/>
 	{/if}
 </div>
 
-<CreateTaskModal show={showModal} on:close={handleClose} />
+<CreateTaskModal show={showModal} on:close={handleClose} on:update={handleCreate}/>
 
 <style>
 	.top {
