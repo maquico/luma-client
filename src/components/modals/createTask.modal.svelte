@@ -13,6 +13,7 @@
 	let endDate = new Date();
     let selectedUserId = ""; // To bind selected user ID
 	let projectMembers= $projectData.miembros;
+	let projectId = $projectData.Proyecto_ID;
 	let loadedFormData = {}; // Track loaded form data for comparison
 
 	const dispatch = createEventDispatcher();
@@ -49,8 +50,19 @@
     	2: []
 	};
 
-	// Check if a field should be blocked
-	const isFieldRestricted = (fieldName) => restrictedFields[currentUserRole]?.includes(fieldName);
+// Check if a field should be blocked
+const isFieldRestricted = (fieldName) => {
+		// Check if field is restricted based on role
+		const isRestrictedByRole = restrictedFields[currentUserRole]?.includes(fieldName);
+
+		// Allow editing of 'time' and 'priority' only if it's an update
+		if (fieldName === 'time' || fieldName === 'priority') {
+			return isRestrictedByRole && isEdit;
+		}
+
+		return isRestrictedByRole;
+	};
+
 
 	const close = () => {
 		show = false;
@@ -196,15 +208,39 @@
     				        showToast('Error updating task status', { type: 'error', duration: 5000 });
     				    });
 				}
+				dispatch('update');
             } else if (!isEdit) {
-				const taskCreateResponse = await axios.post('https://luma-server.onrender.com/api/task', {
-					...formData,
-                    startDate: formatDateForDB(startDate),
-                    endDate: formatDateForDB(endDate),
-                    userId: userId
-                });
-                console.log('Task created successfully:', taskCreateResponse.data);
-                showToast('Task created successfully', { type: 'success', duration: 5000 });
+				const requestBody = {	
+    				projectId: projectId,
+    				name: formData.name,
+    				priority: parseInt(formData.priority),
+    				startDate: formatDateForDB(startDate),
+    				endDate: formatDateForDB(endDate),
+    				time: formData.time,
+    				userId: userId,
+    				tags: formData.tags,
+    				description: formData.description
+				}
+				await axios
+					.post('https://luma-server.onrender.com/api/task', requestBody)
+					.then((response) => {
+    				        console.log('Task created: ', response.data);
+    				        showToast('Task created successfully', { type: 'success', duration: 5000 });
+    				    })
+    				    .catch((error) => {
+    				        console.error('Error creating task:', error);
+						
+    				        if (error.response) {
+    				            // Check if the status code is 400
+    				            if (error.response.status === 400 || error.response.status === 403) {
+    				                showToast(error.response.data, { type: 'warning', duration: 5000 });
+    				                return;
+    				            }
+    				        }
+						
+    				        // Generic error toast
+    				        showToast('Error creating task', { type: 'error', duration: 5000 });
+    				    });
             }
             close();
         } catch (error) {
@@ -228,7 +264,7 @@
 			</div>
 
 			<label class="input input-bordered flex items-center gap-2">
-				<input type="text" bind:value={formData.name} class="grow" placeholder="Task name" />
+				<input type="text" bind:value={formData.name} required class="grow" placeholder="Task name" />
 			</label>
 
 			<div class="task-details">
@@ -309,7 +345,7 @@
 						<div class="label">
 							<span class="label-text">Esfuerzo</span>
 						</div>
-						<select class="select select-bordered" bind:value={formData.time} disabled={isFieldRestricted('time')}>
+						<select class="select select-bordered" bind:value={formData.time} required disabled={isFieldRestricted('time')}>
 							<option disabled selected></option>
 							<option>1</option>
 							<option>2</option>
@@ -323,7 +359,7 @@
 						<div class="label">
 							<span class="label-text">Prioridad</span>
 						</div>
-						<select class="select select-bordered" bind:value={formData.priority} disabled={isFieldRestricted('priority')}>
+						<select class="select select-bordered" bind:value={formData.priority} required disabled={isFieldRestricted('priority')}>
 							<option>1</option>
 							<option>2</option>
 							<option>3</option>
