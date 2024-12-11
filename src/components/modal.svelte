@@ -14,20 +14,15 @@
 	export let controls = false;
 	export let controlsOptions = false;
 	export let closeByBackgroundClick = false;
+	export let deleteModalType = 'task';
 
 	// Delete Task Modal
 	let showModal = false;
 	let userDropdown = false;
-	let modalType;
 
 	function handleClose() {
 		showModal = false;
 	}
-
-	const openDeleteModal = (type) => {
-		modalType = type;
-		showModal = true;
-	};
 
 	const close = () => {
 		show = false;
@@ -94,12 +89,12 @@
 	</div>
 </div>
 
-{#if modalType === 'reward'}
+{#if deleteModalType === 'reward'}
 	<DeleteRewardModal show={showModal} on:close={handleClose} />
-	{console.log('Modal Type', modalType)}
+	{console.log('Modal Type', deleteModalType)}
 {:else}
 	<DeleteTaskModal show={showModal} on:close={handleClose} />
-	{console.log('Modal Type:'.modalType)}
+	{console.log('Modal Type:', deleteModalType)}
 {/if}
 
 <style>
