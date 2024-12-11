@@ -1,8 +1,10 @@
 <script>
 	import { flip } from 'svelte/animate';
 	import Column from "$components/board/Column.svelte";
+	import { createEventDispatcher } from 'svelte';
 
 	const flipDurationMs = 300;
+	const dispatch = createEventDispatcher();
 
 	export let columns;
 	// will be called any time a card or a column gets dropped to update the parent data
@@ -13,7 +15,12 @@
 		// onFinalUpdate([...columns]);
 	}
 
-	console.log(columns);
+	// Receive the update event from CreateTaskModal
+	function handleUpdate(event) {
+		console.log('Update event received on Board:', event);
+		dispatch('update');
+	}
+
 </script>
 
 <section class="board">
@@ -23,7 +30,8 @@
 			<Column statusId={id}
 							name={name}
 							items={items}
-							onDrop={(newItems) => handleItemFinalize(index, newItems)} />
+							onDrop={(newItems) => handleItemFinalize(index, newItems)} 
+							on:update={handleUpdate}/>
 		</div>
 	{/each}
 </section>

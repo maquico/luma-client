@@ -2,6 +2,7 @@
 	import CreateTaskModal from '$components/modals/createTask.modal.svelte';
 	import { Calendar } from 'lucide-svelte';
 	import { DateTime } from 'luxon';
+	import { createEventDispatcher } from 'svelte';
 
 	export let data;
 	let title = 'Title'
@@ -9,7 +10,9 @@
 	let date = DateTime.now().toFormat('dd LLL yyyy')
 	let tags = ['tag1', 'tag2', 'tag3', 'tag4']
 
-	if (data){
+	const dispatch = createEventDispatcher();
+
+	$: if (data){
 		title = data.name
 		description = data.description
 		tags = data.tags
@@ -21,7 +24,12 @@
 		showModal = false
 	}
 
-	// console.log(data);
+	// Receive the update event from CreateTaskModal
+	function handleUpdate(event) {
+		console.log('Update event received on Card:', event);
+		dispatch('update');
+	}
+
 
 </script>
 
@@ -58,7 +66,7 @@
 	</div>
 </div>
 
-<CreateTaskModal data={data} isEdit={true} show={showModal} on:close={handleClose}/>
+<CreateTaskModal data={data} isEdit={true} show={showModal} on:close={handleClose} on:update={handleUpdate}/>
 
 <style>
     .inline-spacing{
