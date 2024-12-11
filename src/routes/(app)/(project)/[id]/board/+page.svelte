@@ -90,11 +90,15 @@
 
 	}
 
-	// Receive the update event from Board component
-	function handleUpdate(event) {
-		console.log('Update event received on Board Page:', event);
-		getBoardTasks(projectId);
+	async function handleUpdate(event) {
+    	console.log('Update event received on Board Page:', event);
+    	try {
+    	    await getBoardTasks(projectId); 
+    	} catch (error) {
+    	    console.error("Error updating board tasks:", error);
+    	}
 	}
+
 
 	// Receive the create event directly from the CreateTaskModal
 		function handleCreate(event) {

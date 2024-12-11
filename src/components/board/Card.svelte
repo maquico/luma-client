@@ -12,7 +12,7 @@
 
 	const dispatch = createEventDispatcher();
 
-	if (data){
+	$: if (data){
 		title = data.name
 		description = data.description
 		tags = data.tags
