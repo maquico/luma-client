@@ -41,6 +41,10 @@
 		dispatch('update');
 	}
 
+	const handleDelete = () => {
+		dispatch('delete')
+	}
+
 	function handleDndConsiderCards(e) {
 		const { items: newItems, info: { id, trigger } } = e.detail;
 		if (trigger == TRIGGERS.DRAG_STARTED) {
@@ -134,7 +138,7 @@
 		{#each items as item (item.id)}
 			<!--Al consultar item, obtengo toda la informacion de la tarjeta-->
 			<div animate:flip="{{duration: flipDurationMs}}" >
-				<Card data={item} on:update={handleUpdate}/>
+				<Card data={item} on:update={handleUpdate} on:delete={handleDelete}/>
 			</div>
 		{/each}
 	</div>

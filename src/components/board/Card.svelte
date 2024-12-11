@@ -30,6 +30,10 @@
 		dispatch('update');
 	}
 
+	const handleDelete = () => {
+		dispatch('delete')
+	}
+
 
 </script>
 
@@ -66,7 +70,7 @@
 	</div>
 </div>
 
-<CreateTaskModal data={data} isEdit={true} show={showModal} on:close={handleClose} on:update={handleUpdate}/>
+<CreateTaskModal data={data} isEdit={true} show={showModal} on:close={handleClose} on:update={handleUpdate} on:delete={handleDelete}/>
 
 <style>
     .inline-spacing{

@@ -21,6 +21,10 @@
 		dispatch('update');
 	}
 
+	const handleDelete = () => {
+		dispatch('delete')
+	}
+
 </script>
 
 <section class="board">
@@ -31,7 +35,8 @@
 							name={name}
 							items={items}
 							onDrop={(newItems) => handleItemFinalize(index, newItems)} 
-							on:update={handleUpdate}/>
+							on:update={handleUpdate}
+							on:delete={handleDelete}/>
 		</div>
 	{/each}
 </section>

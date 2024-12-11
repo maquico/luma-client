@@ -50,8 +50,8 @@
     	2: []
 	};
 
-// Check if a field should be blocked
-const isFieldRestricted = (fieldName) => {
+	// Check if a field should be blocked
+	const isFieldRestricted = (fieldName) => {
 		// Check if field is restricted based on role
 		const isRestrictedByRole = restrictedFields[currentUserRole]?.includes(fieldName);
 
@@ -69,6 +69,11 @@ const isFieldRestricted = (fieldName) => {
 		formData = { ...initialFormData };
 		dispatch('close');
 	};
+
+	const handleDelete = () => {
+		show = false;
+		dispatch('delete')
+	}
 
 	function formatDate(date) {
 		return date.toLocaleDateString('es-ES', {
@@ -255,7 +260,7 @@ const isFieldRestricted = (fieldName) => {
 </script>
 
 {#if show}
-	<Modal title={isEdit ? 'Edit Task' : 'Create Task'} header controls controlsOptions on:close={close}>
+	<Modal title={isEdit ? 'Edit Task' : 'Create Task'} data={data} header controls controlsOptions on:close={close} on:delete={handleDelete}>
 		<form on:submit|preventDefault={validate}>
 			<div class="overview">
 				<p class="project-name">Project name</p>

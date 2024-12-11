@@ -41,7 +41,7 @@
 	</div>
 </div>
 
-<DeleteTaskModal show={showModal} on:close={handleClose}/>
+<DeleteTaskModal show={showModal} data={data} on:close={handleClose} on:delete={handleDelete}/>
 
 <script>
 	import {createEventDispatcher} from 'svelte';
@@ -58,6 +58,7 @@
 	export let controls = false
 	export let controlsOptions = false
 	export let closeByBackgroundClick = false
+	export let data = {}
 
 
 	// Delete Task Modal
@@ -71,6 +72,11 @@
 	const close = () => {
 		show = false;
 		dispatch('close')
+	}
+
+	const handleDelete = () => {
+		show = false;
+		dispatch('delete')
 	}
 </script>
 

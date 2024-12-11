@@ -145,7 +145,7 @@
 		<p>Loading tasks...</p>
 	{:else}
 <!--		<Board columns={projectTasks} onFinalUpdate={handleBoardUpdated}/>-->
-		<Board columns={filteredProjectTasks} on:update={handleUpdate}/>
+		<Board columns={filteredProjectTasks} on:update={handleUpdate} on:delete={handleUpdate}/>
 	{/if}
 </div>
 
