@@ -23,10 +23,12 @@
 
 		if (projectName === projectNameUser) {
 			await axios
-				.delete('https://luma-server.onrender.com/api/projects', {
-					projectId: projectId,
-					requestUserId: userID
-				})
+				.delete('https://luma-server.onrender.com/api/projects',
+					{ data: {
+							projectId: projectId,
+							requestUserId: userID
+						},
+					})
 				.then((response) => {
 					console.log('Delete successful:', response.data);
 					console.log(projectId, userID);
