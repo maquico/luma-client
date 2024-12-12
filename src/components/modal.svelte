@@ -1,6 +1,6 @@
 <script>
 	import { createEventDispatcher } from 'svelte';
-	import { Ellipsis, Trash2, X } from 'lucide-svelte';
+	import { Ellipsis, Rewind, Trash2, X } from 'lucide-svelte';
 	import { clickOutside } from '$lib/clickOutside.js';
 	import DeleteTaskModal from '$components/modals/deleteTask.modal.svelte';
 	import DeleteRewardModal from './modals/deleteReward.modal.svelte';
@@ -15,6 +15,7 @@
 	export let controlsOptions = false;
 	export let closeByBackgroundClick = false;
 	export let deleteModalType = 'task';
+	export let rewardID;
 
 	// Delete Task Modal
 	let showModal = false;
@@ -90,7 +91,7 @@
 </div>
 
 {#if deleteModalType === 'reward'}
-	<DeleteRewardModal show={showModal} on:close={handleClose} />
+	<DeleteRewardModal show={showModal} rewardId={rewardID} on:close={handleClose} />
 	{console.log('Modal Type', deleteModalType)}
 {:else}
 	<DeleteTaskModal show={showModal} on:close={handleClose} />

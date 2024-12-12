@@ -1,12 +1,15 @@
 <script>
 	import Modal from '$components/modal.svelte';
 	import { createEventDispatcher } from 'svelte';
+	import { showToast } from '$lib/stores/toastStore';
 	import axios from 'axios';
 
 	const dispatch = createEventDispatcher();
 
 	export let show = true;
 	export let rewardId;
+	let userData = JSON.parse(localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token'));
+	let userId = userData.user.id;
 
 	const close = () => {
 		show = false;
@@ -14,14 +17,34 @@
 	};
 
 	const deleteReward = async () => {
-		try {
-			await axios.delete(`https://luma-server.onrender.com/api/rewards/${rewardId}`);
-			console.log(`Recompensa con ID ${rewardId} eliminada exitosamente.`);
-			dispatch('delete', rewardId); // Notifica al padre sobre la eliminación
-			close();
-		} catch (error) {
-			console.error('Error al eliminar la recompensa:', error);
-		}
+		console.log(rewardId, userId);
+
+		await axios
+			.delete('https://luma-server.onrender.com/api/rewards', {
+				rewardId: rewardId,
+				requestUserId: userId
+			})
+			.then((response) => {
+				console.log('Recompensa eliminada', response.data);
+				showToast('Recompensa eliminada', { type: 'success', duration: 5000 });
+
+				show = false;
+				dispatch('close');
+				window.location.href = 'shop/customize';
+			})
+			.catch((error) => {
+				console.error('Error al eliminar la recompensa', error);
+
+				if (error.response) {
+					// Check if the status code is 400
+					if (error.response.status === 400 || error.response.status === 403) {
+						showToast(error.response.data, { type: 'warning', duration: 5000 });
+						return;
+					}
+				}
+				// Generic error toast
+				showToast('Error al eliminar la recompensa', { type: 'error', duration: 5000 });
+			});
 	};
 </script>
 

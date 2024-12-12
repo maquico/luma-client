@@ -3,6 +3,7 @@
 	import { createEventDispatcher } from 'svelte';
 	import { projectData } from '$lib/stores/projectStore';
 	import axios from 'axios';
+	import { showToast } from '$lib/stores/toastStore';
 
 	const dispatch = createEventDispatcher();
 
@@ -23,19 +24,30 @@
 
 		if (projectName === projectNameUser) {
 			await axios
-				.delete('https://luma-server.onrender.com/api/projects',
-					{ data: {
-							projectId: projectId,
-							requestUserId: userID
-						},
-					})
+				.delete('https://luma-server.onrender.com/api/projects', {
+					data: {
+						projectId: projectId,
+						requestUserId: userID
+					}
+				})
 				.then((response) => {
-					console.log('Delete successful:', response.data);
-					console.log(projectId, userID);
-					close();
+					console.log('Protecto eliminado', response.data);
+					showToast('Proecto eliminado', { type: 'success', duration: 5000 });
+
+					window.location.href = '/';
 				})
 				.catch((error) => {
-					console.error('Error during delete request:', error);
+					console.error('Error al eliminar proyecto', error);
+
+					if (error.response) {
+						// Check if the status code is 400
+						if (error.response.status === 400 || error.response.status === 403) {
+							showToast(error.response.data, { type: 'warning', duration: 5000 });
+							return;
+						}
+					}
+					// Generic error toast
+					showToast('Error al eliminar proyecto', { type: 'error', duration: 5000 });
 				});
 		}
 	}
