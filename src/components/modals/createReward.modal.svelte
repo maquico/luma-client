@@ -111,7 +111,14 @@
 </script>
 
 {#if show}
-	<Modal header controls on:close={close}>
+	<Modal
+		header
+		controls
+		controlsOptions
+		on:close={close}
+		rewardID={rewardId}
+		deleteModalType={'reward'}
+	>
 		<form on:submit|preventDefault={validate}>
 			<div class="overview">
 				<p class="project-name">Project name</p>

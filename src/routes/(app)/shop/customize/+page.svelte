@@ -17,6 +17,7 @@
 	let selectedProject = null;
 	let showModal = false;
 	let rewardIdModal;
+	let modalTypeReward = 'reward';
 
 	function handleClose() {
 		showModal = false;
@@ -156,7 +157,12 @@
 	</div>
 </div>
 
-<CreateRewardModal show={showModal} rewardId={rewardIdModal} on:close={handleClose} />
+<CreateRewardModal
+	show={showModal}
+	rewardId={rewardIdModal}
+	modalType={modalTypeReward}
+	on:close={handleClose}
+/>
 
 <style>
 	.custom-shadow {
