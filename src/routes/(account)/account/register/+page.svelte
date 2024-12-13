@@ -5,6 +5,7 @@
 	import ButtonComponent from '$components/button.svelte';
 	import axios from 'axios';
 	import { showToast } from '$lib/stores/toastStore';
+	import { onMount } from 'svelte';
 
 	let name;
 	let lastName;
@@ -15,33 +16,43 @@
 	let validRegex = /^[\w-]+@[a-zA-Z\dx-]+\.[a-zA-Z]{2,}$/;
 
 	async function register() {
-		//TODO: add toast to show error messages
 		try {
-			if (email.match(validRegex) && password && password === confirmPassword) {
-				await axios.post('https://luma-server.onrender.com/api/user/', {
-					email: email,
-					password: password,
-					first_name: name,
-					last_name: lastName
-				})
-					.then((response) => {
-						console.log(response.data);
-						// Optionally redirect after successful registration
-						// goto('/account/register/checkemail');
-						console.log('successfull register');
+			if (email.match(validRegex)) {
+				if(password && password === confirmPassword){
+					await axios.post('https://luma-server.onrender.com/api/user/', {
+						email: email,
+						password: password,
+						first_name: name,
+						last_name: lastName
 					})
-					.catch((error) => {
-						console.error('Error:', error);
-					});
-				invalidInput = false;
+						.then((response) => {
+							console.log(response.data);
+							// Optionally redirect after successful registration
+							// goto('/account/register/checkemail');
+							console.log('successfull register');
+							showToast("¡Registro exitoso! 🎉 Tu cuenta ha sido creada correctamente.", { theme: 'dark', type: 'success', duration: 5000 });
+						})
+						.catch((error) => {
+							console.error('Error:', error);
+							if(error.response.data.startsWith("Password should be at least 8 characters")){
+								showToast("La contraseña debe tener al menos 8 caracteres e incluir al menos una letra minúscula, una letra mayúscula, un número y un carácter especial.", { theme: 'dark', type: 'error', duration: 5000 });
+							}else{
+								showToast(error.response.data, { theme: 'dark', type: 'error', duration: 5000 });
+							}
+						});
+					invalidInput = false;
+				}else{
+					console.error('Error: Los campos de contraseña no coinciden.');
+					showToast('Los campos de contraseña no coinciden', { theme: 'dark', type: 'error', duration: 5000 });
+				}
 			} else {
-				console.error('Validation error: Invalid input');
-				showToast('Invalid input. Please check your email or password.', { type: 'error', duration: 5000 });
+				console.error('Error: El formato del correo electrónico no es válido');
+				showToast('El formato del correo electrónico no es válido', { theme: 'dark',  type: 'error', duration: 5000 });
 				invalidInput = true;
 			}
 		} catch (error) {
-			showToast(`Error registering user: ${error.response ? error.response.data.message : error.message}`, { type: 'error', duration: 5000 });
-			console.error('Error during registration:', error.response ? error.response.data : error.message);
+			showToast(`El registro ha fallado debido a un problema interno. Contacta al soporte.`, { theme: 'dark', type: 'error', duration: 5000 });
+			console.error('Error: El registro ha fallado debido a un problema interno. Contacta al soporte.', error.response ? error.response.data : error.message);
 			invalidInput = true;
 		}
 	}
