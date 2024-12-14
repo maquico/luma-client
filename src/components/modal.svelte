@@ -16,7 +16,7 @@
 	export let closeByBackgroundClick = false;
 	export let deleteModalType = 'task';
 	export let rewardID;
-  export let data = {}
+  	export let data = {}
 
 	// Delete Task Modal
 	let showModal = false;
@@ -97,10 +97,10 @@
 </div>
 
 {#if deleteModalType === 'reward'}
-	<DeleteRewardModal show={showModal} data={data} rewardId={rewardID} on:close={handleClose} on:delete={handleDelete}/>
+	<DeleteRewardModal show={showModal} rewardId={rewardID} on:close={handleClose} />
 	{console.log('Modal Type', deleteModalType)}
 {:else}
-	<DeleteTaskModal show={showModal} on:close={handleClose} />
+	<DeleteTaskModal show={showModal} data={data} on:close={handleClose} on:delete={handleDelete}/>
 	{console.log('Modal Type:', deleteModalType)}
 {/if}
 
