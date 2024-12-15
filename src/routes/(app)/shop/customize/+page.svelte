@@ -123,8 +123,12 @@
 					</div>
 				</div>
 
-				<div class="flex justify-center items-center h-24 bg-gray-300">
-					<ImageIcon class="w-12 h-12 text-gray-400" />
+				<div class="flex justify-center items-center h-24 bg-gray-100">
+					<img 
+						src="{reward.Iconos.foto}" 
+						alt="{reward.nombre} icon" 
+						class="h-full max-w-full object-contain"
+					>
 				</div>
 
 				<div class="p-2">
