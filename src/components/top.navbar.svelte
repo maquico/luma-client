@@ -29,14 +29,22 @@
 			<Info />
 		</a>
 
-		<button class="avatar"
+		<div  class="avatar placeholder"
 						use:clickOutside on:click_outside={() => { if(userDropdown) userDropdown = !userDropdown }}
 						on:click={() => { userDropdown = !userDropdown}}
 		>
-			<div class="w-9 rounded-full">
-				<img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" alt="user-avatar" />
+			<div class="w-8 rounded-full bg-neutral text-neutral-content ">
+				<span class="text-xs">
+					{
+						userName
+							.split(" ")
+							.map(name => name[0].toUpperCase())
+							.slice(0, 2)
+							.join("")
+					}
+				</span>
 			</div>
-		</button>
+		</div >
 
 <!--		TODO: pendiente revisar si afecta el comportamiento de que el dropdown cierre cuando se haga click fuera del menu-->
 		<div class="dropdown-menu-container {userDropdown ? 'open' : ''}">
