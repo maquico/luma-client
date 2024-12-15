@@ -21,12 +21,15 @@
 					<p>MIEMBROS</p>
 
 					<div class="members-grid">
-						<!--{#each [1,2,3,4,5,6] as member}-->
 						{#each $projectData.miembros as member}
-<!--							TODO: pendiente añadir bien el routing con el id del miembro-->
-<!--							TODO: pendiente parsear el nombre para mostrar iniciales del usuario-->
 							<div class="member" on:click={() => {goto(`/user/${member.Usuario_ID}`)}}>
-								XX
+								{
+									member.nombreCompleto
+									.split(" ")
+									.map(name => name[0].toUpperCase())
+									.slice(0, 2)
+									.join("")
+								}
 							</div>
 						{/each}
 					</div>
