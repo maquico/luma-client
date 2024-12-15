@@ -21,16 +21,15 @@
 
 		await axios
 			.delete('https://luma-server.onrender.com/api/rewards', {
-				rewardId: rewardId,
-				requestUserId: userId
+				data: {
+					rewardId: rewardId,
+					requestUserId: userId
+				}
 			})
 			.then((response) => {
 				console.log('Recompensa eliminada', response.data);
-				showToast('Recompensa eliminada', { type: 'success', duration: 5000 });
-
-				show = false;
-				dispatch('close');
-				window.location.href = 'shop/customize';
+				showToast('Recompensa eliminada', {theme: 'dark', type: 'success', duration: 5000 });
+				close()
 			})
 			.catch((error) => {
 				console.error('Error al eliminar la recompensa', error);
@@ -38,12 +37,13 @@
 				if (error.response) {
 					// Check if the status code is 400
 					if (error.response.status === 400 || error.response.status === 403) {
-						showToast(error.response.data, { type: 'warning', duration: 5000 });
+						showToast(error.response.data, {theme: 'dark', type: 'warning', duration: 5000 });
 						return;
 					}
 				}
 				// Generic error toast
-				showToast('Error al eliminar la recompensa', { type: 'error', duration: 5000 });
+				showToast('Error al eliminar la recompensa', {theme: 'dark', type: 'error', duration: 5000 });
+				close()
 			});
 	};
 </script>
@@ -52,8 +52,8 @@
 	<Modal header closeByBackgroundClick title="Eliminar recompensa" on:close={close}>
 		<p>¿Estás seguro de que deseas eliminar esta recompensa? Esta acción no se puede deshacer.</p>
 		<div class="controls">
-			<button type="button" class="btn btn-secondary" on:click={close}> Cancelar </button>
-			<button type="button" class="btn btn-danger" on:click={deleteReward}> Eliminar </button>
+			<button type="button" class="btn" on:click={close}> Cancelar </button>
+			<button type="button" class="btn" on:click={deleteReward}> Eliminar </button>
 		</div>
 	</Modal>
 {/if}
