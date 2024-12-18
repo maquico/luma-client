@@ -165,6 +165,7 @@
 	show={showModal}
 	rewardId={rewardIdModal}
 	modalType={modalTypeReward}
+	isEdit={true}
 	on:close={handleClose}
 />
 
