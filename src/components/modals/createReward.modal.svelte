@@ -3,7 +3,6 @@
     import Modal from '$components/modal.svelte';
     import { createEventDispatcher } from 'svelte';
     import axios from 'axios';
-    import { loadRewardsFunction } from '$src/lib/stores/rewardStore.js';
 	import { showToast } from '$src/lib/stores/toastStore.js';
 	import { selectedProjectStore } from '$src/lib/stores/selectedProjectStore.js';
 
@@ -28,11 +27,12 @@
 
     let userProjects = [];
 	let selectedProjectUserRole;
-    let loadRewards;
 	let isEditable = false;
     let data;
     let formData = { ...initialFormData };
+	let loadedFormData = { ...initialFormData };
     let projectsOptions = [];
+	let iconsOptions = [];
 
     const close = () => {
         show = false;
@@ -40,23 +40,28 @@
         dispatch('close');
     };
 
-    loadRewardsFunction.subscribe((func) => {
-        loadRewards = func;
-    });
+
 
 	// Set role and determine if fields are editable
 	const setRoleAndEditable = () => {
-		console.log("SET ROLE AND EDITABLE");
-		console.log('User projects:', userProjects);
         const selectedProject = userProjects.find(p => p.Proyecto_ID === formData.projectId);
-		console.log('Selected project:', selectedProject);
         if (selectedProject) {
             selectedProjectUserRole = selectedProject.queryingUserRole;
-            isEditable = selectedProjectUserRole === 'Lider'; // Editable only if role is 'Lider'
-			console.log('Role:', selectedProjectUserRole);
-			console.log('Is editable:', isEditable);
+            isEditable = selectedProjectUserRole === 'Lider';
         }
     };
+
+	const fetchIcons = async () => {
+		try {
+			const response = await axios.get('https://luma-server.onrender.com/api/icon');
+			iconsOptions = response.data.map((icon) => ({
+				value: icon.Icono_ID,
+				label: icon.nombre
+			}));
+		} catch (error) {
+			console.error('Error fetching icons:', error);
+		}
+	};
 
     const fetchProjectsByUser = async () => {
         try {
@@ -102,7 +107,7 @@
                 formData.price = data.precio;
                 formData.description = data.descripcion;
 
-                console.log('rewardDATA', response.data);
+				loadedFormData = { ...formData };
             })
             .catch((error) => {
                 console.error('Error fetching user data:', error);
@@ -117,6 +122,7 @@
 
     onMount(() => {
         fetchProjectsByUser();
+		fetchIcons();
     });
 
 
@@ -129,7 +135,9 @@
             };
 
             if (isEdit) {
+				console.log('isEdit', isEdit);
                 if (formHasChanged()) {
+					console.log("FORM HAS CHANGED")
                     const rewardObj = {
                         iconoId: formData.icon,
                         nombre: formData.name,
@@ -145,14 +153,14 @@
                     Object.keys(rewardObj).forEach(key => rewardObj[key] === undefined && delete rewardObj[key]);
     
                     await axios.put(
-                        `https://luma-server.onrender.com/api/rewards/${userId}`, rewardObj
+                        `https://luma-server.onrender.com/api/rewards/`, rewardObj
                     )
                     .then((response) => {
-                        console.log('Task details updated:', response.data);
-                        showToast('Detalles de tarea actualizados', { type: 'success', duration: 5000 });
+                        console.log('Reward details updated:', response.data);
+                        showToast('Detalles de recompensa actualizados', { type: 'success', duration: 5000 });
                     })
                     .catch((error) => {
-                        console.error('Error updating task details:', error);
+                        console.error('Error updating reward details:', error);
                         
                         if (error.response) {
                             // Check if the status code is 400
@@ -162,12 +170,12 @@
                             }
                         }
                         // Generic error toast
-                        showToast('Error updating task details', { type: 'error', duration: 5000 });
+                        showToast('Error updating reward details', { type: 'error', duration: 5000 });
                     });
                 }
     
             } else {
-                const response = axios.post('https://luma-server.onrender.com/api/rewards/create', {
+                axios.post('https://luma-server.onrender.com/api/rewards/create', {
                     projectId: formData.projectId,
                     iconoId: formData.icon,
                     nombre: formData.name,
@@ -175,16 +183,28 @@
                     precio: formData.price,
                     cantidad: formData.quantity,
                     limite: formData.capacity
+                })
+				.then((response) => {
+					console.log('Reward created:', response.data);
+					showToast('Recompensa creada exitosamente', { type: 'success', duration: 5000 });
+				})
+				.catch((error) => {
+					console.error('Error updating rewards details:', error);
+					if (error.response) {
+                            // Check if the status code is 400
+                            if (error.response.status === 400 || error.response.status === 403) {
+                                showToast(error.response.data, { type: 'warning', duration: 5000 });
+                                return;
+                            }
+                        }
+                        // Generic error toast
+                        showToast('Error updating reward details', { type: 'error', duration: 5000 });
                 });
-    
-                console.log('Form data:', formData);
-    
-                console.log('Reward created successfully:', response.data);
             }
-            loadRewards();
+			dispatch('update');
             close();
         } catch (error) {
-            console.error('Error creating reward:', error);
+            console.error('Error creating or updating reward:', error);
         }
     }
 
@@ -249,14 +269,12 @@
                             <span class="label-text">Icono</span>
                         </div>
                         <select class="select select-bordered"
-						bind:value={formData.icon}
-						disabled={!isEditable}
-						required>
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                            <option>5</option>
+                        bind:value={formData.icon}
+                        disabled={!isEditable}
+                        required>
+                            {#each iconsOptions as icon}
+                                <option value={icon.value}>{icon.label}</option>
+                            {/each}
                         </select>
                     </label>
                 </div>

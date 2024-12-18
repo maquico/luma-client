@@ -1,9 +1,8 @@
 <script>
 	import { onMount } from 'svelte';
-	import { ImageIcon, Info, Edit } from 'lucide-svelte';
+	import { Info} from 'lucide-svelte';
 	import axios from 'axios';
 	import { filters } from '$src/lib/stores/filterStore.js';
-	import { loadRewardsFunction } from '$src/lib/stores/rewardStore.js';
 	import { selectedProjectStore } from '$src/lib/stores/selectedProjectStore.js';
 	import CreateRewardModal from '$components/modals/createReward.modal.svelte';
 
@@ -22,6 +21,10 @@
 	function handleClose() {
 		showModal = false;
 	}
+
+	const handleUpdate = () => {
+		loadRewards(); 
+	};
 
 	// Función para aplicar los filtros
 	function applyFilters(filterValues) {
@@ -86,6 +89,7 @@
 	};
 
 	$: selectedProjectStore.subscribe((value) => {
+		console.log("DETECTED CHANGE", value);
 		selectedProject = value;
 		if (selectedProject) {
 			loadRewards(); // Cargar recompensas dinámicamente al cambiar el proyecto
@@ -167,6 +171,7 @@
 	modalType={modalTypeReward}
 	isEdit={true}
 	on:close={handleClose}
+	on:update={handleUpdate}
 />
 
 <style>
