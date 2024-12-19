@@ -5,6 +5,7 @@
     import axios from 'axios';
 	import { showToast } from '$src/lib/stores/toastStore.js';
 	import { selectedProjectStore } from '$src/lib/stores/selectedProjectStore.js';
+    import { toggle } from '$src/lib/stores/refreshReward.js';
 
     const dispatch = createEventDispatcher();
 
@@ -172,8 +173,9 @@
                         // Generic error toast
                         showToast('Error updating reward details', { type: 'error', duration: 5000 });
                     });
+                    dispatch('update');
                 }
-    
+                
             } else {
                 axios.post('https://luma-server.onrender.com/api/rewards/create', {
                     projectId: formData.projectId,
@@ -200,8 +202,9 @@
                         // Generic error toast
                         showToast('Error updating reward details', { type: 'error', duration: 5000 });
                 });
+                selectedProjectStore.set('0');
+                selectedProjectStore.set(formData.projectId);
             }
-			dispatch('update');
             close();
         } catch (error) {
             console.error('Error creating or updating reward:', error);
@@ -213,11 +216,12 @@
 {#if show}
     <Modal
         header
-		title="Recompensa personalizada"
+		title={isEdit ? 'Edit Reward' : 'Create Reward'}
         controls
         controlsOptions
         on:close={close}
         rewardID={rewardId}
+        isEdit={isEdit}
         deleteModalType={'reward'}
     >
         <form on:submit|preventDefault={validate}>

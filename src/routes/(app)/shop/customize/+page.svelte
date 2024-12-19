@@ -4,6 +4,7 @@
 	import axios from 'axios';
 	import { filters } from '$src/lib/stores/filterStore.js';
 	import { selectedProjectStore } from '$src/lib/stores/selectedProjectStore.js';
+	import { refreshReward, toggle } from '$src/lib/stores/refreshReward.js';
 	import CreateRewardModal from '$components/modals/createReward.modal.svelte';
 
 	let isProjectLeader = true;
@@ -60,7 +61,10 @@
 	// Función para traer recompensas (sincrónica)
 	const loadRewards = () => {
 		console.log('Cargando recompensas...', selectedProject);
-		if (!selectedProject) return; // Nos aseguramos de que selectedProject esté definido
+		if (!selectedProject) {
+			console.log('No hay proyecto seleccionado');
+			return;
+		}
 		axios
 			.get(`https://luma-server.onrender.com/api/rewards/project/${selectedProject}`)
 			.then((response) => {
@@ -93,6 +97,15 @@
 		selectedProject = value;
 		if (selectedProject) {
 			loadRewards(); // Cargar recompensas dinámicamente al cambiar el proyecto
+		}
+	});
+	
+	// subscribe to the refreshReward store
+	$: refreshReward.subscribe((value) => {
+		console.log('refreshReward:', value);
+		if (value === true) {
+			loadRewards();
+			toggle();
 		}
 	});
 

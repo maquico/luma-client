@@ -260,7 +260,7 @@
 </script>
 
 {#if show}
-	<Modal title={isEdit ? 'Edit Task' : 'Create Task'} data={data} header controls controlsOptions on:close={close} on:delete={handleDelete}>
+	<Modal title={isEdit ? 'Edit Task' : 'Create Task'} data={data} isEdit={isEdit} header controls controlsOptions on:close={close} on:delete={handleDelete}>
 		<form on:submit|preventDefault={validate}>
 			<div class="overview">
 				<p class="project-name">Project name</p>

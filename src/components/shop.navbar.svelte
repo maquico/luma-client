@@ -63,7 +63,9 @@
 	{/if}
 </section>
 
-<CreateRewardModal show={showModal} on:close={handleClose} />
+<CreateRewardModal
+	show={showModal}
+	on:close={handleClose} />
 
 <style>
 	.tab {
