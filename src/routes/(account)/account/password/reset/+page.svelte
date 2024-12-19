@@ -23,8 +23,12 @@
 								</div>
 							{/if}
 						</div>
-						<button type="submit" class="btn btn-primary">
-							Ingresar
+						<button type="submit" class="btn btn-primary" disabled={loading}>
+							{#if loading}
+								<span class="spinner"></span> Cargando...
+							{:else}
+								Ingresar
+							{/if}
 						</button>
 					</form>
 				</div>
@@ -44,9 +48,11 @@
 											class="w-full h-full flex flex-col items-center justify-center text-center outline-none rounded-lg border border-gray-200 text-lg bg-white {invalidInput? 'input-error': ''}"
 											type="text"
 											name=""
-											id=""
+											id="otp-{n}"
 											bind:value={userOTP[n]}
-											maxlength="1">
+											maxlength="1"
+											on:input={handleInput(n)}
+											on:keydown={handleKeydown(n)}>
 									</div>
 								{/each}
 							</div>
@@ -58,11 +64,21 @@
 							{/if}
 						</div>
 <!--						TODO: añadir un conteo regresivo que indique el tiempo restante de validez de la OTP-->
-						<button type="submit" class="btn btn-primary">
-							Enviar
+						<button type="submit" class="btn btn-primary" disabled="{loading}">
+							{#if loading}
+								<span class="spinner"></span> Cargando...
+							{:else}
+								Ingresar
+							{/if}
 						</button>
 						<div class="flex items-center justify-center text-sm font-medium space-x-1 text-gray-500">
-							<p>¿No recibiste el código?</p> <span class="flex flex-row items-center text-blue-600" on:click={() => {console.log(OTP)}}>Reenviar</span>
+							<p>¿No recibiste el código?</p>
+<!--							TODO: volver a mandar el OTP-->
+							<span
+															class="flex flex-row items-center text-blue-600 cursor-pointer"
+															on:click={resendEmailOTP}>
+								{canResend ? 'Reenviar' : `Reintentar en ${resendCooldown}s`}
+							</span>
 						</div>
 					</form>
 				</div>
@@ -125,74 +141,180 @@
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import { Eye, EyeOff, CircleAlert  } from 'lucide-svelte';
+	import axios from 'axios';
+	import { showToast } from '$lib/stores/toastStore.js';
 
+	let loading = false;
 	let currentStep = 0
 	let steps = [{}, {}, {}];
-	let email = 'mockup@email.com'
+	let email = ''
 	let userOTP = ['','','','','','']
-	let OTP
+	let userID
 	let newPassword
 	let confirmNewPassword
-	let invalidInput=false
-
+	let invalidInput = false
+	let canResend = true
+	let resendCooldown = 30
+	let resendInterval
+	let loadingResend = false;
 	let validRegex = /^[\w-]+@[a-zA-Z\dx-]+\.[a-zA-Z]{2,}$/
 
-	$:console.log(userOTP);
 	$:email.match(validRegex) ? invalidInput=false : invalidInput=true
 
 	onMount(() => {
-		OTP = Math.floor(100000 + Math.random() * 900000)
+
 	})
 
-	function sendEmailOTP(){
+	async function sendEmailOTP(){
 		if (email.match(validRegex)){
-			console.log('valid email');
-			console.log(OTP);
-			//TODO: send email with OTP
-			invalidInput=false
-			currentStep++
+			invalidInput = false
+			loading = true
+			await axios.post('https://luma-server.onrender.com/api/user/otp/send', {
+					email: email
+			})
+				.then((response) => {
+					console.log(response);
+					currentStep++
+				})
+				.catch((error) => {
+					console.log(error);
+
+					if (error.response.data.startsWith("Signups not allowed for otp")) {
+						showToast('No existe una cuenta asociado al correo ingresado', {theme: 'dark', type: 'error', duration: 5000})
+					}else{
+						showToast(error.response.data, {theme: 'dark', type: 'error', duration: 5000})
+					}
+				})
+				.finally(() => {
+					loading = false
+				})
 		}else{
 			console.log('wrong email pattern');
 		}
 	}
 
-	function validateOTP() {
-		if (Number(userOTP.join('')) === OTP){
-			currentStep++
-			invalidInput=false
-		}else{
-			console.log('wrong OTP')
-			invalidInput=true
-		}
+	async function resendEmailOTP() {
+		if (!canResend) return;
+
+		canResend = false;
+		resendCooldown = 30;
+		resendInterval = setInterval(() => {
+			resendCooldown--;
+			if (resendCooldown <= 0) {
+				clearInterval(resendInterval);
+				canResend = true;
+			}
+		}, 1000);
+
+		loadingResend = true;
+
+		await axios.post('https://luma-server.onrender.com/api/user/otp/send', { email: email })
+			.then((response) => {
+				showToast('Se ha enviado un nuevo código OTP a su correo electrónico', {
+					theme: 'dark',
+					type: 'success',
+					duration: 5000
+				})
+				console.log(response);
+			})
+			.catch((error) => {
+				console.log(error);
+				showToast('Hubo un error al reenviar el OTP. Intente de nuevo más tarde.', {
+					theme: 'dark',
+					type: 'error',
+					duration: 5000
+				});
+			})
+			.finally( () => {
+				loadingResend = false
+				})
 	}
 
-	function validateAndConfirmNewPassword(){
+	async function validateOTP() {
+		invalidInput=false
+		loading = true
+		console.log(email, userOTP.join(''));
+		await axios.post('https://luma-server.onrender.com/api/user/otp/verify', {
+			email: email,
+			token: userOTP.join('')
+		})
+			.then((response) => {
+				console.log(response);
+				userID = response.data.user.id
+				currentStep++
+			})
+			.catch((error) => {
+				console.log(error);
+
+				if (error.response.data.startsWith("Verify requires either a token or a token hash")) {
+					showToast('Ingrese el OTP enviado a su correo electronico', {theme: 'dark', type: 'error', duration: 5000})
+				}else if(error.response.data.startsWith("Token has expired or is invalid")){
+					showToast('El OTP ha caducado o no es válido', {theme: 'dark', type: 'error', duration: 5000})
+				}else{
+					showToast(error.response.data, {theme: 'dark', type: 'error', duration: 5000})
+				}
+
+			})
+			.finally(() => {
+				loading = false
+			})
+	}
+
+	async function validateAndConfirmNewPassword(){
 		if (confirmNewPassword === newPassword){
-			console.log('both password match');
-			goto('/account/login')
-			//TODO: toast exitoso
+			await axios.put('https://luma-server.onrender.com/api/user/password/reset',
+				{
+					userId: userID,
+					newPassword: confirmNewPassword
+				})
+				.then((response) => {
+					console.log(response);
+					showToast('Cambio de contraseña exitoso', {theme: 'dark', type: 'success', duration: 5000})
+					goto('/account/login')
+				})
+				.catch((error) => {
+					console.log(error);
+					if(error.response.data.startsWith("Password should be at least 8 characters")){
+						showToast("La contraseña debe tener al menos 8 caracteres e incluir al menos una letra minúscula, una letra mayúscula, un número y un carácter especial.", { theme: 'dark', type: 'error', duration: 5000 });
+					}else{
+						showToast(error.response.data, { theme: 'dark', type: 'error', duration: 5000 });
+					}
+				})
 		}else{
 			console.log('wrong match');
 			invalidInput=true
 		}
 	}
 
+	// Helper functions
 	function showPassword() {
 		let x = document.getElementById("password");
-		if (x.type === "password") {
-			x.type = "text";
-		} else {
-			x.type = "password";
-		}
+		x.type = x.type === "password" ? "text" : "password";
 	}
 
 	function showConfirmPassword() {
 		let x = document.getElementById("confirmPassword");
-		if (x.type === "password") {
-			x.type = "text";
-		} else {
-			x.type = "password";
-		}
+		x.type = x.type === "password" ? "text" : "password";
+	}
+
+	function handleInput(index) {
+		return (event) => {
+			// Move focus to the next input if a value is entered
+			if (event.target.value && index < 5) {
+				const nextInput = document.getElementById(`otp-${index + 1}`);
+				nextInput.focus();
+			}
+		};
+	}
+
+	function handleKeydown(index) {
+		return (event) => {
+			// Move focus to the previous input on Backspace
+			if (event.key === "Backspace" && !event.target.value && index > 0) {
+				const prevInput = document.getElementById(`otp-${index - 1}`);
+				prevInput.focus();
+			}
+		};
 	}
 </script>
 
@@ -304,6 +426,26 @@
 
     .card a{
         color: black;
+    }
+
+    .spinner {
+        border: 2px solid transparent;
+        border-top: 2px solid white; /* Adjust color as needed */
+        border-radius: 50%;
+        width: 16px;
+        height: 16px;
+        animation: spin 1s linear infinite;
+        display: inline-block;
+        margin-right: 8px;
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
     }
 
 </style>

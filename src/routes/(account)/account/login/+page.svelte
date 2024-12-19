@@ -43,7 +43,7 @@
 	import { CircleAlert, Eye, EyeOff, Mail } from 'lucide-svelte';
 
 	let email = 'huanhaowu28@gmail.com'
-	let password = 'Abc123456!'
+	let password = 'Test@123'
 	let invalidInput=false
 	let validRegex = /^[\w-]+@[a-zA-Z\dx-]+\.[a-zA-Z]{2,}$/
 

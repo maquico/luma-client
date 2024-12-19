@@ -13,7 +13,8 @@
 	let selectedAvailability = '';
 	let selectedPriceOrder = '';
 
-	const userId = '37d3b652-d314-4124-9685-add5f0c6fc19';
+    const userData = JSON.parse(localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token'));
+    const userId = userData.user.id;
 
 	// Función para obtener los proyectos
 	const fetchProjects = async () => {
@@ -47,6 +48,11 @@
 		});
 		selectedProjectStore.set(selectedProject); // Actualiza el store
 	};
+
+	// Suscribirse al store para recibir cambios
+	$: selectedProjectStore.subscribe((value) => {
+		selectedProject = value;
+	});
 </script>
 
 <nav>

@@ -6,6 +6,7 @@
 	import { projectData } from '$lib/stores/projectStore';
 	import { showToast } from '$lib/stores/toastStore';
 	import ApproveTaskModal from '$components/modals/approve.task.modal.svelte';
+	import { createEventDispatcher } from 'svelte';
 
 	let projectID =  $projectData.Proyecto_ID
 	let userData = JSON.parse(localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token'))
@@ -13,6 +14,7 @@
 	let showModal = false;
 
 	const flipDurationMs = 150;
+	const dispatch = createEventDispatcher();
 
 	export let name;
 	export let items;
@@ -31,6 +33,16 @@
 			};
 			document.addEventListener('close', handleClose, { once: true });
 		});
+	}
+
+	// Receive the update event from Task Card
+	function handleUpdate(event) {
+		console.log('Update event received on Column:', event);
+		dispatch('update');
+	}
+
+	const handleDelete = () => {
+		dispatch('delete')
 	}
 
 	function handleDndConsiderCards(e) {
@@ -91,7 +103,7 @@
 				})
 				.catch((error) => {
 					// console.log(error.data);
-					console.log('arregle su diparate');
+					console.log('Error updating task status');
 					console.log(error);
 
 					if (error.response.data === "Task already has the new status"){
@@ -99,7 +111,7 @@
 						return
 					}
 
-					showToast('KBOOM! 💣', { type: 'error', duration: 5000 })
+					showToast('Error updating task status', { type: 'error', duration: 5000 })
 					return
 				})
 		}
@@ -126,7 +138,7 @@
 		{#each items as item (item.id)}
 			<!--Al consultar item, obtengo toda la informacion de la tarjeta-->
 			<div animate:flip="{{duration: flipDurationMs}}" >
-				<Card data={item}/>
+				<Card data={item} on:update={handleUpdate} on:delete={handleDelete}/>
 			</div>
 		{/each}
 	</div>
