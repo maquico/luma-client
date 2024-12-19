@@ -1,10 +1,10 @@
 <script>
 	import { onMount } from 'svelte';
-	import { ImageIcon, Info, Edit } from 'lucide-svelte';
+	import { Info} from 'lucide-svelte';
 	import axios from 'axios';
 	import { filters } from '$src/lib/stores/filterStore.js';
-	import { loadRewardsFunction } from '$src/lib/stores/rewardStore.js';
 	import { selectedProjectStore } from '$src/lib/stores/selectedProjectStore.js';
+	import { refreshReward, toggle } from '$src/lib/stores/refreshReward.js';
 	import CreateRewardModal from '$components/modals/createReward.modal.svelte';
 
 	let isProjectLeader = true;
@@ -22,6 +22,10 @@
 	function handleClose() {
 		showModal = false;
 	}
+
+	const handleUpdate = () => {
+		loadRewards(); 
+	};
 
 	// Función para aplicar los filtros
 	function applyFilters(filterValues) {
@@ -57,7 +61,10 @@
 	// Función para traer recompensas (sincrónica)
 	const loadRewards = () => {
 		console.log('Cargando recompensas...', selectedProject);
-		if (!selectedProject) return; // Nos aseguramos de que selectedProject esté definido
+		if (!selectedProject) {
+			console.log('No hay proyecto seleccionado');
+			return;
+		}
 		axios
 			.get(`https://luma-server.onrender.com/api/rewards/project/${selectedProject}`)
 			.then((response) => {
@@ -86,9 +93,19 @@
 	};
 
 	$: selectedProjectStore.subscribe((value) => {
+		console.log("DETECTED CHANGE", value);
 		selectedProject = value;
 		if (selectedProject) {
 			loadRewards(); // Cargar recompensas dinámicamente al cambiar el proyecto
+		}
+	});
+	
+	// subscribe to the refreshReward store
+	$: refreshReward.subscribe((value) => {
+		console.log('refreshReward:', value);
+		if (value === true) {
+			loadRewards();
+			toggle();
 		}
 	});
 
@@ -123,8 +140,12 @@
 					</div>
 				</div>
 
-				<div class="flex justify-center items-center h-24 bg-gray-300">
-					<ImageIcon class="w-12 h-12 text-gray-400" />
+				<div class="flex justify-center items-center h-24 bg-gray-100">
+					<img 
+						src="{reward.Iconos.foto}" 
+						alt="{reward.nombre} icon" 
+						class="h-full max-w-full object-contain"
+					>
 				</div>
 
 				<div class="p-2">
@@ -161,7 +182,9 @@
 	show={showModal}
 	rewardId={rewardIdModal}
 	modalType={modalTypeReward}
+	isEdit={true}
 	on:close={handleClose}
+	on:update={handleUpdate}
 />
 
 <style>
