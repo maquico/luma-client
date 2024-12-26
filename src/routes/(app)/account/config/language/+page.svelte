@@ -1,8 +1,47 @@
 <script>
 	import { t, locale, locales } from '$lib/translations';
+	import { showToast } from '$lib/stores/toastStore';
+	import axios from 'axios';
+	
+	const userData = JSON.parse(localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token'))
+	const userID = userData.user.id
 
-	const handleChange = ({ currentTarget }) => {
+	const handleChange = async ({ currentTarget }) => {
 		const { value } = currentTarget;
+
+		let languageId = 0;
+		if (value === 'en') {
+			languageId = 4;
+		} else if (value === 'es') {
+			languageId = 3;
+		} else {
+			console.log("Not valid language selected, defaulting to English");
+			languageId = 4;
+		}
+
+		// Call the put request to update the user's language
+		await axios
+    	.put(`https://luma-server.onrender.com/api/user/lang/${userID}`, {
+    	    Idioma_ID: languageId
+    	})
+    	.then((response) => {
+    	    console.log('Prefered Language Updated:', response.data);
+    	    showToast('Cambio de preferencia guardado', { type: 'success', duration: 5000 });
+    	})
+    	.catch((error) => {
+    	    console.error('Error updating language preference:', error);
+		
+    	    if (error.response) {
+    	        // Check if the status code is 400
+    	        if (error.response.status === 400 || error.response.status === 403) {
+    	            showToast(error.response.data, { type: 'warning', duration: 5000 });
+    	            return;
+    	        }
+    	    }
+		
+    	    // Generic error toast
+    	    showToast('Error actualizando preferencia de idioma', { type: 'error', duration: 5000 });
+		});
 
 		document.cookie = `lang=${value}; path=/;`;
 	};
@@ -25,11 +64,12 @@
 <!--			{/each}-->
 <!--		</select>-->
 
-		<div class="btn-wrapper">
+		<!--<div class="btn-wrapper">
 			<button>
 				{$t('profile_config_lang.langUI_button')}
 			</button>
 		</div>
+		-->
 	</div>
 </div>
 
