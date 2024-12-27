@@ -15,7 +15,7 @@
 <!--			</div>-->
 			<div class="coins currency">
 			<span>
-				XXX,XXX
+				{userCoins}
 			</span>
 				<div class="icon-container">
 					<Coins />
@@ -89,10 +89,12 @@
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import { t } from '$lib/translations';
+	import { userData } from '$lib/stores/userStore.js';
 
  	let userDropdown = false
 	let userName = 'John Doe'
 	let userMail = 'jdoe@acme.com'
+	let userCoins = userData.monedas
 
 	onMount(() => {
 		const storedData = localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token');
