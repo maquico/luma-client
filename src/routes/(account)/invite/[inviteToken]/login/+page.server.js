@@ -8,7 +8,7 @@ export const load = async ({ locals }) => {
 }
 
 export const actions = {
-	login: async ({ cookies, request, locals }) => {
+	login: async ({ cookies, request, locals}) => {
 		console.log('login form action');
 
 		//fetch all the data from the form
@@ -21,6 +21,13 @@ export const actions = {
 			email: _email,
 			password: _password,
 		})
+
+		if (error) {
+			return {
+				status: 400,
+				body: { error: error.message }
+			};
+		}
 
 		//sets cookie with session.access_token
 		cookies.set("auth", "authenticated_user", {

@@ -43,33 +43,29 @@
 	import logo from '$lib/assets/luma-logo.png'
 	import { enhance } from "$app/forms";
 	import { CircleAlert, Eye, EyeOff, Mail } from 'lucide-svelte';
+	import { showToast } from '$lib/stores/toastStore';
 
 	let email = ''
 	let password = ''
 	let invalidInput=false
 	let validRegex = /^[\w-]+@[a-zA-Z\dx-]+\.[a-zA-Z]{2,}$/
 
-	async function validate(event) {
-    	event.preventDefault(); // Prevent the form from reloading the page
+	async function validate() {
+		event.preventDefault();
 		if (email.match(validRegex) && password){
-			// console.log(getSession());
-
-			//TODO: add coin call to database
-			await logIn(email, password)
-				.then(async response => {
-					console.log(response.data);
-				})
-				.catch(error => {
-					console.error('Error:', error);
-				})
-
-			// console.log(getSession());
-			invalidInput=false
-		}else{
-			console.log('error login');
-			invalidInput=true
+			const { data, error } = await logIn(email, password);
+			if (error) {
+				console.log('Error logIn', error);
+				showToast('Credenciales incorrectas', { theme: 'light', type: 'error', duration: 5000 });
+				invalidInput=true
+			} 
+		} else {
+				console.log('Wrong email format or password is empty');
+				showToast('Credenciales incorrectas', { theme: 'light', type: 'error', duration: 5000 });
+				invalidInput=true
 		}
 	}
+
 
 	//Supabase native singIn
 	async function logIn(_email, _password){
