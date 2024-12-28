@@ -1,7 +1,8 @@
 <script>
 	import { goto } from '$app/navigation';
 	import { createEventDispatcher } from 'svelte';
-
+	import { userData } from '$lib/stores/userStore.js';
+	import { get } from 'svelte/store';
 	import Modal from '$components/modal.svelte';
 	import axios from 'axios';
 
@@ -11,8 +12,18 @@
 	let projectName = '';
 	let projectDescription = '';
 	// let userId = '37d3b652-d314-4124-9685-add5f0c6fc19';
-	let userData = JSON.parse(localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token'))
-	let userID = userData.user.id
+	let userLocalData = JSON.parse(localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token'))
+	let userID;
+	let userNewData;
+	if (!userLocalData) {
+		console.log('No hay usuario en local storage');
+		// get data from the store
+		userNewData = get(userData)
+		console.log('userNewData', userNewData);
+	} else {
+		userID = userLocalData.user.id;
+	}
+
 	let invalidInput = false;
 
 	const close = () => {

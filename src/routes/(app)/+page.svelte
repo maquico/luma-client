@@ -7,6 +7,8 @@
 	import axios from 'axios';
 	import { badgeChannel } from '$lib/badgeChannel.js';
 	import { showToast } from '$lib/stores/toastStore';
+	import { userData } from '$lib/stores/userStore.js';
+	import { get } from 'svelte/store';
 
 	let frequentProjects = [];
 	let otherProjects = [];
@@ -67,7 +69,10 @@
 			});
 	}
 
+	$: console.log("Detailed user data:", $userData);
+
 	onMount(() => {
+		
 		const storedData = localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token');
 
 		if (storedData) {
