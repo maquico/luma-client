@@ -21,7 +21,6 @@
 
 	async function deleteProject() {
 		console.log(projectId, userID);
-
 		if (projectName === projectNameUser) {
 			await axios
 				.delete('https://luma-server.onrender.com/api/projects', {
@@ -31,8 +30,8 @@
 					}
 				})
 				.then((response) => {
-					console.log('Protecto eliminado', response.data);
-					showToast('Proecto eliminado', { type: 'success', duration: 5000 });
+					console.log('Proyecto eliminado', response.data);
+					showToast('Proyecto eliminado', { type: 'success', duration: 5000 });
 
 					window.location.href = '/';
 				})

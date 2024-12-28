@@ -17,6 +17,7 @@
 	export let deleteModalType = 'task';
 	export let rewardID;
   	export let data = {}
+	export let isEdit = false;
 
 	// Delete Task Modal
 	let showModal = false;
@@ -57,6 +58,7 @@
 					{#if controls}
 						<div class="controls">
 							{#if controlsOptions}
+								{#if isEdit}
 								<button
 									use:clickOutside
 									on:click_outside={() => {
@@ -68,7 +70,7 @@
 								>
 									<Ellipsis />
 								</button>
-
+								
 								<div class="dropdown-menu-container {userDropdown ? 'open' : ''}">
 									<div class="dropdown-menu">
 										<button
@@ -81,6 +83,7 @@
 										</button>
 									</div>
 								</div>
+								{/if}
 							{/if}
 							<button on:click={close}>
 								<X />
@@ -96,10 +99,10 @@
 	</div>
 </div>
 
-{#if deleteModalType === 'reward'}
+{#if deleteModalType === 'reward' && isEdit}
 	<DeleteRewardModal show={showModal} rewardId={rewardID} on:close={handleClose} />
 	{console.log('Modal Type', deleteModalType)}
-{:else}
+{:else if deleteModalType === 'task' && isEdit} 
 	<DeleteTaskModal show={showModal} data={data} on:close={handleClose} on:delete={handleDelete}/>
 	{console.log('Modal Type:', deleteModalType)}
 {/if}

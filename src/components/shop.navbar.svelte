@@ -2,12 +2,14 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { createEventDispatcher } from 'svelte';
+	import { selectedProjectStore } from '$src/lib/stores/selectedProjectStore.js';
 	import CreateRewardModal from '$components/modals/createReward.modal.svelte';
 
 	const dispatch = createEventDispatcher(); // Crear un despachador de eventos
 	let currentPath;
 
 	let isProjectLeader = true;
+	let selectedProject = null;
 
 	onMount(() => {
 		currentPath = window.location.pathname;
@@ -61,7 +63,9 @@
 	{/if}
 </section>
 
-<CreateRewardModal show={showModal} on:close={handleClose} />
+<CreateRewardModal
+	show={showModal}
+	on:close={handleClose} />
 
 <style>
 	.tab {
