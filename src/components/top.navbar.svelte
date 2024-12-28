@@ -94,7 +94,7 @@
  	let userDropdown = false
 	let userName = 'John Doe'
 	let userMail = 'jdoe@acme.com'
-	let userCoins = userData.monedas
+	let userCoins = $userData.monedas
 
 	onMount(() => {
 		const storedData = localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token');
