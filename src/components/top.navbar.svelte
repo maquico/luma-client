@@ -89,12 +89,14 @@
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import { t } from '$lib/translations';
-	import { userData } from '$lib/stores/userStore.js';
+	import { API_BASE_URL } from '$lib/stores/apiStore.js';
+	import { userData, setUserData } from '$lib/stores/userStore.js';
+	import axios from "axios";
 
  	let userDropdown = false
 	let userName = 'John Doe'
 	let userMail = 'jdoe@acme.com'
-	let userCoins = $userData.monedas
+	let userCoins = 'loading...';
 
 	onMount(() => {
 		const storedData = localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token');
@@ -107,6 +109,19 @@
 			userName = `${sessionData.user.user_metadata.first_name} ${sessionData.user.user_metadata.last_name}`;
 			userMail = sessionData.user.user_metadata.email
 		}
+
+		const localUserData = JSON.parse(localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token'))
+		const userID = localUserData.user.id
+		// Get the user extra info from the endpoint
+		axios.get(`${API_BASE_URL}/user/${userID}`)
+		.catch((error) => {
+			console.error('Error:', error);
+		})
+		.then((response) => {
+			console.log('Success:', response.data);
+			setUserData(response.data[0]);
+			userCoins = $userData.monedas;
+		});
 	})
 
 	async function signOut(){

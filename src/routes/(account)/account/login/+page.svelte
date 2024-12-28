@@ -43,12 +43,6 @@
 	import logo from '$lib/assets/luma-logo.png'
 	import { enhance } from "$app/forms";
 	import { CircleAlert, Eye, EyeOff, Mail } from 'lucide-svelte';
-	import { API_BASE_URL } from '$lib/stores/apiStore.js';
-	import { setUserData } from '$lib/stores/userStore.js';
-	import axios from "axios";
-	import { userData } from "$lib/stores/userStore";
-	import { get } from "svelte/store";
-	import { goto } from "$app/navigation"; 
 
 	let email = ''
 	let password = ''
@@ -64,21 +58,6 @@
 			await logIn(email, password)
 				.then(async response => {
 					console.log(response.data);
-					const localUserData = JSON.parse(localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token'))
-					const userID = localUserData.user.id
-					// Get the user extra info from the endpoint
-					await axios.get(`${API_BASE_URL}/user/${userID}`)
-					.catch((error) => {
-						console.error('Error:', error);
-					})
-					.then((response) => {
-						console.log('Success:', response.data);
-						setUserData(response.data[0]);
-						console.log('User data set');
-						// get the user data from the store
-						const printUser = get(userData);
-						console.log('User data from store:', printUser);
-					});
 				})
 				.catch(error => {
 					console.error('Error:', error);
