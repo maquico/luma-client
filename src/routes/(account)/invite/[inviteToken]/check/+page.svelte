@@ -43,9 +43,9 @@
 
 <div class="login-container">
 	<div class="card container">
-		<div>Checking and validating invite</div>
-		<div>Invite Token: {inviteToken}</div>
-		<h1>User ID: {userId}</h1>
+		<div>Checking and validating invite...</div>
+		<!--	<div>Invite Token: {inviteToken}</div>
+		<h1>User ID: {userId}</h1>-->
 
 
 	</div>

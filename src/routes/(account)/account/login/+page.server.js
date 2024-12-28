@@ -1,5 +1,10 @@
 import { redirect } from "@sveltejs/kit"
 import { supabase } from '$lib/supabaseClient.js';
+import { API_BASE_URL } from '$lib/stores/apiStore.js';
+import { setUserData } from '$lib/stores/userStore.js';
+import axios from "axios";
+import { userData } from "$lib/stores/userStore";
+import { get } from "svelte/store";
 
 export const load = async ({ locals }) => {
 	return {
@@ -8,7 +13,7 @@ export const load = async ({ locals }) => {
 }
 
 export const actions = {
-	login: async ({ cookies, request, locals }) => {
+	login: async ({ cookies, request, locals}) => {
 		console.log('login form action');
 
 		//fetch all the data from the form
@@ -28,6 +33,14 @@ export const actions = {
 				body: { error: error.message }
 			};
 		}
+
+		// Get the user extra info
+		//await axios.get(`${API_BASE_URL}/user/${data.user.id}`)
+		//.then((response) => {
+		//  console.log('Success:', response.data);
+		//  setUserData(response.data[0]);
+		//})
+		//.catch(error => console.error('Error:', error));
 
 		//sets cookie with session.access_token
 		cookies.set("auth", "authenticated_user", {

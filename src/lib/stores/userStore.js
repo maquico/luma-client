@@ -2,6 +2,6 @@ import { writable } from 'svelte/store';
 
 export const userData = writable(null);
 
-export function setProjectData(data) {
+export function setUserData(data) {
 	userData.set(data);
 }
