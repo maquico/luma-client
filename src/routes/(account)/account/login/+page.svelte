@@ -2,7 +2,8 @@
 	<div class="card login">
 		<img src={logo} alt="luma-logo"/>
 <!--		<form on:submit={validate} action="?/login" method="POST">-->
-		<form on:submit={validate} action="?/login" method="POST">
+			<form on:submit={validate} method="POST" action="?/login" use:enhance>
+
 			<label class="input input-bordered flex items-center gap-2 {invalidInput? 'input-error': ''}">
 				<input type="text" name="email" id="email" placeholder="Correo" bind:value={email} size="30" required/>
 				<Mail />
@@ -40,19 +41,22 @@
 <script>
 	import { supabase } from "$lib/supabaseClient";
 	import logo from '$lib/assets/luma-logo.png'
+	import { enhance } from "$app/forms";
 	import { CircleAlert, Eye, EyeOff, Mail } from 'lucide-svelte';
 	import { API_BASE_URL } from '$lib/stores/apiStore.js';
 	import { setUserData } from '$lib/stores/userStore.js';
 	import axios from "axios";
 	import { userData } from "$lib/stores/userStore";
 	import { get } from "svelte/store";
+	import { goto } from "$app/navigation"; 
 
 	let email = ''
 	let password = ''
 	let invalidInput=false
 	let validRegex = /^[\w-]+@[a-zA-Z\dx-]+\.[a-zA-Z]{2,}$/
 
-	async function validate() {
+	async function validate(event) {
+    	event.preventDefault(); // Prevent the form from reloading the page
 		if (email.match(validRegex) && password){
 			// console.log(getSession());
 

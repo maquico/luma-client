@@ -34,6 +34,14 @@ export const actions = {
 			};
 		}
 
+		// Get the user extra info
+		//await axios.get(`${API_BASE_URL}/user/${data.user.id}`)
+		//.then((response) => {
+		//  console.log('Success:', response.data);
+		//  setUserData(response.data[0]);
+		//})
+		//.catch(error => console.error('Error:', error));
+
 		//sets cookie with session.access_token
 		cookies.set("auth", "authenticated_user", {
 			path: "/",
