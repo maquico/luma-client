@@ -50,7 +50,6 @@
 </script>
 
 <div class="register-container">
-	<div class="card"> Register custom con logica de invite </div>
 
 	<div class="card register">
 		<img src={logo} alt="luma-logo" />
