@@ -1,11 +1,9 @@
 <script>
 	import logo from '$lib/assets/luma-logo.png';
 	import { Eye, EyeOff } from 'lucide-svelte';
-	import { goto } from '$app/navigation';
 	import ButtonComponent from '$components/button.svelte';
 	import axios from 'axios';
 	import { showToast } from '$lib/stores/toastStore';
-	import { onMount } from 'svelte';
 
 	let name;
 	let lastName;
@@ -30,28 +28,28 @@
 							// Optionally redirect after successful registration
 							// goto('/account/register/checkemail');
 							console.log('successfull register');
-							showToast("¡Registro exitoso! 🎉 Tu cuenta ha sido creada correctamente.", { theme: 'dark', type: 'success', duration: 5000 });
+							showToast("¡Registro exitoso! 🎉 Tu cuenta ha sido creada correctamente.", { theme: 'light', type: 'success', duration: 5000 });
 						})
 						.catch((error) => {
 							console.error('Error:', error);
 							if(error.response.data.startsWith("Password should be at least 8 characters")){
-								showToast("La contraseña debe tener al menos 8 caracteres e incluir al menos una letra minúscula, una letra mayúscula, un número y un carácter especial.", { theme: 'dark', type: 'error', duration: 5000 });
+								showToast("La contraseña debe tener al menos 8 caracteres e incluir al menos una letra minúscula, una letra mayúscula, un número y un carácter especial.", { theme: 'light', type: 'error', duration: 5000 });
 							}else{
-								showToast(error.response.data, { theme: 'dark', type: 'error', duration: 5000 });
+								showToast(error.response.data, { theme: 'light', type: 'error', duration: 5000 });
 							}
 						});
 					invalidInput = false;
 				}else{
 					console.error('Error: Los campos de contraseña no coinciden.');
-					showToast('Los campos de contraseña no coinciden', { theme: 'dark', type: 'error', duration: 5000 });
+					showToast('Los campos de contraseña no coinciden', { theme: 'light', type: 'error', duration: 5000 });
 				}
 			} else {
 				console.error('Error: El formato del correo electrónico no es válido');
-				showToast('El formato del correo electrónico no es válido', { theme: 'dark',  type: 'error', duration: 5000 });
+				showToast('El formato del correo electrónico no es válido', { theme: 'light',  type: 'error', duration: 5000 });
 				invalidInput = true;
 			}
 		} catch (error) {
-			showToast(`El registro ha fallado debido a un problema interno. Contacta al soporte.`, { theme: 'dark', type: 'error', duration: 5000 });
+			showToast(`El registro ha fallado debido a un problema interno. Contacta al soporte.`, { theme: 'light', type: 'error', duration: 5000 });
 			console.error('Error: El registro ha fallado debido a un problema interno. Contacta al soporte.', error.response ? error.response.data : error.message);
 			invalidInput = true;
 		}
