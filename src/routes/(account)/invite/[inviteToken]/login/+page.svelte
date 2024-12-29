@@ -42,29 +42,26 @@
 	import { supabase } from "$lib/supabaseClient";
 	import logo from '$lib/assets/luma-logo.png'
 	import { CircleAlert, Eye, EyeOff, Mail } from 'lucide-svelte';
+	import { showToast } from '$lib/stores/toastStore';
 
-	let email = 'huanhaowu28@gmail.com'
-	let password = 'Abc123456!'
+	let email = ''
+	let password = ''
 	let invalidInput=false
 	let validRegex = /^[\w-]+@[a-zA-Z\dx-]+\.[a-zA-Z]{2,}$/
 
 	async function validate() {
+		console.log('validating...')
 		if (email.match(validRegex) && password){
-			// console.log(getSession());
-
-			await logIn(email, password)
-				.then(async response => {
-					console.log(response.data);
-				})
-				.catch(error => {
-					console.error('Error:', error);
-				})
-
-			// console.log(getSession());
-			invalidInput=false
-		}else{
-			console.log('error login');
-			invalidInput=true
+			const { data, error } = await logIn(email, password);
+			if (error) {
+				console.log('Error logIn', error);
+				showToast('Credenciales incorrectas', { theme: 'light', type: 'error', duration: 5000 });
+				invalidInput=true
+			} 
+		} else {
+				console.log('Wrong email format or password is empty');
+				showToast('Credenciales incorrectas', { theme: 'light', type: 'error', duration: 5000 });
+				invalidInput=true
 		}
 	}
 
@@ -73,7 +70,7 @@
 		const { data, error } = await supabase.auth.signInWithPassword({
 			email: _email,
 			password: _password,
-		});
+		})
 		return { data, error };
 	}
 

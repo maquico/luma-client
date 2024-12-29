@@ -3,7 +3,7 @@
 	import axios from 'axios';
 	import { filters } from '$src/lib/stores/filterStore.js';
 
-	let themes = [];
+	let customThemes = [];
 	let userData = JSON.parse(localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token'));
 	let userId = userData.user.id;
 
@@ -15,17 +15,29 @@
 
 	let filteredThemes = [];
 
+	function isValidHex(color) {
+    	return /^#([0-9A-F]{3}|[0-9A-F]{6})$/i.test(color);
+	}
+
+	function generateGradient(theme) {
+    	const { accent, primary, secondary } = theme;
+    	if (isValidHex(accent) && isValidHex(primary) && isValidHex(secondary)) {
+    	    return `linear-gradient(135deg, ${accent}, ${primary} 40%, ${primary} 60%, ${secondary})`;
+    	}
+    	return null; 
+}
+
 	// Función para aplicar los filtros
 	function applyFilters(filterValues) {
 		const { availability, priceOrder } = filterValues;
 
 		// Filtrar la lógica según tus requisitos, por ejemplo:
 		if (availability === 'Disponibles para comprar') {
-			filteredThemes = themes.filter((theme) => theme.available === true);
+			filteredThemes = customThemes.filter((theme) => theme.available === true);
 		} else if (availability === 'Compradas') {
-			filteredThemes = themes.filter((theme) => theme.available === false);
+			filteredThemes = customThemes.filter((theme) => theme.available === false);
 		} else {
-			filteredThemes = [...themes];
+			filteredThemes = [...customThemes];
 		}
 
 		// Ordenar si se seleccionó
@@ -45,13 +57,18 @@
 	async function fetchThemes() {
 		try {
 			const response = await axios.get(`https://luma-server.onrender.com/api/themes`);
-			themes = response.data.map((theme) => ({
+			customThemes = response.data.map((theme) => ({
 				name: theme.nombre,
 				id: theme.Tema_ID,
 				totalAvailable: theme.totalAvailable || 1,
 				totalBought: theme.totalBought || 0,
 				totalCapacity: theme.totalCapacity || 1,
-				price: theme.precio
+				price: theme.precio,
+				accent: theme.accentHex,
+				primary: theme.primaryHex,
+				secondary: theme.secondaryHex,
+				background: theme.backgroundHex,
+				textHex: theme.textHex,
 			}));
 		} catch (error) {
 			console.error('Error fetching themes:', error);
@@ -68,7 +85,7 @@
 			console.log('Datos de recompensas canjeadas:', redeemedThemes);
 
 			redeemedThemes.forEach((redeemedTheme) => {
-				let theme = themes.find((t) => {
+				let theme = customThemes.find((t) => {
 					return t.name === redeemedTheme.name;
 				});
 
@@ -82,7 +99,7 @@
 				}
 			});
 
-			filteredThemes = [...themes];
+			filteredThemes = [...customThemes];
 		} catch (error) {
 			console.error('Error fetching redeemed themes:', error);
 		}
@@ -135,9 +152,16 @@
 					</button>
 				</div>
 
-				<div class="flex justify-center items-center h-24 bg-gray-300">
-					<ImageIcon class="w-12 h-12 text-gray-400" />
-				</div>
+
+					<div
+    					class="flex justify-center items-center h-24"
+    					style="background: {generateGradient(theme) || 'none'};"
+					>
+					    {#if !generateGradient(theme)}
+					        <ImageIcon class="w-12 h-12 text-gray-400" />
+					    {/if}
+					</div>
+
 
 				<div class="p-2">
 					<div class="flex justify-between text-sm text-gray-500 mb-2">
