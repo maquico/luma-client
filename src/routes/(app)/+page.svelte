@@ -178,7 +178,15 @@
 							<span class="top">
 								<div class="avatar placeholder">
 									<div class="text-neutral-content w-10 p-2 border-2 rounded-l">
-										<span class="text-xl">XX</span>
+										<span class="text-xl">
+											{
+												project.nombre
+												.split(" ")
+												.map(name => name[0].toUpperCase())
+												.slice(0, 2)
+												.join("")
+											}
+										</span>
 									</div>
 								</div>
 								<p class="title">{project.nombre}</p></span
