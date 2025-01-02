@@ -1,9 +1,10 @@
 <div class="login-container">
-
 	<div class="card login">
 		<img src={logo} alt="luma-logo"/>
 <!--		<form on:submit={validate} action="?/login" method="POST">-->
-		<form on:submit={validate} action="?/login" method="POST">
+			<form on:submit={validate} method="POST" action="?/login" use:enhance>
+			<input type="hidden" name="inviteToken" value={inviteToken} />
+
 			<label class="input input-bordered flex items-center gap-2 {invalidInput? 'input-error': ''}">
 				<input type="text" name="email" id="email" placeholder="Correo" bind:value={email} size="30" required/>
 				<Mail />
@@ -39,51 +40,59 @@
 </div>
 
 <script>
+	import { page } from '$app/stores';
 	import { supabase } from "$lib/supabaseClient";
-	import logo from '$lib/assets/luma-logo.png'
+	import logo from '$lib/assets/luma-logo.png';
+	import { enhance } from "$app/forms";
 	import { CircleAlert, Eye, EyeOff, Mail } from 'lucide-svelte';
 	import { showToast } from '$lib/stores/toastStore';
-
-	let email = ''
-	let password = ''
-	let invalidInput=false
-	let validRegex = /^[\w-]+@[a-zA-Z\dx-]+\.[a-zA-Z]{2,}$/
-
+  
+	let email = '';
+	let password = '';
+	let invalidInput = false;
+	let validRegex = /^[\w-]+@[a-zA-Z\dx-]+\.[a-zA-Z]{2,}$/;
+  
+	let inviteToken = '';
+  
+	$: inviteToken = $page.params.inviteToken;
+  
 	async function validate() {
-		console.log('validating...')
-		if (email.match(validRegex) && password){
-			const { data, error } = await logIn(email, password);
-			if (error) {
-				console.log('Error logIn', error);
-				showToast('Credenciales incorrectas', { theme: 'light', type: 'error', duration: 5000 });
-				invalidInput=true
-			} 
+	  event.preventDefault();
+	  if (email.match(validRegex) && password) {
+		const { data, error } = await logIn(email, password);
+		if (error) {
+		  console.log('Error logIn', error);
+		  showToast('Credenciales incorrectas', { theme: 'light', type: 'error', duration: 5000 });
+		  invalidInput = true;
 		} else {
-				console.log('Wrong email format or password is empty');
-				showToast('Credenciales incorrectas', { theme: 'light', type: 'error', duration: 5000 });
-				invalidInput=true
+		  // Redirect to the invite check route
+		  window.location.href = `/invite/${inviteToken}/check`;
 		}
+	  } else {
+		console.log('Wrong email format or password is empty');
+		showToast('Credenciales incorrectas', { theme: 'light', type: 'error', duration: 5000 });
+		invalidInput = true;
+	  }
 	}
-
-	//Supabase native singIn
-	async function logIn(_email, _password){
-		const { data, error } = await supabase.auth.signInWithPassword({
-			email: _email,
-			password: _password,
-		})
-		return { data, error };
+  
+	async function logIn(_email, _password) {
+	  const { data, error } = await supabase.auth.signInWithPassword({
+		email: _email,
+		password: _password,
+	  });
+	  return { data, error };
 	}
-
+  
 	function showPassword() {
-		let x = document.getElementById("password");
-		if (x.type === "password") {
-			x.type = "text";
-		} else {
-			x.type = "password";
-		}
+	  let x = document.getElementById("password");
+	  if (x.type === "password") {
+		x.type = "text";
+	  } else {
+		x.type = "password";
+	  }
 	}
-
-</script>
+  </script>
+  
 
 <style>
     .login-container{
