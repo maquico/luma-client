@@ -30,8 +30,15 @@
 		await axios.post('https://luma-server.onrender.com/api/invitation/validate', {
 			token: inviteToken,
 			userId: userId
-		}).then(
-			(response) => {console.log(response.data)}
+		}).then((response) => {
+			console.log(response.data)
+			if (response.status === 200) {
+				// Redirect to base route
+				window.location.href = '/';
+			} else {
+				customErrorMsg = response.data
+			}
+		}
 		).catch(
 			(error) => {
 				console.log(error.response.data)
@@ -44,9 +51,6 @@
 <div class="login-container">
 	<div class="card container">
 		<div>Checking and validating invite...</div>
-		<!--	<div>Invite Token: {inviteToken}</div>
-		<h1>User ID: {userId}</h1>-->
-
 
 	</div>
 
@@ -55,7 +59,7 @@
 		<img class="not-logged-in" src={notloggedin} alt="user-notloggedin"/>
 
 		<div class="custom-error" style="color: red">
-			{customErrorMsg}
+			{ customErrorMsg ? customErrorMsg : '' }
 		</div>
 		<!--		<div class="divider">O</div>-->
 <!--		<a href="/account/login">¿Ya tienes una cuenta? <span>Iniciar sesión</span></a>-->

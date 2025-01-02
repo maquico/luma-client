@@ -58,14 +58,17 @@
 			<Calendar size={16}/>
 			<p> {date} </p>
 		</div>
-
-		<div class="assigned-user">
-			{#if data.assignedUser}
-				XX
-			{:else}
-				ZZ
-			{/if}
-		</div>
+		{#if data.assignedUser}
+			<div class="assigned-user">
+					{
+						data.assignedUser
+							.split(" ")
+							.map(name => name[0].toUpperCase())
+							.slice(0, 2)
+							.join("")
+					}
+			</div>
+		{/if}
 
 	</div>
 </div>

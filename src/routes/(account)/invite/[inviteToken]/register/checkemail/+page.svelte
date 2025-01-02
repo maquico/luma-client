@@ -1,6 +1,9 @@
 <script>
 	import image from '$lib/assets/checkemail-img.png';
 	import { ChevronLeft } from 'lucide-svelte';
+	import { page } from '$app/stores';
+
+	$: inviteToken = $page.params.inviteToken;
 </script>
 
 <div class="checkemail-container">
@@ -21,7 +24,7 @@
 			<hr />
 			<div class="button-container">
 				<ChevronLeft class="chevron-icon" />
-				<a href="/account/login" class="btn-secondary"> Regresar </a>
+				<a href="/invite/{inviteToken}/login" class="btn-secondary"> Regresar </a>
 			</div>
 		</div>
 		<div class="divider"></div>
