@@ -4,6 +4,7 @@
 	import ButtonComponent from '$components/button.svelte';
 	import axios from 'axios';
 	import { showToast } from '$lib/stores/toastStore';
+	import { goto } from '$app/navigation';
 
 	let name;
 	let lastName;
@@ -26,7 +27,7 @@
 						.then((response) => {
 							console.log(response.data);
 							// Optionally redirect after successful registration
-							// goto('/account/register/checkemail');
+							goto('/account/register/checkemail');
 							console.log('successfull register');
 							showToast("¡Registro exitoso! 🎉 Tu cuenta ha sido creada correctamente.", { theme: 'light', type: 'success', duration: 5000 });
 						})
