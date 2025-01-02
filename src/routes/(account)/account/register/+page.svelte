@@ -27,9 +27,9 @@
 						.then((response) => {
 							console.log(response.data);
 							// Optionally redirect after successful registration
-							goto('/account/register/checkemail');
 							console.log('successfull register');
 							showToast("¡Registro exitoso! 🎉 Tu cuenta ha sido creada correctamente.", { theme: 'light', type: 'success', duration: 5000 });
+							goto('/account/register/checkemail');
 						})
 						.catch((error) => {
 							console.error('Error:', error);

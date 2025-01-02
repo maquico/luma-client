@@ -54,12 +54,7 @@
   
 	let inviteToken = '';
   
-	$: {
-	  // Extract inviteToken from the URL
-	  const url = $page.url;
-	  const parts = url.pathname.split('/');
-	  inviteToken = parts[2] || ''; // Assuming the token is the second part of the path
-	}
+	$: inviteToken = $page.params.inviteToken;
   
 	async function validate() {
 	  event.preventDefault();

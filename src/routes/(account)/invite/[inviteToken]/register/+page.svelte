@@ -5,6 +5,7 @@
 	import axios from 'axios';
 	import { showToast } from '$lib/stores/toastStore';
 	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 
 	let name;
 	let lastName;
@@ -13,6 +14,9 @@
 	let confirmPassword;
 	let invalidInput = false;
 	let validRegex = /^[\w-]+@[a-zA-Z\dx-]+\.[a-zA-Z]{2,}$/;
+	let inviteToken;
+
+	$: inviteToken = $page.params.inviteToken;
 
 	async function register() {
 		try {
@@ -22,14 +26,15 @@
 						email: email,
 						password: password,
 						first_name: name,
-						last_name: lastName
+						last_name: lastName,
+						invite_token: inviteToken
 					})
 						.then((response) => {
 							console.log(response.data);
 							// Optionally redirect after successful registration
-							goto('/account/register/checkemail');
 							console.log('successfull register');
 							showToast("¡Registro exitoso! 🎉 Tu cuenta ha sido creada correctamente.", { theme: 'light', type: 'success', duration: 5000 });
+							goto(`/invite/${inviteToken}/register/checkemail`);
 						})
 						.catch((error) => {
 							console.error('Error:', error);
