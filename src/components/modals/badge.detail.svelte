@@ -26,11 +26,12 @@
 		on:close={close}
 	>
 		<div class="content">
-			<p>{badgeData.description}</p>
 
 			<div class="img-container">
 				<img src="{badgeData.icon}" alt="imagen de insignia">
 			</div>
+
+			<p>{badgeData.description}</p>
 
 		</div>
 	</Modal>
@@ -46,5 +47,15 @@
 
 	.img-container img{
 			width: 150px;
+	}
+
+	.content{
+			display: flex;
+			flex-direction: column;
+			gap: 1.5rem;
+	}
+
+	.content p{
+			text-align: center;
 	}
 </style>
