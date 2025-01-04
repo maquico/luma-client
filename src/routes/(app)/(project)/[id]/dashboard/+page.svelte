@@ -194,7 +194,7 @@
 				<thead>
 					<tr>
 						<th> Miembro </th>
-						<th> Tareas </th>
+						<th> Tareas asignadas </th>
 						<th> Gemas</th>
 					</tr>
 				</thead>
@@ -203,8 +203,8 @@
 					{#each projectMembers as member}
 						<tr>
 							<td> {member.nombre}</td>
-							<td> Data 1</td>
-							<td> {member.gemasTotales}</td>
+							<td> {member.totalTareas} </td>
+							<td> {member.gemasTotales} </td>
 						</tr>
 					{/each}
 				</tbody>
