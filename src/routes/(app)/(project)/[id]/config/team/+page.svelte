@@ -54,6 +54,15 @@
 		selectedData = memberInfo
 	}
 
+	function handleReload() {
+
+    	loading = true; 
+    	getAllMembers().finally(() => {
+    	    loading = false; 
+    });
+}
+
+
 	async function getAllRoles(){
 		await axios.get('https://luma-server.onrender.com/api/roles/')
 			.then((response) => {
@@ -144,9 +153,11 @@
 						</select>
 					</td>
 					<td class="center">
-						<button class="icon-container" on:click={() => {handleDeleteMember(row)}}>
-							<Trash2 size={20}/>
-						</button>
+						{#if row.Usuario_ID !== loggedUserID}
+							<button class="icon-container" on:click={() => {handleDeleteMember(row)}}>
+								<Trash2 size={20}/>
+							</button>
+						{/if}
 					</td>
 				</tr>
 			{/each}
@@ -162,7 +173,7 @@
 </div>
 
 <InviteModal show={showInvitationModal} on:close={handleInvitationClose} />
-<DeleteUserModal show={showDeleteModal} on:close={handleDeleteClose} memberInfo={selectedData}/>
+<DeleteUserModal show={showDeleteModal} on:close={handleDeleteClose} on:reload={handleReload} memberInfo={selectedData}/>
 
 <style>
 		.title{
