@@ -2,6 +2,7 @@
 	import Modal from '$components/modal.svelte'
 	import {createEventDispatcher} from 'svelte';
 	import axios from 'axios';
+	import { showToast } from '$lib/stores/toastStore';
 
 	const dispatch = createEventDispatcher();
 
@@ -19,19 +20,38 @@
 	async function deleteMember() {
 		console.log(memberInfo.Proyecto_ID, memberInfo.Usuario_ID, userData.user.id);
 
-		// await axios.delete('https://luma-server.onrender.com/api/member/client', {
-		// 	"projectId": memberInfo.Proyecto_ID,
-		// 	"userId": memberInfo.Usuario_ID,
-		// 	"requestUserId": userData.user.id
-		// })
-		// 	.then((response) => {
-		// 		console.log('Delete successful:', response.data);
-		// 	})
-		// 	.catch((error) => {
-		// 		console.error('Error during delete request:', error);
-		// 	})
+		if (memberInfo.Usuario_ID === userData.user.id) {
+			console.log('No puedes eliminarte a ti mismo del proyecto');
+			showToast('No puedes eliminarte a ti mismo del proyecto', { type: 'warning', duration: 5000 });
+			return;
+		}
+		await axios.delete('https://luma-server.onrender.com/api/member/client', {
+			params: {
+				projectId: memberInfo.Proyecto_ID,
+				userId: memberInfo.Usuario_ID,
+				requestUserId: userData.user.id
+			}
+		})
+		.then((response) => {
+    	        console.log('Member deleted succesfully:', response.data);
+    	        showToast('Miembro eliminado exitosamente', { type: 'success', duration: 5000 });
+				dispatch('reload');
+    	})
+    	.catch((error) => {
+    	    console.error('Error deleting member:', error);
+		
+    	    if (error.response) {
+    	        // Check if the status code is 400
+    	        if (error.response.status === 400 || error.response.status === 403) {
+    	            showToast(error.response.data, { type: 'warning', duration: 5000 });
+    	            return;
+    	        }
+    	    }
+    	    // Generic error toast
+    	    showToast('Error eliminando miembro', { type: 'error', duration: 5000 });
+    	});
+		dispatch('close')
 	}
-
 </script>
 
 {#if show}
