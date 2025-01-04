@@ -184,6 +184,7 @@
 					{#if userBadges.length > 0} <!-- Check for badges -->
 						{#each getCurrentPageItems(currentPage) as badge}
 							<div class="badge" on:click={() => { showModal = true; selectedBadge = badge }}>
+								<img src="{badge.icon}" alt="{badge.title} icon">
 								{badge.title}
 							</div>
 						{/each}
@@ -268,7 +269,7 @@
 
 	.profile-info{
 			border-bottom: 3px solid var(--luma-color-gray-200);
-			margin-bottom: 1.5rem;
+			margin-bottom: 1rem;
 	}
 
 	.top{
@@ -323,7 +324,7 @@
 
   .scrollable{
 			/*background-color: pink;*/
-      height: 43vh;
+      height: 45vh;
       overflow: auto;
 			padding-top: var(--luma-half-element-spacing);
   }
@@ -334,7 +335,7 @@
       grid-template-columns: repeat(5, 1fr);
       grid-auto-rows: 100px;
       grid-gap: 20px;
-      height: 236px;
+      height: 240px;
   }
 
   .pagination-controls {
@@ -361,12 +362,19 @@
   .badge{
       background-color: var(--luma-color-gray-50);
       width: auto;
-      height: 100px;
+      height: 110px;
       border: 0px;
       border-radius: 8px;
       box-shadow: rgba(0, 0, 0, 0.24) 0px 2px 5px;
       position: relative;
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
   }
+
+	.badge img{
+			width: 55px;
+	}
 
   .overlay {
       position: fixed;
