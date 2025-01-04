@@ -111,13 +111,14 @@
                 state: String(task.Estado_Tarea_ID),
                 startDate: new Date(task.fechaInicio),
                 endDate: new Date(task.fechaFin),
+				userId: task.Usuario_ID,
                 tags: task.etiquetas,
                 description: task.descripcion,
                 comment: '', // Assuming comments aren't part of the task object
             };
 
             // Set additional states
-            selectedUserId = task.Usuario_ID;
+            // selectedUserId = task.Usuario_ID;
             startDate = new Date(task.fechaInicio);
             endDate = new Date(task.fechaFin);
 			loadedFormData = { ...formData }; // Save loaded form data for comparison
@@ -153,9 +154,10 @@
                 	    descripcion: formData.description !== loadedFormData.description ? formData.description : undefined,
                 	    fechaInicio: formData.startDate !== loadedFormData.startDate ? formatDateForDB(startDate) : undefined,
                 	    fechaFin: formData.endDate !== loadedFormData.endDate ? formatDateForDB(endDate) : undefined,
-                	    Usuario_ID: formData.userId !== loadedFormData.userId ? parseInt(selectedUserId) : undefined	
+                	    Usuario_ID: formData.userId !== loadedFormData.userId ? formData.userId : undefined	
                 	};
 
+					console.log("USER ID ", formData.userId);
 					// Remove undefined properties from the task object
 					Object.keys(taskObj).forEach(key => taskObj[key] === undefined && delete taskObj[key]);
 
@@ -278,7 +280,7 @@
                     </div>
                     <select
                         class="select select-bordered w-full"
-                        bind:value={selectedUserId}
+                        bind:value={formData.userId}
                         required
 						disabled={isFieldRestricted('userId')}
                     >
