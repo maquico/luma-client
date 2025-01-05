@@ -13,15 +13,16 @@
 	let boardStats = []
 	let loading = true
 	let hasDataForDonutChart = true
+	let hasDataForBarChart = true
 
-	// Data for the first chart
-	let chartData = [20, 100, 50, 12, 20, 130, 45];
-	let Labels = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday' ];
-	let ctx1;
+	// Data for the bar chart
+	let BarChartData = [];
+	let BarChartLabels = [];
+	let barChart;
 	let chartCanvas1;
 
 	// Data for the second (donut) chart
-	let ctx2;
+	let donutChart;
 	let chartCanvas2;
 
 	onMount(async () => {
@@ -30,7 +31,8 @@
 			await Promise.all([
 				getMembersStats(),
 				getPendingTasks(),
-				getStats()
+				getStats(),
+				getBarStats()
 			]);
 
 			hasDataForDonutChart =
@@ -38,10 +40,10 @@
 				boardStats.aprobadas ||
 				boardStats.completadas; // True if any value is non-zero
 
-			// Second Chart (Donut)
+			// Donut Chart
 			if (hasDataForDonutChart){
-				ctx2 = chartCanvas2.getContext('2d');
-				new Chart(ctx2, {
+				donutChart = chartCanvas2.getContext('2d');
+				new Chart(donutChart, {
 					type: 'doughnut',
 					data: {
 						labels: ['Pendientes', 'Completadas', 'Aprobadas'],
@@ -72,37 +74,61 @@
 					}
 				});
 			}
+
+
+			hasDataForBarChart =
+				BarChartData.length > 0 ||
+				BarChartLabels.length > 0;
+
+			// Bar Chart
+			if(hasDataForBarChart){
+				barChart = chartCanvas1.getContext('2d');
+				new Chart(barChart, {
+					type: 'bar',
+					data: {
+						labels: BarChartLabels,
+						datasets: [{
+							label: 'Tareas aprobadas',
+							data: BarChartData,
+							backgroundColor: [
+								'rgb(255, 113, 74)', // Luma-orange
+								'rgb(255, 119, 151)', // Luma-secondary-color-pink
+								'rgb(105, 45, 215)'  // Luma-violet
+							],
+							borderColor: [
+								'rgb(255, 113, 74)', // Luma-orange
+								'rgb(255, 119, 151)', // Luma-secondary-color-pink
+								'rgb(105, 45, 215)'  // Luma-violet
+							],
+							borderWidth: 1
+						}]
+					},
+					options: {
+						plugins: {
+							legend: {
+								display: true,
+								labels: {
+									boxWidth: 0, // Removes the color box
+									padding: 10, // Adjusts spacing
+									font: {
+										size: 14, // Adjusts the font size
+									}
+								}
+							}
+						},
+						scales: {
+							y: {
+								beginAtZero: true
+							}
+						}
+					}
+				});
+			}
 		} catch (error) {
 			console.error("Error fulfilling promises:", error);
 		} finally {
 			loading = false; // Hide overlay
 		}
-
-
-
-		// First Chart
-		ctx1 = chartCanvas1.getContext('2d');
-		new Chart(ctx1, {
-			type: 'bar',
-			data: {
-				labels: Labels,
-				datasets: [{
-					label: 'Unit Sales',
-					data: chartData,
-					backgroundColor: 'rgb(255, 113, 74)', // Luma-orange,
-					borderColor: 'rgb(255, 113, 74)', // Luma-orange,
-					borderWidth: 1
-				}]
-			},
-			options: {
-				scales: {
-					y: {
-						beginAtZero: true
-					}
-				}
-			}
-		});
-
 		loading = false
 	});
 
@@ -131,8 +157,20 @@
 	async function getStats(){
 		await axios.get(`https://luma-server.onrender.com/api/dashboard/conteoTareas/${$page.params.id}`)
 			.then((response) => {
-				// console.log(response.data);
 				boardStats = response.data
+			})
+			.catch((error) => {
+				console.log(error.data);
+			})
+	}
+
+	async function getBarStats(){
+		await axios.get(`https://luma-server.onrender.com/api/dashboard/tareasAprobadas/${$page.params.id}`)
+			.then((response) => {
+				for(let member of response.data){
+					BarChartData.push(member.tareasAprobadas)
+					BarChartLabels.push(member.nombre)
+				}
 			})
 			.catch((error) => {
 				console.log(error.data);
@@ -156,7 +194,7 @@
 				<thead>
 					<tr>
 						<th> Miembro </th>
-						<th> Tareas </th>
+						<th> Tareas asignadas </th>
 						<th> Gemas</th>
 					</tr>
 				</thead>
@@ -165,8 +203,8 @@
 					{#each projectMembers as member}
 						<tr>
 							<td> {member.nombre}</td>
-							<td> Data 1</td>
-							<td> {member.gemasTotales}</td>
+							<td> {member.totalTareas} </td>
+							<td> {member.gemasTotales} </td>
 						</tr>
 					{/each}
 				</tbody>
@@ -225,26 +263,29 @@
 			</div>
 		</div>
 		<div class="card">
-<!--			Grafico 1-->
-			<!--TODO: add null cases -->
+			<!--Grafico de barra-->
 			<div>
-				<canvas bind:this={chartCanvas1} id="firstChart" height="200"/>
+				{#if hasDataForBarChart}
+					<canvas bind:this={chartCanvas1} id="firstChart" height="200"/>
+				{:else} <!-- Null case-->
+					<div class="no-data-message">
+						<p> No data available to display </p>
+					</div>
+				{/if}
 			</div>
 
 		</div>
 
 		<div class="card">
-			<!--Grafico 2-->
-			<!--TODO: add null cases -->
+			<!--Grafico de dona-->
 			<div style="width: 200px">
 				{#if hasDataForDonutChart}
 					<canvas bind:this={chartCanvas2} id="secondChart"></canvas>
-				{:else}
+				{:else} <!-- Null case-->
 					<div class="no-data-message">
 						<p> No data available to display </p>
 					</div>
 				{/if}
-<!--				<canvas bind:this={chartCanvas2} id="secondChart"/>-->
 			</div>
 
 		</div>
@@ -359,7 +400,7 @@
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         grid-gap: 1rem;
-        height: 25vh;
+        height: 31vh;
     }
 
     .pending-tasks{

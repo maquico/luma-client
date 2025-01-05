@@ -2,6 +2,7 @@
 	import { ImageIcon, Info } from 'lucide-svelte';
 	import axios from 'axios';
 	import { filters } from '$src/lib/stores/filterStore.js';
+	import { showToast } from '$src/lib/stores/toastStore.js';
 
 	let customThemes = [];
 	let userData = JSON.parse(localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token'));
@@ -16,16 +17,16 @@
 	let filteredThemes = [];
 
 	function isValidHex(color) {
-    	return /^#([0-9A-F]{3}|[0-9A-F]{6})$/i.test(color);
+		return /^#([0-9A-F]{3}|[0-9A-F]{6})$/i.test(color);
 	}
 
 	function generateGradient(theme) {
-    	const { accent, primary, secondary } = theme;
-    	if (isValidHex(accent) && isValidHex(primary) && isValidHex(secondary)) {
-    	    return `linear-gradient(135deg, ${accent}, ${primary} 40%, ${primary} 60%, ${secondary})`;
-    	}
-    	return null; 
-}
+		const { accent, primary, secondary } = theme;
+		if (isValidHex(accent) && isValidHex(primary) && isValidHex(secondary)) {
+			return `linear-gradient(135deg, ${accent}, ${primary} 40%, ${primary} 60%, ${secondary})`;
+		}
+		return null;
+	}
 
 	// Función para aplicar los filtros
 	function applyFilters(filterValues) {
@@ -68,7 +69,7 @@
 				primary: theme.primaryHex,
 				secondary: theme.secondaryHex,
 				background: theme.backgroundHex,
-				textHex: theme.textHex,
+				textHex: theme.textHex
 			}));
 		} catch (error) {
 			console.error('Error fetching themes:', error);
@@ -134,9 +135,19 @@
 				rewardType: 'theme'
 			});
 			console.log('Canje exitoso:', response.data);
+			showToast('Tema canjeado con éxito', { type: 'success', duration: 5000 });
 			fetchRewards();
 		} catch (error) {
 			console.error('Error en el canje:', error);
+			if (error.response.data.startsWith('User does not have enough coins')) {
+				showToast('Este usuario no tiene monedas suficientes para canjear la recompensa.', {
+					theme: 'light',
+					type: 'error',
+					duration: 5000
+				});
+			} else {
+				showToast(error.response.data, { theme: 'light', type: 'error', duration: 5000 });
+			}
 		}
 	}
 </script>
@@ -152,16 +163,14 @@
 					</button>
 				</div>
 
-
-					<div
-    					class="flex justify-center items-center h-24"
-    					style="background: {generateGradient(theme) || 'none'};"
-					>
-					    {#if !generateGradient(theme)}
-					        <ImageIcon class="w-12 h-12 text-gray-400" />
-					    {/if}
-					</div>
-
+				<div
+					class="flex justify-center items-center h-24"
+					style="background: {generateGradient(theme) || 'none'};"
+				>
+					{#if !generateGradient(theme)}
+						<ImageIcon class="w-12 h-12 text-gray-400" />
+					{/if}
+				</div>
 
 				<div class="p-2">
 					<div class="flex justify-between text-sm text-gray-500 mb-2">

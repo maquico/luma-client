@@ -1,11 +1,12 @@
 <script>
 	import { onMount } from 'svelte';
-	import { Info} from 'lucide-svelte';
+	import { Info } from 'lucide-svelte';
 	import axios from 'axios';
 	import { filters } from '$src/lib/stores/filterStore.js';
 	import { selectedProjectStore } from '$src/lib/stores/selectedProjectStore.js';
 	import { refreshReward, toggle } from '$src/lib/stores/refreshReward.js';
 	import CreateRewardModal from '$components/modals/createReward.modal.svelte';
+	import { showToast } from '$src/lib/stores/toastStore.js';
 
 	let isProjectLeader = true;
 
@@ -24,7 +25,7 @@
 	}
 
 	const handleUpdate = () => {
-		loadRewards(); 
+		loadRewards();
 	};
 
 	// Función para aplicar los filtros
@@ -86,20 +87,30 @@
 				rewardId: rewardId
 			});
 			console.log('Recompensa canjeada:', response.data);
+			showToast('Recompensa canjeada con éxito', { type: 'success', duration: 5000 });
 			loadRewards(); // Recarga recompensas después del canje
 		} catch (error) {
 			console.error('Error al canjear la recompensa:', error.response?.data || error.message);
+			if (error.response.data.startsWith('User does not have enough coins')) {
+				showToast('Este usuario no tiene monedas suficientes para canjear la recompensa.', {
+					theme: 'light',
+					type: 'error',
+					duration: 5000
+				});
+			} else {
+				showToast(error.response.data, { theme: 'light', type: 'error', duration: 5000 });
+			}
 		}
 	};
 
 	$: selectedProjectStore.subscribe((value) => {
-		console.log("DETECTED CHANGE", value);
+		console.log('DETECTED CHANGE', value);
 		selectedProject = value;
 		if (selectedProject) {
 			loadRewards(); // Cargar recompensas dinámicamente al cambiar el proyecto
 		}
 	});
-	
+
 	// subscribe to the refreshReward store
 	$: refreshReward.subscribe((value) => {
 		console.log('refreshReward:', value);
@@ -141,11 +152,11 @@
 				</div>
 
 				<div class="flex justify-center items-center h-24 bg-gray-100">
-					<img 
-						src="{reward.Iconos.foto}" 
-						alt="{reward.nombre} icon" 
+					<img
+						src={reward.Iconos.foto}
+						alt="{reward.nombre} icon"
 						class="h-full max-w-full object-contain"
-					>
+					/>
 				</div>
 
 				<div class="p-2">
