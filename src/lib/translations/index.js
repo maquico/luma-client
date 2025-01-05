@@ -55,6 +55,12 @@ export const config = {
                 return data;
             },
         },
+        {
+            locale: 'en',
+            key: 'home',
+            routes: ['/'],
+            loader: async () => (await import('../../lang/en/home.json')).default,
+        },
         // Spanish loaders
         {
             locale: 'es',
@@ -91,6 +97,12 @@ export const config = {
             key: 'project_config',
             routes: ['/', '/1/config'],
             loader: async () => (await import('../../lang/es/navbars/project.config.sidebar.json')).default,
+        },
+        {
+            locale: 'es',
+            key: 'home',
+            routes: ['/'],
+            loader: async () => (await import('../../lang/es/home.json')).default,
         },
     ],
 };
