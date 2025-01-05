@@ -5,6 +5,8 @@
 	import { get } from 'svelte/store';
 	import Modal from '$components/modal.svelte';
 	import axios from 'axios';
+	import { t } from '$lib/translations';
+	import { showToast } from '$lib/stores/toastStore';
 
 	const dispatch = createEventDispatcher();
 
@@ -60,37 +62,37 @@
 </script>
 
 {#if show}
-	<Modal header closeByBackgroundClick title="Crear nuevo proyecto" on:close={close}>
+	<Modal header closeByBackgroundClick title={$t('create_project.modal_title')} on:close={close}>
 		<form on:submit|preventDefault={validate}>
 			<label class="form-control w-full">
 				<div class="label">
-					<span class="label-text">Nombre de proyecto</span>
+					<span class="label-text">{$t('create_project.project_name')}</span>
 				</div>
 				<input
 					type="text"
 					bind:value={projectName}
-					placeholder="Escribe aquí"
+					placeholder={$t('create_project.input_placeholder')}
 					class="input input-bordered w-full"
 				/>
 				{#if invalidInput}
-					<span style="color:red;">El nombre no debe exceder los 50 caracteres</span>
+					<span style="color:red;">{$t('create_project.project_name_warning')}</span>
 				{/if}
 			</label>
 			<label class="form-control">
 				<div class="label">
-					<span class="label-text">Descripción</span>
+					<span class="label-text">{$t('create_project.project_description')}</span>
 				</div>
 				<textarea
 					bind:value={projectDescription}
 					class="textarea textarea-bordered h-24"
-					placeholder="Escribe aquí"
+					placeholder={$t('create_project.input_placeholder')}
 					style="resize: none"
 				/>
 			</label>
 
 			<div class="controls">
-				<button class="btn btn-outline" on:click={close}> Cancelar </button>
-				<button type="submit" class="btn btn-primary"> Crear </button>
+				<button class="btn btn-outline" on:click={close}> {$t('create_project.cancel')}</button>
+				<button type="submit" class="btn btn-primary"> {$t('create_project.create')}</button>
 			</div>
 		</form>
 	</Modal>

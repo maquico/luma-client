@@ -61,6 +61,12 @@ export const config = {
             routes: ['/'],
             loader: async () => (await import('../../lang/en/home.json')).default,
         },
+        {
+            locale: 'en',
+            key: 'create_project',
+            routes: ['/'],
+            loader: async () => (await import('../../lang/en/modals/createProject.json')).default,
+        },
         // Spanish loaders
         {
             locale: 'es',
@@ -103,6 +109,12 @@ export const config = {
             key: 'home',
             routes: ['/'],
             loader: async () => (await import('../../lang/es/home.json')).default,
+        },
+        {
+            locale: 'es',
+            key: 'create_project',
+            routes: ['/'],
+            loader: async () => (await import('../../lang/es/modals/createProject.json')).default,
         },
     ],
 };
