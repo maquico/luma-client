@@ -59,7 +59,7 @@
 				badgeDescription = badge.descripcion;
 				badgeIcon = badge.foto;
 
-				showToast(`Nueva insignia desbloqueda: ${badgeName}`, {
+				showToast(`${$t('home.badge_success')} ${badgeName}`, {
 					type: 'info',
 					duration: 5000,
 					theme: 'dark'
@@ -149,10 +149,10 @@
 				<!--{#if frequentProjects.length !== 0} &lt;!&ndash;No content&ndash;&gt;-->
 				<div class="no-content">
 					<div class="right">
-						<p class="title">No hay nada por aquí... aún.</p>
+						<p class="title">{$t('home.no_projects_title')}</p>
 						<p>
-							Comienza creando un nuevo proyecto para empezar. <br />
-							Tus proyectos aparecerán aquí una vez crees uno o te inviten para formar parte
+							{$t('home.no_projects_p01')}<br />
+							{$t('home.no_projects_p02')}
 						</p>
 						<button
 							class="btn btn-primary"
@@ -160,7 +160,7 @@
 								showModal = true;
 							}}
 						>
-							NUEVO PROYECTO
+						{$t('home.create_button')}
 						</button>
 					</div>
 

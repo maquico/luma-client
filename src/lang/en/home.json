@@ -1,5 +1,9 @@
 {
     "projects_title": "Projects",
     "search_bar": "Search project ...",
-    "create_button": "NEW PROJECT"
+    "create_button": "NEW PROJECT",
+    "no_projects_title": "There's nothing here... yet.",
+    "no_projects_p01": "Create a new project to start.",
+    "no_projects_p02": "Your projects will appear here once you create or are invited to join one",
+    "badge_success": "New badge unlocked:"
   }

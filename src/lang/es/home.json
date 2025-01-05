@@ -1,5 +1,9 @@
 {
     "projects_title": "Proyectos",
     "search_bar": "Buscar proyecto ...",
-    "create_button": "NUEVO PROYECTO"
-  }
+    "create_button": "NUEVO PROYECTO",
+    "no_projects_title": "No hay nada por aquí... aún.",
+    "no_projects_p01": "Comienza creando un nuevo proyecto para empezar.",
+    "no_projects_p02": "Tus proyectos aparecerán aquí una vez crees uno o te inviten para formar parte",
+    "badge_success": "Nueva insignia desbloqueada:"
+}
