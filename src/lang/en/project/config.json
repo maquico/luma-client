@@ -1,0 +1,13 @@
+{
+    "update_success": "Project details updated successfully",
+    "update_error": "Error updating project details",
+    "not_leader": "You don't have the role needed for this action",
+    "project_summary": "Project Summary",
+    "project_name": "Project Name",
+    "description": "Description",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete_project_title": "Delete Project",
+    "delete_project_p": "To delete this project, click on the Delete button below",
+    "delete": "Delete"
+}

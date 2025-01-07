@@ -1,0 +1,13 @@
+{
+    "update_success": "Detalles del proyecto actualizados exitosamente",
+    "update_error": "Error al actualizar los detalles del proyecto",
+    "not_leader": "No tienes el rol necesario para esta acción",
+    "project_summary": "Resumen del proyecto",
+    "project_name": "Nombre del proyecto",
+    "description": "Descripción",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "delete_project_title": "Eliminar proyecto",
+    "delete_project_p": "Para eliminar este proyecto, haz clic en el botón Eliminar a continuación",
+    "delete": "Eliminar"
+}
