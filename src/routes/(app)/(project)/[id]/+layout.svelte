@@ -8,7 +8,6 @@
 	export let projectData;
 	let projectId;
 
-	//TODO: añadir disabled buttons para cuando se esta cargando los datos del proyecto
 	async function getProjectDetails(id) {
 		await axios
 			.get(`https://luma-server.onrender.com/api/projects/id/${id}`)
