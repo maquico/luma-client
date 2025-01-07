@@ -104,6 +104,11 @@ export const config = {
             key: 'delete_project',
             loader: async () => (await import('../../lang/en/modals/deleteProject.json')).default,
         },
+        {
+            locale: 'en',
+            key: 'project_dashboard',
+            loader: async () => (await import('../../lang/en/project/dashboard.json')).default,
+        },
         // Spanish loaders
         {
             locale: 'es',
@@ -189,6 +194,11 @@ export const config = {
             locale: 'es',
             key: 'delete_project',
             loader: async () => (await import('../../lang/es/modals/deleteProject.json')).default,
+        },
+        {
+            locale: 'es',
+            key: 'project_dashboard',
+            loader: async () => (await import('../../lang/es/project/dashboard.json')).default,
         },
     ],
 };
