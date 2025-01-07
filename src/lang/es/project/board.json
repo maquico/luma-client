@@ -1,0 +1,10 @@
+{
+    "filter_none": "None",
+    "p_loading": "Loading project data...",
+    "create": "Create Task",
+    "t_loading": "Loading task data...",
+    "task_approval": "Task approval was not granted",
+    "requires_leader": "This action requires a leader role",
+    "state_change": "State change saved successfully",
+    "already_status": "Task is already in this status"
+}

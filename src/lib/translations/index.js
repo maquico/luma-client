@@ -72,6 +72,11 @@ export const config = {
             key: 'project_overview',
             loader: async () => (await import('../../lang/en/project/overview.json')).default,
         },
+        {
+            locale: 'en',
+            key: 'project_board',
+            loader: async () => (await import('../../lang/en/project/board.json')).default,
+        },
         // Spanish loaders
         {
             locale: 'es',
@@ -125,6 +130,11 @@ export const config = {
             locale: 'es',
             key: 'project_overview',
             loader: async () => (await import('../../lang/es/project/overview.json')).default,
+        },
+        {
+            locale: 'es',
+            key: 'project_board',
+            loader: async () => (await import('../../lang/es/project/board.json')).default,
         },
     ],
 };
