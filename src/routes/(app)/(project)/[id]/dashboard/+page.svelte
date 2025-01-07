@@ -5,9 +5,24 @@
 	import { projectData } from '$lib/stores/projectStore';
 	import { ClipboardPenLine } from 'lucide-svelte';
 	import axios from 'axios';
+	import { browser } from '$app/environment';
+	import { get } from 'svelte/store';
 
-	let userData = JSON.parse(localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token'))
-	let userID = userData.user.id
+	let userData
+	let userID
+
+	if (browser) {
+		userData = localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token')
+			? JSON.parse(localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token'))
+			: null;
+
+		if (!userData) {
+			console.log('No hay usuario en local storage');
+		} else {
+			userID = userData.user.id;
+		}
+	}
+
 	let projectMembers = []
 	let pendingTasks = []
 	let boardStats = []

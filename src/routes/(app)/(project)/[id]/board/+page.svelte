@@ -1,7 +1,8 @@
 <script>
 	import Board from '$components/board/Board.svelte';
 	import CreateTaskModal from '$components/modals/createTask.modal.svelte';
-	import { projectData } from '$lib/stores/projectStore';
+	import { projectData, getProjectDetails } from '$lib/stores/projectStore';
+	import { page } from '$app/stores';
 	import axios from 'axios';
 	import { onMount } from 'svelte';
 
@@ -9,6 +10,14 @@
 
 	onMount(async () => {
 		loading = true
+		if (!$projectData) {
+			// If projectData doesn't exist, retrieve it from the API
+			const idFromParams = $page.params.id;
+			await getProjectDetails(idFromParams);
+		} else {
+			projectId = $projectData.Proyecto_ID;
+		}
+
 		try {
 			await Promise.all([
 				getBoardTasks(projectId),
@@ -24,11 +33,18 @@
 
 	let showModal = false;
 	let tags = [];
-	let projectId = $projectData.Proyecto_ID
+	let projectId
 	let projectTasks = []
 	let filteredProjectTasks = []
 	let selectedOption = ''
 	let loading = true
+
+	// Subscribe to the projectData store to get the current value
+	projectData.subscribe((data) => {
+		if (data) {
+			projectId = data.Proyecto_ID;
+		}
+	});
 
 	function handleClose() {
 		showModal = false;

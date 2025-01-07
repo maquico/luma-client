@@ -5,6 +5,7 @@
 	import { get } from 'svelte/store';
 	import Modal from '$components/modal.svelte';
 	import axios from 'axios';
+	import { browser } from '$app/environment';
 
 	const dispatch = createEventDispatcher();
 
@@ -12,16 +13,23 @@
 	let projectName = '';
 	let projectDescription = '';
 	// let userId = '37d3b652-d314-4124-9685-add5f0c6fc19';
-	let userLocalData = JSON.parse(localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token'))
+	let userLocalData
+
 	let userID;
 	let userNewData;
-	if (!userLocalData) {
-		console.log('No hay usuario en local storage');
-		// get data from the store
-		userNewData = get(userData)
-		console.log('userNewData', userNewData);
-	} else {
-		userID = userLocalData.user.id;
+	if (browser) {
+		userLocalData = localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token')
+			? JSON.parse(localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token'))
+			: null;
+
+		if (!userLocalData) {
+			console.log('No hay usuario en local storage');
+			// get data from the store
+			userNewData = get(userData);
+			console.log('userNewData', userNewData);
+		} else {
+			userID = userLocalData.user.id;
+		}
 	}
 
 	let invalidInput = false;

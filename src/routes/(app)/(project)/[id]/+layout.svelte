@@ -1,29 +1,14 @@
 <script>
 	import SideBar from '$components/project.sidebar.svelte';
-	import { setProjectData } from '$lib/stores/projectStore';
+	import { getProjectDetails } from '$lib/stores/projectStore';
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
-	import axios from 'axios';
 
-	export let projectData;
 	let projectId;
-
-	async function getProjectDetails(id) {
-		await axios
-			.get(`https://luma-server.onrender.com/api/projects/id/${id}`)
-			.then((response) => {
-				projectData = response.data;
-				console.log(projectData);
-				setProjectData(projectData);
-			})
-			.catch((error) => {
-				console.log(error);
-			});
-	}
 
 	onMount(() => {
 		projectId = $page.params.id;
-		getProjectDetails(projectId);
+		getProjectDetails(projectId); // Fetch and set project details
 	});
 </script>
 
