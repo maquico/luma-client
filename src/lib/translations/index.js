@@ -77,6 +77,26 @@ export const config = {
             key: 'project_board',
             loader: async () => (await import('../../lang/en/project/board.json')).default,
         },
+        {
+            locale: 'en',
+            key: 'approve_task',
+            loader: async () => (await import('../../lang/en/modals/approveTask.json')).default,
+        },
+        {
+            locale: 'en',
+            key: 'create_task',
+            loader: async () => (await import('../../lang/en/modals/createTask.json')).default,
+        },
+        {
+            locale: 'en',
+            key: 'delete_task',
+            loader: async () => (await import('../../lang/en/modals/deleteTask.json')).default,
+        },
+        {
+            locale: 'en',
+            key: 'modal',
+            loader: async () => (await import('../../lang/en/modals/modal.json')).default,
+        },
         // Spanish loaders
         {
             locale: 'es',
@@ -135,6 +155,26 @@ export const config = {
             locale: 'es',
             key: 'project_board',
             loader: async () => (await import('../../lang/es/project/board.json')).default,
+        },
+        {
+            locale: 'es',
+            key: 'approve_task',
+            loader: async () => (await import('../../lang/es/modals/approveTask.json')).default,
+        },
+        {
+            locale: 'es',
+            key: 'create_task',
+            loader: async () => (await import('../../lang/es/modals/createTask.json')).default,
+        },
+        {
+            locale: 'es',
+            key: 'delete_task',
+            loader: async () => (await import('../../lang/es/modals/deleteTask.json')).default,
+        },
+        {
+            locale: 'es',
+            key: 'modal',
+            loader: async () => (await import('../../lang/es/modals/modal.json')).default,
         },
     ],
 };

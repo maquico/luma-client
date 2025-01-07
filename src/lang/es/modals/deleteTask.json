@@ -1,0 +1,8 @@
+{
+    "delete_success": "Tarea eliminada exitosamente",
+    "delete_error": "Error al eliminar la tarea",
+    "you_sure": "¿Estás seguro de que quieres eliminar esta tarea?",
+    "delete": "Eliminar",
+    "cancel": "Cancelar",
+    "title": "Eliminar tarea"
+}

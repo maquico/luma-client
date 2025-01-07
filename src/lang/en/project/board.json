@@ -9,6 +9,7 @@
     "approved": "Approved",
     "task_approval": "Task approval was not granted",
     "requires_leader": "This action requires a leader role",
-    "state_change": "State change saved successfully",
-    "already_status": "Task is already in this status"
+    "status_change": "Status change saved successfully",
+    "already_status": "Task is already in this status",
+    "error_status": "Error updating task status"
 }

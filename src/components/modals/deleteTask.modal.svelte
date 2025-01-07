@@ -5,6 +5,7 @@
 	import { API_BASE_URL } from '$lib/stores/apiStore';
 	import { projectData } from '$lib/stores/projectStore';
 	import { showToast } from '$lib/stores/toastStore';
+	import { t } from '$lib/translations';
 
 	const dispatch = createEventDispatcher();
 
@@ -30,10 +31,10 @@
 		axios.delete(`${API_BASE_URL}/task/${taskId}/${userId}/${projectId}`)
 		.then((response) => {
 			console.log(response)
-			showToast('Task deleted successfully', { type: 'success', duration: 5000 });
+			showToast($t('delete_task.delete_success'), { type: 'success', duration: 5000 });
 			dispatch('delete')
 		}).catch((error) => {
-			console.error('Error updating deleting task:', error);
+			console.error('Error deleting task:', error);
 			if (error.response) {
 				// Check if the status code is 400
 				if (error.response.status === 400 || error.response.status === 403) {
@@ -42,7 +43,7 @@
 				}
 			}
 			// Generic error toast
-			showToast('Error deleting task', { type: 'error', duration: 5000 });
+			showToast($t('delete_task.delete_error'), { type: 'error', duration: 5000 });
 		})
 		close()
 	}
@@ -53,13 +54,13 @@
 	<Modal
 		header
 		closeByBackgroundClick
-		title="Eliminar tarea"
+		title={$t('delete_task.title')}
 		on:close={close}
 	>
-		<p>¿Estás seguro que quieres eliminar esta tarea? </p>
+		<p>{$t('delete_task.you_sure')} </p>
 			<div class="controls">
-				<button class="btn-delete" on:click={validate}>Eliminar</button> 
-				<button class="btn-cancel" on:click={close}>Cancelar</button>  
+				<button class="btn-delete" on:click={validate}>{$t('delete_task.delete')}</button> 
+				<button class="btn-cancel" on:click={close}>{$t('delete_task.cancel')}</button>  
 			</div>
 	</Modal>
 {/if}

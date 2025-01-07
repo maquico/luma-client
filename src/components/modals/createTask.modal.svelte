@@ -6,12 +6,12 @@
 	import { DatePicker } from 'date-picker-svelte';
 	import { projectData } from '$lib/stores/projectStore';
 	import { showToast } from '$lib/stores/toastStore';
+	import { t } from '$lib/translations';
 
 	let showDatePickerStart = false;
 	let showDatePickerEnd = false;
 	let startDate = new Date();
 	let endDate = new Date();
-    let selectedUserId = ""; // To bind selected user ID
 	let projectMembers= $projectData.miembros;
 	let projectId = $projectData.Proyecto_ID;
 	let loadedFormData = {}; // Track loaded form data for comparison
@@ -166,7 +166,7 @@
                 	)
 					.then((response) => {
     				        console.log('Task details updated:', response.data);
-    				        showToast('Detalles de tarea actualizados', { type: 'success', duration: 5000 });
+    				        showToast($t('create_task.update_success'), { type: 'success', duration: 5000 });
     				})
     				.catch((error) => {
     				    console.error('Error updating task details:', error);
@@ -174,12 +174,20 @@
     				    if (error.response) {
     				        // Check if the status code is 400
     				        if (error.response.status === 400 || error.response.status === 403) {
-    				            showToast(error.response.data, { type: 'warning', duration: 5000 });
+								if (error.response.data === 'El usuario no es miembro del proyecto') {
+									showToast($t('create_task.not_member'), { type: 'warning', duration: 5000 });
+								} else if(error.response.data === 'Rol de usuario sin permisos para actualizar tareas'){
+									showToast($t('create_task.not_leader'), { type: 'warning', duration: 5000 });
+								} else if(error.response.data === 'No hay campos válidos para actualizar'){
+									showToast($t('create_task.not_valid'), { type: 'warning', duration: 5000 });
+								} else {
+									showToast(error.response.data, { type: 'warning', duration: 5000 });
+								}
     				            return;
     				        }
     				    }
     				    // Generic error toast
-    				    showToast('Error updating task details', { type: 'error', duration: 5000 });
+    				    showToast($t('create_task.update_error'), { type: 'error', duration: 5000 });
     				});
 				}
 
@@ -192,7 +200,7 @@
     				    })
     				    .then((response) => {
     				        console.log('Task status updated:', response.data);
-    				        showToast('Cambio de estado guardado', { type: 'success', duration: 5000 });
+    				        showToast($t('create_task.status_change'), { type: 'success', duration: 5000 });
     				    })
     				    .catch((error) => {
     				        console.error('Error updating task status:', error);
@@ -200,19 +208,21 @@
     				        if (error.response) {
     				            // Check if the status code is 400
     				            if (error.response.status === 400 || error.response.status === 403) {
-    				                showToast(error.response.data, { type: 'warning', duration: 5000 });
-    				                return;
-    				            }
-							
-    				            // Handle specific known error message
-    				            if (error.response.data === 'Task already has the new status') {
-    				                showToast('Task already with that status', { type: 'info', duration: 5000 });
+    				                // Handle specific known error message
+    				            	if (error.response.data === 'Task already has the new status') {
+    				            	    //showToast('Task already with that status', { type: 'info', duration: 5000 });
+    				            	} else if(error.response.data === 'User does not have permission to approve tasks'){
+									showToast($t('create_task.not_leader'), { type: 'warning', duration: 5000 });
+									} else if(error.response.data === 'Task has no user associated'){
+										showToast($t('create_task.no_user'), { type: 'warning', duration: 5000 });
+									} else {
+										showToast(error.response.data, { type: 'warning', duration: 5000 });
+									}
     				                return;
     				            }
     				        }
-						
     				        // Generic error toast
-    				        showToast('Error updating task status', { type: 'error', duration: 5000 });
+    				        showToast($t('create_task.update_status_error'), { type: 'error', duration: 5000 });
     				    });
 				}
             } else if (!isEdit) {
@@ -231,7 +241,7 @@
 					.post('https://luma-server.onrender.com/api/task', requestBody)
 					.then((response) => {
     				        console.log('Task created: ', response.data);
-    				        showToast('Task created successfully', { type: 'success', duration: 5000 });
+    				        showToast($t('create_task.create_success'), { type: 'success', duration: 5000 });
     				    })
     				    .catch((error) => {
     				        console.error('Error creating task:', error);
@@ -245,38 +255,38 @@
     				        }
 						
     				        // Generic error toast
-    				        showToast('Error creating task', { type: 'error', duration: 5000 });
+    				        showToast($t('create_task.create_error'), { type: 'error', duration: 5000 });
     				    });
             }
 			dispatch('update');
             close();
         } catch (error) {
 			console.error(isEdit ? 'Error updating task:' : 'Error creating task:', error);
-            showToast('Error saving task', { type: 'error', duration: 5000 });
+            showToast($t('create_task.saving_error'), { type: 'error', duration: 5000 });
         }
     } catch (error) {
 		console.error('Unexpected error occurred:', error);
-        showToast('Unexpected error occurred', { type: 'error', duration: 5000 });
+        showToast($t('create_task.unexpected_error'), { type: 'error', duration: 5000 });
     }
 }
 </script>
 
 {#if show}
-	<Modal title={isEdit ? 'Edit Task' : 'Create Task'} data={data} isEdit={isEdit} header controls controlsOptions on:close={close} on:delete={handleDelete}>
+	<Modal title={isEdit ? $t('create_task.edit_title') : $t('create_task.create_title')} data={data} isEdit={isEdit} header controls controlsOptions on:close={close} on:delete={handleDelete}>
 		<form on:submit|preventDefault={validate}>
 			<div class="overview">
-				<p class="project-name">Project name</p>
+				<p class="project-name" hidden>{$t('create_task.project_name')}</p>
 			</div>
 
 			<label class="input input-bordered flex items-center gap-2">
-				<input type="text" bind:value={formData.name} required class="grow" placeholder="Task name" />
+				<input type="text" bind:value={formData.name} required class="grow" placeholder={$t('create_task.task_name')} />
 			</label>
 
 			<div class="task-details">
 				<!-- Dropdown for selecting a user -->
                 <label class="form-control">
                     <div class="label">
-                        <span class="label-text">Asignar Usuario</span>
+                        <span class="label-text">{$t('create_task.assign_user')}</span>
                     </div>
                     <select
                         class="select select-bordered w-full"
@@ -284,7 +294,7 @@
                         required
 						disabled={isFieldRestricted('userId')}
                     >
-                        <option value="" disabled selected>Seleccionar Usuario</option>
+                        <option value="" disabled selected>{$t('create_task.select_user')}</option>
                         {#each projectMembers as member}
                             <option value={member.Usuario_ID}>{member.nombreCompleto} - {member.nombreRol}</option>
                         {/each}
@@ -293,16 +303,16 @@
 
 				<label class="input input-bordered flex items-center gap-2 w-full">
 					<Tags />
-					<input type="text" bind:value={formData.tags} class="grow" placeholder="Tags" />
+					<input type="text" bind:value={formData.tags} class="grow" placeholder={$t('create_task.tags')} />
 				</label>
 
 				<select class="select select-bordered w-full" bind:value={formData.state}>
-					<option value="0" disabled selected>Estado</option>
+					<option value="0" disabled selected>{$t('create_task.status')}</option>
 					<!-- Placeholder visible por defecto -->
-					<option value="1">Nuevo</option>
-					<option value="2">En Progreso</option>
-					<option value="3">Completadas</option>
-					<option value="4">Aprobadas</option>
+					<option value="1">{$t('create_task.to_do')}</option>
+					<option value="2">{$t('create_task.in_progress')}</option>
+					<option value="3">{$t('create_task.done')}</option>
+					<option value="4">{$t('create_task.approved')}</option>
 				</select>
 			</div>
 
@@ -311,7 +321,7 @@
 					<!-- Campo de Fecha Inicio -->
 					<label class="form-control w-full max-w-xs">
 						<div class="label">
-							<span class="label-text">Fecha inicio</span>
+							<span class="label-text">{$t('create_task.start_date')}</span>
 						</div>
 						<input
 							type="text"
@@ -329,7 +339,7 @@
 					<!-- Campo de Fecha Fin -->
 					<label class="form-control w-full max-w-xs">
 						<div class="label">
-							<span class="label-text">Fecha fin</span>
+							<span class="label-text">{$t('create_task.end_date')}</span>
 						</div>
 						<input
 							type="text"
@@ -348,7 +358,7 @@
 				<div class="row">
 					<label class="form-control w-full max-w-xs">
 						<div class="label">
-							<span class="label-text">Esfuerzo</span>
+							<span class="label-text">{$t('create_task.effort')}</span>
 						</div>
 						<select class="select select-bordered" bind:value={formData.time} required disabled={isFieldRestricted('time')}>
 							<option disabled selected></option>
@@ -362,14 +372,14 @@
 
 					<label class="form-control w-full max-w-xs">
 						<div class="label">
-							<span class="label-text">Prioridad</span>
+							<span class="label-text">{$t('create_task.priority')}</span>
 						</div>
 						<select class="select select-bordered" bind:value={formData.priority} required disabled={isFieldRestricted('priority')}>
-							<option>1</option>
-							<option>2</option>
-							<option>3</option>
-							<option>4</option>
-							<option>5</option>
+							<option value="1">{$t('create_task.really_high')}</option>
+							<option value="2">{$t('create_task.high')}</option>
+							<option value="3">{$t('create_task.normal')}</option>
+							<option value="4">{$t('create_task.low')}</option>
+							<option value="5">{$t('create_task.really_low')}</option>
 						</select>
 					</label>
 				</div>
@@ -377,12 +387,12 @@
 
 			<label class="form-control">
 				<div class="label">
-					<span class="label-text">Descripción</span>
+					<span class="label-text">{$t('create_task.description')}</span>
 				</div>
 				<textarea
 					class="textarea textarea-bordered h-24"
 					bind:value={formData.description}
-					placeholder="Descricion de la tarea"
+					placeholder={$t('create_task.description_placeholder')}
 				></textarea>
 			</label>
 
@@ -400,7 +410,7 @@
 			-->
 
 			<div class="controls">
-				<button type="submit" class="btn btn-primary">{isEdit ? 'Actualizar' : 'Guardar'}</button>
+				<button type="submit" class="btn btn-primary">{isEdit ? $t('create_task.update') : $t('create_task.save')}</button>
 			</div>
 		</form>
 		<!--		{#if data}-->

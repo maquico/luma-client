@@ -7,6 +7,7 @@
 	import { showToast } from '$lib/stores/toastStore';
 	import ApproveTaskModal from '$components/modals/approve.task.modal.svelte';
 	import { createEventDispatcher } from 'svelte';
+	import { t } from '$lib/translations';
 
 	let projectID =  $projectData.Proyecto_ID
 	let userData = JSON.parse(localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token'))
@@ -70,12 +71,12 @@
 			const approved = await openApprovalModal();
 			if (!approved) {
 				// If not approved, show a toast and reset items
-				showToast('Task approval was not granted.', { type: 'warning', duration: 5000 });
+				showToast($t('project_board.task_approval'), { type: 'warning', duration: 5000 });
 				items = [...items]; // Revert items to the original state
 				return;
 			}
 		} else if (statusId === 4 && !isLeader) {
-			showToast('This status requires leader approval and cannot accept items.', { type: 'warning', duration: 5000 });
+			showToast($t('project_board.requires_leader'), { type: 'warning', duration: 5000 });
 			items = [...items]; // Revert items to the original state
 			return;
 		}
@@ -99,7 +100,7 @@
 					// console.log(response.data);
 					console.log('status de tarea actualizada');
 					console.log(response.data);
-					showToast('Cambio de estado guardado', { type: 'success', duration: 5000 })
+					showToast($t('project_board.status_change'), { type: 'success', duration: 5000 })
 				})
 				.catch((error) => {
 					// console.log(error.data);
@@ -107,11 +108,11 @@
 					console.log(error);
 
 					if (error.response.data === "Task already has the new status"){
-						showToast('Task already with that status', { type: 'info', duration: 5000 })
+						showToast($t('project_board.already_status'), { type: 'info', duration: 5000 })
 						return
 					}
 
-					showToast('Error updating task status', { type: 'error', duration: 5000 })
+					showToast($t('project_board.error_status'), { type: 'error', duration: 5000 })
 					return
 				})
 		}

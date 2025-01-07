@@ -1,10 +1,15 @@
 {
-    "filter_none": "None",
-    "p_loading": "Loading project data...",
-    "create": "Create Task",
-    "t_loading": "Loading task data...",
-    "task_approval": "Task approval was not granted",
-    "requires_leader": "This action requires a leader role",
-    "state_change": "State change saved successfully",
-    "already_status": "Task is already in this status"
+    "filter_none": "Ninguno",
+    "p_loading": "Cargando datos del proyecto...",
+    "create_outer": "Crear tarea",
+    "t_loading": "Cargando datos de la tarea...",
+    "to_do": "Por hacer",
+    "in_progress": "En progreso",
+    "done": "Hecho",
+    "approved": "Aprobado",
+    "task_approval": "La aprobación de la tarea no fue concedida",
+    "requires_leader": "Esta acción requiere un rol de líder",
+    "status_change": "Cambio de estado guardado exitosamente",
+    "already_status": "La tarea ya tiene este estado",
+    "error_status": "Error al actualizar el estado de la tarea"
 }
