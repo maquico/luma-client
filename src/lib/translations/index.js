@@ -36,19 +36,16 @@ export const config = {
         {
             locale: 'en',
             key: 'profile_dropdown',
-            routes: ['/', '/1/overview', '/1/board', '/1/dashboard'],
             loader: async () => (await import('../../lang/en/user/user.dropdown.json')).default,
         },
         {
             locale: 'en',
             key: 'project_sidebar',
-            routes: ['/1/overview'],
             loader: async () => (await import('../../lang/en/navbars/project.sidebar.json')).default,
         },
         {
             locale: 'en',
-            key: 'project_config',
-            routes: ['/', '/1/config'],
+            key: 'project_config_sidebar',
             loader: async () => {
                 const data = (await import('../../lang/en/navbars/project.config.sidebar.json')).default;
                 console.log('Loaded project_sidebar translations:', data);
@@ -97,6 +94,16 @@ export const config = {
             key: 'modal',
             loader: async () => (await import('../../lang/en/modals/modal.json')).default,
         },
+        {
+            locale: 'en',
+            key: 'project_config',
+            loader: async () => (await import('../../lang/en/project/config.json')).default,
+        },
+        {
+            locale: 'en',
+            key: 'delete_project',
+            loader: async () => (await import('../../lang/en/modals/deleteProject.json')).default,
+        },
         // Spanish loaders
         {
             locale: 'es',
@@ -119,19 +126,16 @@ export const config = {
         {
             locale: 'es',
             key: 'profile_dropdown',
-            routes: ['/', '/1/overview', '/1/board', '/1/dashboard'],
             loader: async () => (await import('../../lang/es/user/user.dropdown.json')).default,
         },
         {
             locale: 'es',
             key: 'project_sidebar',
-            routes: ['/1/overview', '/1/board', '/1/dashboard'],
             loader: async () => (await import('../../lang/es/navbars/project.sidebar.json')).default,
         },
         {
             locale: 'es',
-            key: 'project_config',
-            routes: ['/', '/1/config'],
+            key: 'project_config_sidebar',
             loader: async () => (await import('../../lang/es/navbars/project.config.sidebar.json')).default,
         },
         {
@@ -175,6 +179,16 @@ export const config = {
             locale: 'es',
             key: 'modal',
             loader: async () => (await import('../../lang/es/modals/modal.json')).default,
+        },
+        {
+            locale: 'es',
+            key: 'project_config',
+            loader: async () => (await import('../../lang/es/project/config.json')).default,
+        },
+        {
+            locale: 'es',
+            key: 'delete_project',
+            loader: async () => (await import('../../lang/es/modals/deleteProject.json')).default,
         },
     ],
 };
