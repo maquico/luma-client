@@ -127,9 +127,10 @@
 		display: flex;
 		justify-content: flex-end;
 		align-items: center;
-		position: absolute;
-		right: 10px;
-		top: 70px;
+    margin-right: 1.5rem;
+		/*position: absolute;*/
+		/*right: 10px;*/
+		/*top: 70px;*/
 	}
 
 	.tab {
