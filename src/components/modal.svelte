@@ -4,6 +4,7 @@
 	import { clickOutside } from '$lib/clickOutside.js';
 	import DeleteTaskModal from '$components/modals/deleteTask.modal.svelte';
 	import DeleteRewardModal from './modals/deleteReward.modal.svelte';
+	import { t } from '$lib/translations';
 
 	const dispatch = createEventDispatcher();
 
@@ -78,7 +79,7 @@
 												showModal = true;
 											}}
 										>
-											Eliminar
+										{$t('modal.delete')}
 											<Trash2 size={20} />
 										</button>
 									</div>

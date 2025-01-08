@@ -1,0 +1,11 @@
+{
+    "delete_success": "Project deleted successfully",
+    "delete_error": "Error deleting project",
+    "not_leader": "You don't have the role needed for this action",
+    "confirm_title": "Confirm deletion",
+    "you_sure": "Are you sure you want to delete the project",
+    "warning": "This action can not be undone.",
+    "to_confirm": "To confirm, type the project name",
+    "delete": "Delete",
+    "cancel": "Cancel"
+}

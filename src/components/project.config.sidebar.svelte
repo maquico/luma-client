@@ -1,7 +1,7 @@
 <nav>
 	<div class="top">
 		<div class="details">
-			<p>{$t('project_config.config_title')}</p>
+			<p>{$t('project_config_sidebar.config_title')}</p>
 <!--			<p>Configuraciones de proyecto</p>-->
 			<p>{ProyectName}</p>
 		</div>
@@ -11,14 +11,14 @@
 			<a class="tab {activeTab === 'config' ? 'active' : ''}"
 				 href={`/${projectID}/config`}>
 				<Text size={20}/>
-				{$t('project_config.summary_text')}
+				{$t('project_config_sidebar.summary_text')}
 <!--				Resumen-->
 			</a>
 
 			<a class="tab {activeTab === 'config/team' ? 'active' : ''}"
 				 href={`/${projectID}/config/team`}>
 				<Users size={20}/>
-				{$t('project_config.team_text')}
+				{$t('project_config_sidebar.team_text')}
 
 <!--				Equipo-->
 			</a>
@@ -27,7 +27,7 @@
 
 	<a class="settings" href={`/${projectID}/overview`}>
 		<LogOut size={20}/>
-		{$t('project_config.exit_config_text')}
+		{$t('project_config_sidebar.exit_config_text')}
 <!--		Cerrar configuración-->
 	</a>
 </nav>

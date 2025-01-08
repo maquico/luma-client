@@ -1,0 +1,9 @@
+{
+    "project_name_warning": "El nombre del proyecto no debe exceder 50 caracteres.",
+    "modal_title": "Crear nuevo proyecto",
+    "project_name": "Nombre del proyecto",
+    "project_description": "Descripción",
+    "cancel": "Cancelar",
+    "create": "Crear",
+    "input_placeholder": "Escribe aquí"
+}

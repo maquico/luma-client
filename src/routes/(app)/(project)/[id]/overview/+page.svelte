@@ -3,6 +3,7 @@
 	import { goto } from '$app/navigation';
 	import { DateTime} from 'luxon';
 	import { onMount } from 'svelte';
+	import { t } from '$lib/translations';
 
 	console.log($projectData);
 
@@ -32,7 +33,7 @@
 
 			<aside>
 				<div class="members-content">
-					<p>MIEMBROS</p>
+					<p>{$t('project_overview.members')}</p>
 
 					<div class="members-grid">
 						{#each $projectData.miembros as member}
@@ -50,17 +51,17 @@
 				</div>
 
 				<div class="creation-date">
-					<p>FECHA DE CREACION</p>
+					<p>{$t('project_overview.creation_date')}</p>
 					<p class="date"> {DateTime.fromISO($projectData.fechaRegistro).toFormat('LLL dd, yyyy')} </p>
 				</div>
 
 				<div class="tasks">
 					<div class="completed-tasks">
-						<p>TOTAL TAREAS</p>
+						<p>{$t('project_overview.total_tasks')}</p>
 						<p class="value"> {$projectData.totalTareas} </p>
 					</div>
 					<div class="approved-tasks">
-						<p>TAREAS APROBADAS</p>
+						<p>{$t('project_overview.approved_tasks')}</p>
 						<p class="value"> {$projectData.tareasAprobadas} </p>
 					</div>
 				</div>
@@ -70,7 +71,7 @@
 	</div>
 
 {:else}
-	<p>Loading project data...</p>
+	<p>{$t('project_overview.loading')}</p>
 {/if}
 
 <style>

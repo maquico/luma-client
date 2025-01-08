@@ -5,6 +5,7 @@
 	import { projectData } from '$lib/stores/projectStore';
 	import { ClipboardPenLine } from 'lucide-svelte';
 	import axios from 'axios';
+	import { t } from '$lib/translations';
 	import { browser } from '$app/environment';
 	import { get } from 'svelte/store';
 
@@ -61,7 +62,7 @@
 				new Chart(donutChart, {
 					type: 'doughnut',
 					data: {
-						labels: ['Pendientes', 'Completadas', 'Aprobadas'],
+						labels: [$t('project_dashboard.pending'), $t('project_dashboard.completed'), $t('project_dashboard.approved')],
 						datasets: [{
 							label: 'Color Distribution',
 							data:  [boardStats.pendientes, boardStats.aprobadas, boardStats.completadas],
@@ -103,7 +104,7 @@
 					data: {
 						labels: BarChartLabels,
 						datasets: [{
-							label: 'Tareas aprobadas',
+							label: $t('project_dashboard.approved_tasks'),
 							data: BarChartData,
 							backgroundColor: [
 								'rgb(255, 113, 74)', // Luma-orange
@@ -199,7 +200,7 @@
 	</div>
 {/if}
 
-<p class="title">Gráficos de proyecto</p>
+<p class="title">{$t('project_dashboard.dashboard')}</p>
 
 <div class="content">
 
@@ -208,9 +209,9 @@
 			<table class="team-members">
 				<thead>
 					<tr>
-						<th> Miembro </th>
-						<th> Tareas asignadas </th>
-						<th> Gemas</th>
+						<th> {$t('project_dashboard.member')}</th>
+						<th> {$t('project_dashboard.assigned_tasks')} </th>
+						<th> {$t('project_dashboard.gems')}</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -230,28 +231,28 @@
 				<div class="stat-elem card">
 					<div class="container">
 						<p class="value"> {loading? '00' : boardStats.aprobadas} </p>
-						<p class="title"> TAREAS APROBADAS </p>
+						<p class="title"> {$t('project_dashboard.approved_tasks')} </p>
 					</div>
 				</div>
 
 				<div class="stat-elem card">
 					<div class="container">
 						<p class="value"> {loading? '00' : boardStats.completadas} </p>
-						<p class="title"> TAREAS COMPLETADAS </p>
+						<p class="title"> {$t('project_dashboard.completed_tasks')} </p>
 					</div>
 				</div>
 
 				<div class="stat-elem card">
 					<div class="container">
 						<p class="value"> {loading? '00' : boardStats.pendientes} </p>
-						<p class="title"> TAREAS PENDIENTES </p>
+						<p class="title"> {$t('project_dashboard.pending_tasks')} </p>
 					</div>
 				</div>
 
 				<div class="stat-elem card">
 					<div class="container">
 						<p class="value"> {loading? '00' : boardStats.total} </p>
-						<p class="title"> TOTAL TAREAS </p>
+						<p class="title"> {$t('project_dashboard.total_tasks')} </p>
 					</div>
 				</div>
 		</div>
@@ -260,7 +261,7 @@
 
 	<div class="second-row">
 		<div class="pending-tasks">
-			<p>Mis pendientes</p>
+			<p>{$t('project_dashboard.my_pending_tasks')}</p>
 			<div class="task-container">
 				<!--TODO: add null cases -->
 				{#if pendingTasks.length > 0}
@@ -273,7 +274,7 @@
 						</div>
 					{/each}
 				{:else} <!-- Null case-->
-					No tienes tareas pendientes
+				{$t('project_dashboard.no_pending_tasks')}
 				{/if}
 			</div>
 		</div>
@@ -284,7 +285,7 @@
 					<canvas bind:this={chartCanvas1} id="firstChart" height="200"/>
 				{:else} <!-- Null case-->
 					<div class="no-data-message">
-						<p> No data available to display </p>
+						<p> {$t('project_dashboard.no_data')}</p>
 					</div>
 				{/if}
 			</div>
@@ -298,7 +299,7 @@
 					<canvas bind:this={chartCanvas2} id="secondChart"></canvas>
 				{:else} <!-- Null case-->
 					<div class="no-data-message">
-						<p> No data available to display </p>
+						<p> {$t('project_dashboard.no_data')} </p>
 					</div>
 				{/if}
 			</div>

@@ -5,6 +5,7 @@
 	import { page } from '$app/stores';
 	import axios from 'axios';
 	import { onMount } from 'svelte';
+	import { t } from '$lib/translations';
 
 	// console.log($projectData);
 
@@ -135,12 +136,12 @@
 			{#if $projectData}
 				<h1>{$projectData.nombre}</h1>
 			{:else}
-				<p>Loading project data...</p>
+				<p>{$t('project_board.p_loading')}</p>
 			{/if}
 		</p>
 		<div class="controls">
 			<select class="select select-primary w-full max-w-xs" on:change={handleSelectChange}>
-				<option selected>None</option>
+				<option selected>{$t('project_board.filter_none')}</option>
 				{#each tags as tag}
 					<option value={tag}>{tag}</option>
 				{/each}
@@ -152,13 +153,13 @@
 					showModal = true;
 				}}
 			>
-				Crear tarea</button
+			{$t('project_board.create_outer')}</button
 			>
 		</div>
 	</div>
 
 	{#if !filteredProjectTasks}
-		<p>Loading tasks...</p>
+		<p>{$t('project_board.t_loading')}</p>
 	{:else}
 <!--		<Board columns={projectTasks} onFinalUpdate={handleBoardUpdated}/>-->
 		<Board columns={filteredProjectTasks} on:update={handleUpdate} on:delete={handleUpdate}/>

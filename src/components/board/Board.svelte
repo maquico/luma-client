@@ -2,6 +2,7 @@
 	import { flip } from 'svelte/animate';
 	import Column from "$components/board/Column.svelte";
 	import { createEventDispatcher } from 'svelte';
+	import { t } from '$lib/translations';
 
 	const flipDurationMs = 300;
 	const dispatch = createEventDispatcher();
@@ -25,6 +26,20 @@
 		dispatch('delete')
 	}
 
+	function getColumnName(name) {
+		if (name === "TODO") {
+			return $t('project_board.to_do');
+		} else if (name === "DOING") {
+			return $t('project_board.in_progress');
+		} else if (name === "DONE") {
+			return $t('project_board.done');
+		} else if (name === "APPROVED") {
+			return $t('project_board.approved');
+		} else {
+			return name;
+		}
+	}
+
 </script>
 
 <section class="board">
@@ -32,11 +47,11 @@
 		<div class="column">
 <!--			animate:flip="{{duration: flipDurationMs}}"-->
 			<Column statusId={id}
-							name={name}
-							items={items}
-							onDrop={(newItems) => handleItemFinalize(index, newItems)} 
-							on:update={handleUpdate}
-							on:delete={handleDelete}/>
+					name={getColumnName(name)}
+					items={items}
+					onDrop={(newItems) => handleItemFinalize(index, newItems)} 
+					on:update={handleUpdate}
+					on:delete={handleDelete}/>
 		</div>
 	{/each}
 </section>

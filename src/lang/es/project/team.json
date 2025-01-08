@@ -1,0 +1,11 @@
+{
+    "member": "Miembro",
+    "leader": "Líder",
+    "role": "Rol",
+    "email": "Correo electrónico",
+    "update_success": "Rol actualizado con éxito",
+    "not_leader": "No tienes el rol necesario para realizar esta acción",
+    "team_config": "Configuración del equipo",
+    "invite": "Invitar miembro",
+    "loading": "Cargando..."
+}

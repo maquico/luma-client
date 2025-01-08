@@ -1,0 +1,11 @@
+{
+    "member": "Member",
+    "leader": "Leader",
+    "role": "Role",
+    "email": "Email",
+    "update_success": "Role updated successfully",
+    "not_leader": "You don't have the role needed for this action",
+    "team_config": "Team Configuration",
+    "invite": "Invite member",
+    "loading": "Loading..."
+}
