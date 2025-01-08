@@ -4,6 +4,7 @@
 	import axios from 'axios';
 	import { projectData } from '$lib/stores/projectStore';
 	import { showToast } from '$lib/stores/toastStore.js';
+	import { t } from '$lib/translations';
 
 	let invitationMail;
 	const dispatch = createEventDispatcher();
@@ -22,8 +23,12 @@
 
 	// Send invitation with validation and error handling
 	async function sendInvitation() {
+		if (!invitationMail) {
+			showToast($t('invite.required_email'), { type: 'warning', duration: 5000, theme: 'dark' });
+			return;
+		}
 		if (!isValidEmail(invitationMail)) {
-			showToast('error', 'Formato de correo inválido', 'Por favor, ingrese un correo electrónico válido.');
+			showToast($t('invite.invalid_email'), { type: 'warning', duration: 5000, theme: 'dark'  });
 			return;
 		}
 
@@ -35,11 +40,11 @@
 			.then((response) => {
 				console.log(response.data);
 				dispatch('close');
-				showToast('Invitación enviada exitosamente', { type: 'success', duration: 5000 });
+				showToast($t('invite.invite_success'), { type: 'success', duration: 5000, theme: 'dark' });
 			})
 			.catch((error) => {
 				console.error(error);
-				showToast('Error al enviar la invitación', { type: 'error', duration: 5000 });
+				showToast($t('invite.invite_error'), { type: 'error', duration: 5000, theme: 'dark'  });
 			});
 	}
 </script>
@@ -47,28 +52,27 @@
 {#if show}
 	<Modal
 		header
-		title="Agregar usuario"
+		title={$t('invite.title')}
 		on:close={close}
 	>
 		<form on:submit|preventDefault={sendInvitation}>
 			<p>
-				Enviar invitación del proyecto a través de correo
-				electrónico
+				{$t('invite.send_invite')}
 			</p>
 			<label class="form-control w-full">
 				<input
-					type="email"
-					placeholder="Type here"
+					type="text"
+					placeholder={$t('invite.type_here')}
 					class="input input-bordered w-full"
 					bind:value={invitationMail}
 				/>
 			</label>
 			<div class="controls">
 				<button class="btn btn-outline" on:click={close}>
-					Cancelar
+					{$t('invite.cancel')}
 				</button>
 				<button type="submit" class="btn btn-primary">
-					Ingresar
+					{$t('invite.send')}
 				</button>
 			</div>
 		</form>

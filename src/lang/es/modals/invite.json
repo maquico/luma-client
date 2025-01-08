@@ -1,0 +1,11 @@
+{
+    "invite_success": "Invitación enviada con éxito",
+    "invite_error": "Error al enviar la invitación",
+    "title": "Agregar usuario al proyecto",
+    "send_invite": "Enviar invitación al proyecto por correo electrónico",
+    "type_here": "Escribe aquí",
+    "cancel": "Cancelar",
+    "send": "Enviar",
+    "invalid_email": "Correo electrónico inválido",
+    "required_email": "Se requiere un correo electrónico"
+}

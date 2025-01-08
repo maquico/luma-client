@@ -109,6 +109,21 @@ export const config = {
             key: 'project_dashboard',
             loader: async () => (await import('../../lang/en/project/dashboard.json')).default,
         },
+        {
+            locale: 'en',
+            key: 'project_team',
+            loader: async () => (await import('../../lang/en/project/team.json')).default,
+        },
+        {
+            locale: 'en',
+            key: 'delete_member',
+            loader: async () => (await import('../../lang/en/modals/deleteMember.json')).default,
+        },
+        {
+            locale: 'en',
+            key: 'invite',
+            loader: async () => (await import('../../lang/en/modals/invite.json')).default,
+        },
         // Spanish loaders
         {
             locale: 'es',
@@ -199,6 +214,21 @@ export const config = {
             locale: 'es',
             key: 'project_dashboard',
             loader: async () => (await import('../../lang/es/project/dashboard.json')).default,
+        },
+        {
+            locale: 'es',
+            key: 'project_team',
+            loader: async () => (await import('../../lang/es/project/team.json')).default,
+        },
+        {
+            locale: 'es',
+            key: 'delete_member',
+            loader: async () => (await import('../../lang/es/modals/deleteMember.json')).default,
+        },
+        {
+            locale: 'es',
+            key: 'invite',
+            loader: async () => (await import('../../lang/es/modals/invite.json')).default,
         },
     ],
 };

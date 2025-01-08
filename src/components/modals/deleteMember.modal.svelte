@@ -3,6 +3,7 @@
 	import {createEventDispatcher} from 'svelte';
 	import axios from 'axios';
 	import { showToast } from '$lib/stores/toastStore';
+	import { t } from '$lib/translations';
 
 	const dispatch = createEventDispatcher();
 
@@ -22,7 +23,7 @@
 
 		if (memberInfo.Usuario_ID === userData.user.id) {
 			console.log('No puedes eliminarte a ti mismo del proyecto');
-			showToast('No puedes eliminarte a ti mismo del proyecto', { type: 'warning', duration: 5000 });
+			showToast($t('delete_member.cant_delete'), { type: 'warning', duration: 5000 });
 			return;
 		}
 		await axios.delete('https://luma-server.onrender.com/api/member/client', {
@@ -34,7 +35,7 @@
 		})
 		.then((response) => {
     	        console.log('Member deleted succesfully:', response.data);
-    	        showToast('Miembro eliminado exitosamente', { type: 'success', duration: 5000 });
+    	        showToast($t('delete_member.delete_success'), { type: 'success', duration: 5000 });
 				dispatch('reload');
     	})
     	.catch((error) => {
@@ -48,7 +49,7 @@
     	        }
     	    }
     	    // Generic error toast
-    	    showToast('Error eliminando miembro', { type: 'error', duration: 5000 });
+    	    showToast($t('delete_member.delete_error'), { type: 'error', duration: 5000 });
     	});
 		dispatch('close')
 	}
@@ -59,19 +60,19 @@
 		header
 		closeByBackgroundClick
 		controls
-		title="Confirmar eliminación"
+		title={$t('delete_member.confirm_delete')}
 		on:close={close}
 	>
 		<div class="content">
-			<p> ¿Estás seguro de que deseas eliminar a <span class="member">{memberInfo.Usuarios.nombreCompleto}</span> del proyecto? </p>
-			<p class="warning"> * Esta acción es irreversible y el usuario perderá todos los accesos y permisos asociados a este proyecto. *</p>
+			<p> {$t('delete_member.you_sure01')} <span class="member">{memberInfo.Usuarios.nombreCompleto}</span> {$t('delete_member.you_sure02')} </p>
+			<p class="warning"> {$t('delete_member.warning')}</p>
 
 			<div class="controls">
 				<button class="btn btn-outline" on:click={close}>
-					Cancelar
+					{$t('delete_member.cancel')}
 				</button>
 				<button type="submit" class="btn btn-error" on:click={deleteMember}>
-					Eliminar
+					{$t('delete_member.delete')}
 				</button>
 			</div>
 		</div>
