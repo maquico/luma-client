@@ -36,20 +36,39 @@
 	import { LogOut, Text, Users } from 'lucide-svelte';
 	import { page } from '$app/stores';
 	import { t } from '$lib/translations'
-	import { projectData } from '$lib/stores/projectStore';
+	import { projectData, getProjectDetails  } from '$lib/stores/projectStore';
+	import { browser } from '$app/environment';
+	import { onMount } from 'svelte';
 
-	let ProyectName = $projectData.nombre
-
+	let ProyectName
 	let activeTab;
 	let projectID;
 
-	$: page.subscribe(($page) => {
-		const segments = $page.url.pathname.split('/');
-		projectID = segments[1];
-		if(segments.length == 4){
-			activeTab = `${segments[2]}/${segments[3]}`;
-		}else{
-			activeTab = segments[2]
+	// Subscribe to projectData store to set ProyectName when data is available
+	projectData.subscribe((data) => {
+		if (data) {
+			ProyectName = data.nombre;
+		}
+	});
+
+	onMount(async () => {
+		if (browser) {
+			const segments = $page.url.pathname.split('/');
+			projectID = segments[1];
+
+			// Fetch project details if projectData is not already available
+			if (!$projectData) {
+				await getProjectDetails(projectID);
+			} else {
+				ProyectName = $projectData.nombre;
+			}
+
+			// Determine the active tab based on URL segments
+			if (segments.length == 4) {
+				activeTab = `${segments[2]}/${segments[3]}`;
+			} else {
+				activeTab = segments[2];
+			}
 		}
 	});
 

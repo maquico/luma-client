@@ -4,17 +4,35 @@
 	import { showToast } from '$lib/stores/toastStore';
 	import DeleteProjectModal from '$components/modals/deleteProject.modal.svelte';
 	import { t } from '$lib/translations';
+	import { browser } from '$app/environment'; // Check for browser environment
 
-	console.log($projectData);
-
-	let projectName = $projectData.nombre;
-	let projectDescription = $projectData.descripcion;
-	let projectId = $projectData.Proyecto_ID;
+	let projectName = '';
+	let projectDescription = '';
+	let projectId = '';
 	let invalidInput;
 	let showModal = false;
+	let userData = null;
+	let userID = null;
 
-	let userData = JSON.parse(localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token'));
-	let userID = userData.user.id;
+	// Subscribe to projectData store to set project details when data is available
+	projectData.subscribe((data) => {
+		if (data) {
+			projectName = data.nombre;
+			projectDescription = data.descripcion;
+			projectId = data.Proyecto_ID;
+		}
+	});
+
+	if (browser) {
+		// Retrieve user data only in the browser environment
+		const localData = localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token');
+		if (localData) {
+			userData = JSON.parse(localData);
+			userID = userData.user.id;
+		} else {
+			console.error('No user data found in localStorage');
+		}
+	}
 
 	function handleClose() {
 		showModal = false;
@@ -47,7 +65,7 @@
 			})
 			.catch((error) => {
 				console.error('Error al editar el proyecto:', error);
-				
+
 				if (error.response.status === 400 || error.response.status === 403) {
 					// Check if the status code is 400
 					if (error.response.data == "El usuario no tiene permisos para editar el proyecto.") {

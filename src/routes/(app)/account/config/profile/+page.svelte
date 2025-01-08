@@ -2,15 +2,33 @@
 	import axios from 'axios';
 	import { onMount } from 'svelte';
 	import { showToast } from '$lib/stores/toastStore';
+	import { browser } from '$app/environment'; // Import browser check
 
 	let name;
 	let lastName;
 	let email;
-	let userData = JSON.parse(localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token'));
-	let userID = userData.user.id;
-	let userInfo;
+	let userData = null;
+	let userID = null;
+	let userInfo = null;
+
+	if (browser) {
+		// Retrieve user data only in the browser environment
+		const localData = localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token');
+		if (localData) {
+			userData = JSON.parse(localData);
+			userID = userData.user.id;
+		} else {
+			console.error('No user data found in localStorage');
+		}
+	}
 
 	async function getUserInfo() {
+		if (!userID) {
+			console.error('Usuario no autenticado');
+			showToast('Usuario no autenticado', { type: 'error', duration: 5000 });
+			return;
+		}
+
 		await axios
 			.get(`https://luma-server.onrender.com/api/user/${userID}`)
 			.then((response) => {
@@ -29,6 +47,11 @@
 	}
 
 	function changeUserDetails() {
+		if (!userID) {
+			showToast('Usuario no autenticado', { type: 'error', duration: 5000 });
+			return;
+		}
+
 		try {
 			const response = axios.put('https://luma-server.onrender.com/api/user', {
 				id: userID,
@@ -54,7 +77,7 @@
 	}
 
 	onMount(async () => {
-		getUserInfo();
+		await getUserInfo();
 	});
 </script>
 

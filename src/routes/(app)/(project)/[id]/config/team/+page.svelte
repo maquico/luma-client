@@ -8,8 +8,31 @@
 	import { page } from '$app/stores';
 	import { showToast } from '$lib/stores/toastStore.js';
 	import { t } from '$lib/translations';
+	import { browser } from '$app/environment';
 
-	console.log($projectData);
+	let showInvitationModal = false
+	let showDeleteModal = false
+	let roles = []
+	let projectMembers = []
+	let loading = true
+	let isInitialLoad = true;
+	let selectedRoles = projectMembers.map(member => member.Rol_ID);
+	let initialRoles = [];
+	let selectedData = {}
+	let columns = [$t('project_team.member'), $t('project_team.email'), $t('project_team.role'), '']
+	let loggedUserData = null;
+	let loggedUserID = null;
+
+	if (browser) {
+		// Retrieve logged user data only in the browser environment
+		const localData = localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token');
+		if (localData) {
+			loggedUserData = JSON.parse(localData);
+			loggedUserID = loggedUserData.user.id;
+		} else {
+			console.error('No logged user data found in localStorage');
+		}
+	}
 
 	onMount(async () => {
 		loading = true
@@ -28,19 +51,6 @@
 		isInitialLoad = false;
 		// console.log(selectedRoles);
 	})
-
-	let showInvitationModal = false
-	let showDeleteModal = false
-	let roles = []
-	let projectMembers = []
-	let loading = true
-	let isInitialLoad = true;
-	let selectedRoles = projectMembers.map(member => member.Rol_ID);
-	let initialRoles = [];
-	let selectedData = {}
-	let columns = [$t('project_team.member'), $t('project_team.email'), $t('project_team.role'), '']
-	let loggedUserData = JSON.parse(localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token'))
-	let loggedUserID = loggedUserData.user.id
 
 	function handleInvitationClose(){
 		showInvitationModal = false
@@ -67,7 +77,6 @@
 	async function getAllRoles(){
 		await axios.get('https://luma-server.onrender.com/api/roles/')
 			.then((response) => {
-				// Change default roles name to translation values
 				roles = response.data || []
 			})
 			.catch((error) => {

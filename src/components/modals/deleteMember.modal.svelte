@@ -3,15 +3,24 @@
 	import {createEventDispatcher} from 'svelte';
 	import axios from 'axios';
 	import { showToast } from '$lib/stores/toastStore';
+	import { browser } from '$app/environment'; // Check for browser environment
 	import { t } from '$lib/translations';
 
 	const dispatch = createEventDispatcher();
 
 	export let show = true;
 	export let memberInfo
-	let userData = JSON.parse(localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token'))
+	let userData = null
 
-	// $: console.log(memberInfo);
+	if (browser) {
+		// Retrieve user data only in the browser environment
+		const localData = localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token');
+		if (localData) {
+			userData = JSON.parse(localData);
+		} else {
+			console.error('No user data found in localStorage');
+		}
+	}
 
 	const close = () => {
 		show = false;
