@@ -3,17 +3,36 @@
 	import { projectData } from '$lib/stores/projectStore';
 	import { showToast } from '$lib/stores/toastStore';
 	import DeleteProjectModal from '$components/modals/deleteProject.modal.svelte';
+	import { t } from '$lib/translations';
+	import { browser } from '$app/environment'; // Check for browser environment
 
-	console.log($projectData);
-
-	let projectName = $projectData.nombre;
-	let projectDescription = $projectData.descripcion;
-	let projectId = $projectData.Proyecto_ID;
+	let projectName = '';
+	let projectDescription = '';
+	let projectId = '';
 	let invalidInput;
 	let showModal = false;
+	let userData = null;
+	let userID = null;
 
-	let userData = JSON.parse(localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token'));
-	let userID = userData.user.id;
+	// Subscribe to projectData store to set project details when data is available
+	projectData.subscribe((data) => {
+		if (data) {
+			projectName = data.nombre;
+			projectDescription = data.descripcion;
+			projectId = data.Proyecto_ID;
+		}
+	});
+
+	if (browser) {
+		// Retrieve user data only in the browser environment
+		const localData = localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token');
+		if (localData) {
+			userData = JSON.parse(localData);
+			userID = userData.user.id;
+		} else {
+			console.error('No user data found in localStorage');
+		}
+	}
 
 	function handleClose() {
 		showModal = false;
@@ -38,20 +57,35 @@
 				console.log('Proyecto editado con ID:', projectId);
 				console.log('Proyecto editado:', response.data);
 
-				showToast(`Informacion actualizada`, {
-					type: 'info',
+				showToast($t('project_config.update_success'), {
+					type: 'success',
 					duration: 5000,
-					theme: 'dark'
+					theme: 'light'
 				});
 			})
 			.catch((error) => {
 				console.error('Error al editar el proyecto:', error);
 
-				showToast(`No tienes permiso para editar`, {
-					type: 'error',
-					duration: 5000,
-					theme: 'dark'
-				});
+				if (error.response.status === 400 || error.response.status === 403) {
+					// Check if the status code is 400
+					if (error.response.data == "El usuario no tiene permisos para editar el proyecto.") {
+						showToast($t('project_config.not_leader'), {
+							type: 'warning',
+							duration: 5000,
+							theme: 'light'
+						});
+					} else {
+						showToast(error.response.data, {
+							type: 'warning',
+							duration: 5000,
+							theme: 'light'
+						});
+					}
+					return;
+				}
+
+				showToast($t('project_config.update_error'), { type: 'error', duration: 5000 });
+				return;
 			});
 	}
 	function cancelChanges() {
@@ -64,29 +98,29 @@
 <DeleteProjectModal show={showModal} on:close={handleClose} />
 
 <div class="content">
-	<p class="title">Nuevo Proyecto</p>
+	<p class="title">{$t('project_config.project_summary')}</p>
 
 	<div class="container">
 		<label for="projectName">
-			<span>Nombre del Proyecto</span>
+			<span>{$t('project_config.project_name')}</span>
 			<input id="projectName" type="text" required bind:value={projectName} />
 		</label>
 
 		<label for="projectDescription">
-			<span>Descripción</span>
+			<span>{$t('project_config.description')}</span>
 			<textarea id="projectDescription" required bind:value={projectDescription}></textarea>
 		</label>
 
 		<div class="controls">
-			<button class="btn btn-outline" on:click={cancelChanges}> Cancelar </button>
-			<button type="submit" class="btn btn-primary" on:click={validate}> Guardar </button>
+			<button class="btn btn-outline" on:click={cancelChanges}> {$t('project_config.cancel')} </button>
+			<button type="submit" class="btn btn-primary" on:click={validate}> {$t('project_config.save')} </button>
 		</div>
 
 		<br />
 
 		<label for="deleteProject">
-			<span>Eliminar Proyecto</span>
-			<p>Para elimnar el proyecto haz click en "ELIMINAR PROYECTO"</p>
+			<span>{$t('project_config.delete_project_title')}</span>
+			<p>{$t('project_config.delete_project_p')}</p>
 		</label>
 		<button
 			class="btn btn-primary"
@@ -94,7 +128,7 @@
 				showModal = true;
 			}}
 		>
-			Eliminar
+		{$t('project_config.delete')}
 		</button>
 	</div>
 </div>

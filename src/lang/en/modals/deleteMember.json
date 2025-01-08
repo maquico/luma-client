@@ -1,0 +1,11 @@
+{
+    "cant_delete": "You can't delete yourself from the project",
+    "delete_success": "Member deleted successfully",
+    "delete_error": "Error deleting member",
+    "confirm_delete": "Confirm deletion",
+    "you_sure01": "Are you sure you want to delete",
+    "you_sure02": "from the project?",
+    "warning": "* This action can't be undone and the user will lose all access and permitions to the project. *",
+    "cancel": "Cancel",
+    "delete": "Delete"
+}

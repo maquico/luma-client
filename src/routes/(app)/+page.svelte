@@ -9,6 +9,7 @@
 	import { showToast } from '$lib/stores/toastStore';
 	import { userData } from '$lib/stores/userStore.js';
 	import { get } from 'svelte/store';
+	import { t } from '$lib/translations';
 
 	let frequentProjects = [];
 	let otherProjects = [];
@@ -58,7 +59,7 @@
 				badgeDescription = badge.descripcion;
 				badgeIcon = badge.foto;
 
-				showToast(`Nueva insignia desbloqueda: ${badgeName}`, {
+				showToast(`${$t('home.badge_success')} ${badgeName}`, {
 					type: 'info',
 					duration: 5000,
 					theme: 'dark'
@@ -114,7 +115,7 @@
 			</div>
 		{:else}
 			<div class="controls">
-				Proyectos
+				{$t('home.projects_title')}
 
 				<!--TOOD: cambiar la condicional para cuando se pase al flujo normal -->
 				{#if frequentProjects.length !== 0}
@@ -126,7 +127,7 @@
 								type="text"
 								name="search"
 								id="search"
-								placeholder="Buscar proyecto ..."
+								placeholder={$t('home.search_bar')}
 								bind:value={searchValue}
 								size="20"
 							/>
@@ -137,7 +138,7 @@
 								showModal = true;
 							}}
 						>
-							NUEVO PROYECTO
+							{$t('home.create_button')}
 						</button>
 					</div>
 				{/if}
@@ -148,10 +149,10 @@
 				<!--{#if frequentProjects.length !== 0} &lt;!&ndash;No content&ndash;&gt;-->
 				<div class="no-content">
 					<div class="right">
-						<p class="title">No hay nada por aquí... aún.</p>
+						<p class="title">{$t('home.no_projects_title')}</p>
 						<p>
-							Comienza creando un nuevo proyecto para empezar. <br />
-							Tus proyectos aparecerán aquí una vez crees uno o te inviten para formar parte
+							{$t('home.no_projects_p01')}<br />
+							{$t('home.no_projects_p02')}
 						</p>
 						<button
 							class="btn btn-primary"
@@ -159,7 +160,7 @@
 								showModal = true;
 							}}
 						>
-							NUEVO PROYECTO
+						{$t('home.create_button')}
 						</button>
 					</div>
 

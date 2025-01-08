@@ -1,0 +1,11 @@
+{
+    "cant_delete": "No puedes eliminarte a ti mismo del proyecto",
+    "delete_success": "Miembro eliminado con éxito",
+    "delete_error": "Error al eliminar el miembro",
+    "confirm_delete": "Confirmar eliminación",
+    "you_sure01": "¿Estás seguro de que deseas eliminar a",
+    "you_sure02": "del proyecto?",
+    "warning": "* Esta acción no se puede deshacer y el usuario perderá todo acceso y permisos al proyecto. *",
+    "cancel": "Cancelar",
+    "delete": "Eliminar"
+}

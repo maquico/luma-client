@@ -1,0 +1,9 @@
+{
+    "project_name_warning": "Project name must not exceed 50 characters.",
+    "modal_title": "Create new project",
+    "project_name": "Project name",
+    "project_description": "Description",
+    "cancel": "Cancel",
+    "create": "Create",
+    "input_placeholder": "Write here"
+}

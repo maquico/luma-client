@@ -1,0 +1,17 @@
+{
+    "pending": "Pendiente",
+    "completed": "Completado",
+    "total": "Total",
+    "approved": "Aprobado",
+    "approved_tasks": "Tareas Aprobadas",
+    "completed_tasks": "Tareas Completadas",
+    "pending_tasks": "Tareas Pendientes",
+    "total_tasks": "Total de Tareas",
+    "dashboard": "Panel del Proyecto",
+    "member": "Miembro",
+    "assigned_tasks": "Tareas Asignadas",
+    "gems": "Gemas",
+    "my_pending_tasks": "Mis Tareas Pendientes",
+    "no_pending_tasks": "No tienes tareas pendientes",
+    "no_data": "No hay datos disponibles para mostrar"
+}

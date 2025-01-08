@@ -1,14 +1,24 @@
 <script>
 	import Board from '$components/board/Board.svelte';
 	import CreateTaskModal from '$components/modals/createTask.modal.svelte';
-	import { projectData } from '$lib/stores/projectStore';
+	import { projectData, getProjectDetails } from '$lib/stores/projectStore';
+	import { page } from '$app/stores';
 	import axios from 'axios';
 	import { onMount } from 'svelte';
+	import { t } from '$lib/translations';
 
 	// console.log($projectData);
 
 	onMount(async () => {
 		loading = true
+		if (!$projectData) {
+			// If projectData doesn't exist, retrieve it from the API
+			const idFromParams = $page.params.id;
+			await getProjectDetails(idFromParams);
+		} else {
+			projectId = $projectData.Proyecto_ID;
+		}
+
 		try {
 			await Promise.all([
 				getBoardTasks(projectId),
@@ -24,11 +34,18 @@
 
 	let showModal = false;
 	let tags = [];
-	let projectId = $projectData.Proyecto_ID
+	let projectId
 	let projectTasks = []
 	let filteredProjectTasks = []
 	let selectedOption = ''
 	let loading = true
+
+	// Subscribe to the projectData store to get the current value
+	projectData.subscribe((data) => {
+		if (data) {
+			projectId = data.Proyecto_ID;
+		}
+	});
 
 	function handleClose() {
 		showModal = false;
@@ -119,12 +136,12 @@
 			{#if $projectData}
 				<h1>{$projectData.nombre}</h1>
 			{:else}
-				<p>Loading project data...</p>
+				<p>{$t('project_board.p_loading')}</p>
 			{/if}
 		</p>
 		<div class="controls">
 			<select class="select select-primary w-full max-w-xs" on:change={handleSelectChange}>
-				<option selected>None</option>
+				<option selected>{$t('project_board.filter_none')}</option>
 				{#each tags as tag}
 					<option value={tag}>{tag}</option>
 				{/each}
@@ -136,13 +153,13 @@
 					showModal = true;
 				}}
 			>
-				Crear tarea</button
+			{$t('project_board.create_outer')}</button
 			>
 		</div>
 	</div>
 
 	{#if !filteredProjectTasks}
-		<p>Loading tasks...</p>
+		<p>{$t('project_board.t_loading')}</p>
 	{:else}
 <!--		<Board columns={projectTasks} onFinalUpdate={handleBoardUpdated}/>-->
 		<Board columns={filteredProjectTasks} on:update={handleUpdate} on:delete={handleUpdate}/>

@@ -1,0 +1,11 @@
+{
+    "delete_success": "Proyecto eliminado exitosamente",
+    "delete_error": "Error al eliminar el proyecto",
+    "not_leader": "No tienes el rol necesario para esta acción",
+    "confirm_title": "Confirmar eliminación",
+    "you_sure": "¿Estás seguro de que quieres eliminar el proyecto?",
+    "warning": "Esta acción no se puede deshacer.",
+    "to_confirm": "Para confirmar, escribe el nombre del proyecto",
+    "delete": "Eliminar",
+    "cancel": "Cancelar"
+}

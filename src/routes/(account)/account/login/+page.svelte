@@ -159,4 +159,11 @@
 		.card a span{
 				color: #692DD7;
 		}
+
+		input:-webkit-autofill {
+    		background-color: white !important;
+    		-webkit-box-shadow: 0 0 0px 1000px white inset !important;
+    		-webkit-text-fill-color: black !important;
+		}
+
 </style>

@@ -1,6 +1,7 @@
 <script>
 	import Modal from '$components/modal.svelte'
 	import { createEventDispatcher } from 'svelte';
+	import { t } from '$lib/translations';
 
 	const dispatch = createEventDispatcher();
 
@@ -17,16 +18,16 @@
 	<Modal
 		header
 		closeByBackgroundClick
-		title="Aprobar tarea"
+		title={$t('approve_task.title')}
 		controls
 		on:close={() => close("denied")}
 	>
 		<div>
-			<p>Are you sure you want to approve this task?</p>
+			<p>{$t('approve_task.you_sure')}</p>
 
 			<div class="controls">
-				<button class="btn-approve" on:click={() => close("approved")}>Approve</button> <!-- Approve button -->
-				<button class="btn-decline" on:click={() => close("denied")}>Deny</button>  <!-- Deny button -->
+				<button class="btn-approve" on:click={() => close("approved")}>{$t('approve_task.approve')}</button> <!-- Approve button -->
+				<button class="btn-decline" on:click={() => close("denied")}>{$t('approve_task.deny')}</button>  <!-- Deny button -->
 			</div>
 
 		</div>

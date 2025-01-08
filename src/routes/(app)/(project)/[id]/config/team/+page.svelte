@@ -7,8 +7,32 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import { showToast } from '$lib/stores/toastStore.js';
+	import { t } from '$lib/translations';
+	import { browser } from '$app/environment';
 
-	console.log($projectData);
+	let showInvitationModal = false
+	let showDeleteModal = false
+	let roles = []
+	let projectMembers = []
+	let loading = true
+	let isInitialLoad = true;
+	let selectedRoles = projectMembers.map(member => member.Rol_ID);
+	let initialRoles = [];
+	let selectedData = {}
+	let columns = [$t('project_team.member'), $t('project_team.email'), $t('project_team.role'), '']
+	let loggedUserData = null;
+	let loggedUserID = null;
+
+	if (browser) {
+		// Retrieve logged user data only in the browser environment
+		const localData = localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token');
+		if (localData) {
+			loggedUserData = JSON.parse(localData);
+			loggedUserID = loggedUserData.user.id;
+		} else {
+			console.error('No logged user data found in localStorage');
+		}
+	}
 
 	onMount(async () => {
 		loading = true
@@ -27,19 +51,6 @@
 		isInitialLoad = false;
 		// console.log(selectedRoles);
 	})
-
-	let showInvitationModal = false
-	let showDeleteModal = false
-	let roles = []
-	let projectMembers = []
-	let loading = true
-	let isInitialLoad = true;
-	let selectedRoles = projectMembers.map(member => member.Rol_ID);
-	let initialRoles = [];
-	let selectedData = {}
-	let columns = ['Miembro', 'Correo', 'Rol', '']
-	let loggedUserData = JSON.parse(localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token'))
-	let loggedUserID = loggedUserData.user.id
 
 	function handleInvitationClose(){
 		showInvitationModal = false
@@ -101,6 +112,16 @@
 			})
 	}
 
+	function getRoleName(roleName){
+		if(roleName === "Miembro"){
+			return $t('project_team.member')
+		} else if(roleName === "Lider"){
+			return $t('project_team.leader')
+		} else {
+			return roleName
+		}
+	}
+
 	$: {
 		if (!isInitialLoad) {
 			selectedRoles.forEach((role, index) => {
@@ -120,11 +141,11 @@
 	</div>
 {/if}
 
-<p class="title">Configuración de equipo</p>
+<p class="title">{$t('project_team.team_config')}</p>
 
 <div class="content">
 	<div class="invite-container">
-		<button class="btn btn-primary" on:click={() => {showInvitationModal = true}}>INVITAR MIEMBRO</button>
+		<button class="btn btn-primary" on:click={() => {showInvitationModal = true}}>{$t('project_team.invite')}</button>
 	</div>
 
 	<table>
@@ -138,7 +159,7 @@
 		<tbody>
 		{#if loading}
 			<tr>
-				<td> loading ... </td>
+				<td> {$t('project_team.loading')} </td>
 			</tr>
 		{:else}
 			{#each projectMembers as row, index}
@@ -148,7 +169,7 @@
 					<td>
 						<select name="user-role-{index}" id="user-role-{index}" bind:value={selectedRoles[index]}>
 							{#each roles as role}
-								<option value="{role.Rol_ID}">{role.nombre}</option>
+								<option value="{role.Rol_ID}">{getRoleName(role.nombre)}</option>
 							{/each}
 						</select>
 					</td>

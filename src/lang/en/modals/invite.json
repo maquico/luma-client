@@ -1,0 +1,11 @@
+{
+    "invite_success": "Invitation sent successfully",
+    "invite_error": "Error sending invitation",
+    "title": "Add user to project",
+    "send_invite": "Send invitation to project through email",
+    "type_here": "Type here",
+    "cancel": "Cancel",
+    "send": "Send",
+    "invalid_email": "Invalid email",
+    "required_email": "Email is required"
+}

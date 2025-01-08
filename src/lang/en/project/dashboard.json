@@ -1,0 +1,17 @@
+{
+    "pending": "Pending",
+    "completed": "Completed",
+    "total": "Total",
+    "approved": "Approved",
+    "approved_tasks": "Approved Tasks",
+    "completed_tasks": "Completed Tasks",
+    "pending_tasks": "Pending Tasks",
+    "total_tasks": "Total Tasks",
+    "dashboard": "Project Dashboard",
+    "member": "Member",
+    "assigned_tasks": "Assigned Tasks",
+    "gems": "Gems",
+    "my_pending_tasks": "My Pending Tasks",
+    "no_pending_tasks": "You don't have pending tasks",
+    "no_data": "No data available to display"
+}

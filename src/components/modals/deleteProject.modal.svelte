@@ -4,15 +4,36 @@
 	import { projectData } from '$lib/stores/projectStore';
 	import axios from 'axios';
 	import { showToast } from '$lib/stores/toastStore';
+	import { browser } from '$app/environment'; // Import browser check
+	import { t } from '$lib/translations';
 
 	const dispatch = createEventDispatcher();
 
 	export let show = true;
-	let projectId = $projectData.Proyecto_ID;
-	let projectName = $projectData.nombre;
+	let projectId = '';
+	let projectName = '';
 	let projectNameUser = '';
-	let userData = JSON.parse(localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token'));
-	let userID = userData.user.id;
+	let userData = null;
+	let userID = null;
+
+	// Subscribe to projectData store to set project details when available
+	projectData.subscribe((data) => {
+		if (data) {
+			projectId = data.Proyecto_ID;
+			projectName = data.nombre;
+		}
+	});
+
+	if (browser) {
+		// Retrieve user data only in the browser environment
+		const localData = localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token');
+		if (localData) {
+			userData = JSON.parse(localData);
+			userID = userData.user.id;
+		} else {
+			console.error('No user data found in localStorage');
+		}
+	}
 
 	const close = () => {
 		show = false;
@@ -31,38 +52,48 @@
 				})
 				.then((response) => {
 					console.log('Proyecto eliminado', response.data);
-					showToast('Proyecto eliminado', { type: 'success', duration: 5000 });
+					showToast($t('delete_project.delete_success'), { type: 'success', duration: 5000 });
 
 					window.location.href = '/';
 				})
 				.catch((error) => {
 					console.error('Error al eliminar proyecto', error);
-
-					if (error.response) {
+					if (error.response.status === 400 || error.response.status === 403) {
 						// Check if the status code is 400
-						if (error.response.status === 400 || error.response.status === 403) {
-							showToast(error.response.data, { type: 'warning', duration: 5000 });
-							return;
+						if (error.response.data == "El usuario no tiene permisos para eliminar el proyecto.") {
+							showToast($t('delete_project.not_leader'), {
+								type: 'warning',
+								duration: 5000,
+								theme: 'light'
+							});
+						} else {
+							showToast(error.response.data, {
+								type: 'warning',
+								duration: 5000,
+								theme: 'light'
+							});
 						}
+						return;
 					}
 					// Generic error toast
-					showToast('Error al eliminar proyecto', { type: 'error', duration: 5000 });
+					showToast($t('delete_project.delete_error'), { type: 'error', duration: 5000 });
+					return;
 				});
 		}
 	}
 </script>
 
 {#if show}
-	<Modal header closeByBackgroundClick controls title="Confirmar eliminación" on:close={close}>
+	<Modal header closeByBackgroundClick controls title={$t('delete_project.confirm_title')} on:close={close}>
 		<div class="content">
 			<p>
-				¿Estás seguro de que deseas eliminar el proyecto <span class="projectName"
+				{$t('delete_project.you_sure')} <span class="projectName"
 					>{projectName}</span
 				>?
 			</p>
-			<p class="warning">Esta acción no podrá ser deshecha.</p>
+			<p class="warning">{$t('delete_project.warning')}</p>
 
-			<p>Para confirmar, escriba <span class="projectName">{projectName}</span></p>
+			<p>{$t('delete_project.to_confirm')} <span class="projectName">{projectName}</span></p>
 			<input
 				id="projectName"
 				type="text"
@@ -72,14 +103,14 @@
 			/>
 
 			<div class="controls">
-				<button class="btn btn-outline" on:click={close}>Cancelar</button>
+				<button class="btn btn-outline" on:click={close}>{$t('delete_project.cancel')}</button>
 				<button
 					type="button"
 					class="btn btn-error"
 					disabled={projectName !== projectNameUser}
 					on:click={deleteProject}
 				>
-					Eliminar
+				{$t('delete_project.delete')}
 				</button>
 			</div>
 		</div>
