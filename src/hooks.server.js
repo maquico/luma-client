@@ -3,12 +3,10 @@ import { authenticateUser } from '$lib/auth.js';
 
 export const handle = async ({ event, resolve }) => {
 
-	// event.locals.something = 'Whatever i want'
 	// Aqui estoy llamando a la funcion que esta dentro de lib para validar que tipo de usuario tengo
 	event.locals.user = authenticateUser(event)
 
 	// Implementacion con hooks
-
 	if (event.url.pathname.endsWith('/') ||
 
 			event.url.pathname.includes('/board') ||

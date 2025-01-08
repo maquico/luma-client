@@ -2,19 +2,31 @@
 	import Modal from '$components/modal.svelte';
 	import { createEventDispatcher, onMount } from 'svelte';
 	import axios from 'axios';
-	import { Tags, User } from 'lucide-svelte';
+	import { Tags } from 'lucide-svelte';
 	import { DatePicker } from 'date-picker-svelte';
-	import { projectData } from '$lib/stores/projectStore';
+	import { projectData, getProjectDetails } from '$lib/stores/projectStore';
 	import { showToast } from '$lib/stores/toastStore';
 	import { t } from '$lib/translations';
+	import { page } from '$app/stores';
+	import { browser } from '$app/environment'; // Import browser check
 
 	let showDatePickerStart = false;
 	let showDatePickerEnd = false;
 	let startDate = new Date();
 	let endDate = new Date();
-	let projectMembers= $projectData.miembros;
-	let projectId = $projectData.Proyecto_ID;
+  let selectedUserId = ""; // To bind selected user ID
+	let projectMembers
+	let projectId
 	let loadedFormData = {}; // Track loaded form data for comparison
+	let currentUserRole = true
+
+	// Subscribe to the projectData store
+	projectData.subscribe((data) => {
+		if (data) {
+			projectId = data.Proyecto_ID;
+			projectMembers = data.miembros;
+		}
+	});
 
 	const dispatch = createEventDispatcher();
 
@@ -22,10 +34,10 @@
 	export let data = null;
 	export let isEdit = false; 
 
-	const userId = JSON.parse(localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token')).user.id;
+	let userId
 	const taskId = data?.id;
 	// Extract the current user's role from the project data and projectMembers
-	const currentUserRole = projectMembers.find(member => member.Usuario_ID === userId)?.Rol_ID;
+
 
 	const initialFormData = {
 		id: data?.id,
@@ -269,6 +281,29 @@
         showToast($t('create_task.unexpected_error'), { type: 'error', duration: 5000 });
     }
 }
+
+	onMount(async () => {
+		if (browser) {
+			// Retrieve userId from localStorage if it exists
+			const localData = localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token');
+			if (localData) {
+				userId = JSON.parse(localData).user.id;
+			} else {
+				console.error('No user data found in localStorage');
+			}
+
+			// Fetch project details if not already available
+			if (!$projectData) {
+				const idFromParams = $page.params.id;
+				await getProjectDetails(idFromParams);
+			} else {
+				projectId = $projectData.Proyecto_ID;
+				projectMembers = $projectData.miembros;
+				currentUserRole = projectMembers.find(member => member.Usuario_ID === userId)?.Rol_ID;
+			}
+		}
+	});
+
 </script>
 
 {#if show}
