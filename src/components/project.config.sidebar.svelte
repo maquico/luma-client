@@ -51,6 +51,17 @@
 		}
 	});
 
+	$: page.subscribe(($page) => {
+		const segments = $page.url.pathname.split('/');
+		projectID = segments[1];
+		if (segments.length === 4) {
+    		activeTab = `${segments[2]}/${segments[3]}`;
+		} else {
+		    activeTab = segments[2];
+		}
+
+	});
+
 	onMount(async () => {
 		if (browser) {
 			const segments = $page.url.pathname.split('/');
