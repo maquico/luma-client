@@ -65,7 +65,7 @@
 						labels: [$t('project_dashboard.pending'), $t('project_dashboard.completed'), $t('project_dashboard.approved')],
 						datasets: [{
 							label: 'Color Distribution',
-							data:  [boardStats.pendientes, boardStats.aprobadas, boardStats.completadas],
+							data:  [boardStats.pendientes, boardStats.completadas, boardStats.aprobadas],
 							backgroundColor: [
 								'rgb(255, 113, 74)', // Luma-orange
 								'rgb(255, 119, 151)', // Luma-secondary-color-pink
