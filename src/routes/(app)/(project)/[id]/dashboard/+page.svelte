@@ -192,6 +192,8 @@
 				console.log(error.data);
 			})
 	}
+
+	let cardsColor = 'rgb(255, 113, 74)'
 </script>
 
 {#if loading}
@@ -228,28 +230,28 @@
 		</div>
 
 		<div class="stats-container">
-				<div class="stat-elem card">
+				<div class="stat-elem card bg-primary text-white">
 					<div class="container">
 						<p class="value"> {loading? '00' : boardStats.aprobadas} </p>
 						<p class="title"> {$t('project_dashboard.approved_tasks')} </p>
 					</div>
 				</div>
 
-				<div class="stat-elem card">
+				<div class="stat-elem card bg-primary text-white">
 					<div class="container">
 						<p class="value"> {loading? '00' : boardStats.completadas} </p>
 						<p class="title"> {$t('project_dashboard.completed_tasks')} </p>
 					</div>
 				</div>
 
-				<div class="stat-elem card">
+				<div class="stat-elem card bg-primary text-white">
 					<div class="container">
 						<p class="value"> {loading? '00' : boardStats.pendientes} </p>
 						<p class="title"> {$t('project_dashboard.pending_tasks')} </p>
 					</div>
 				</div>
 
-				<div class="stat-elem card">
+				<div class="stat-elem card bg-primary text-white">
 					<div class="container">
 						<p class="value"> {loading? '00' : boardStats.total} </p>
 						<p class="title"> {$t('project_dashboard.total_tasks')} </p>
