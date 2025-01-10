@@ -17,6 +17,10 @@
 	let userMail = 'jdoe@acme.com';
 	let userCoins = 'loading...';
 
+	let currentLevel = 'loading...';  // Current level of the user
+	let currentXP = 75;    // Current experience points
+	let maxXP = 100;       // Maximum experience points for the current level
+
 	onMount(() => {
 		const storedData = localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token');
 
@@ -31,6 +35,7 @@
 
 		const localUserData = JSON.parse(localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token'));
 		const userID = localUserData.user.id;
+
 		// Get the user extra info from the endpoint
 		axios
 			.get(`${API_BASE_URL}/user/${userID}`)
@@ -41,6 +46,7 @@
 				console.log('Success:', response.data);
 				setUserData(response.data[0]);
 				userCoins = $userData.monedas;
+				currentLevel = $userData.nivel;
 			});
 	});
 
@@ -75,6 +81,19 @@
 	</a>
 
 	<div class="left">
+
+
+		<div class="level-progression">
+			<div class="progress-bar">
+				<div
+					class="progress-fill bg-primary"
+					style="width: {Math.min((currentXP / maxXP) * 100, 100)}%;"
+				></div>
+			</div>
+
+			<div class="level-display text-primary">Level {currentLevel}</div>
+		</div>
+
 		<div class="currency-container">
 			<!--			<div class="gem currency">-->
 			<!--			<span>-->
@@ -260,4 +279,34 @@
 		scale: 1.05;
 		color: var(--luma-color-gray-600);
 	}
+
+  .level-progression {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background-color: var(--luma-color-gray-50);
+      padding: 4px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--luma-color-gray-400);
+  }
+
+  .progress-bar {
+      width: 100px;
+      height: 10px;
+      border-radius: 5px;
+      overflow: hidden;
+      border: 1px solid var(--luma-color-gray-400);
+  }
+
+  .progress-fill {
+      height: 100%;
+      border-radius: 5px;
+			/*background-color: red;*/
+  }
+
+  .level-display {
+      font-weight: bold;
+      font-size: 12px;
+      /*color: var(--luma-color-secondary-orange);*/
+  }
 </style>
