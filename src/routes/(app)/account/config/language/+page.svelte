@@ -26,7 +26,7 @@
     	})
     	.then((response) => {
     	    console.log('Prefered Language Updated:', response.data);
-    	    showToast('Cambio de preferencia guardado', { type: 'success', duration: 5000 });
+    	    showToast($t('profile_config_lang.update_success'), { type: 'success', duration: 5000 });
     	})
     	.catch((error) => {
     	    console.error('Error updating language preference:', error);
@@ -40,7 +40,7 @@
     	    }
 		
     	    // Generic error toast
-    	    showToast('Error actualizando preferencia de idioma', { type: 'error', duration: 5000 });
+    	    showToast($t('profile_config_lang.update_error'), { type: 'error', duration: 5000 });
 		});
 
 		document.cookie = `lang=${value}; path=/;`;

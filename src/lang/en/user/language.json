@@ -1,4 +1,6 @@
 {
   "langUI_title": "Language",
-  "langUI_input_text": "Language preferences"
+  "langUI_input_text": "Language preferences",
+  "update_success": "Language preference updated successfully",
+  "update_error": "Error during language preference update"
 }
