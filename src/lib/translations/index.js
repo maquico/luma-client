@@ -142,7 +142,11 @@ export const config = {
             routes: ['/account/config/security'],
             loader: async () => (await import('../../lang/en/user/security.json')).default,
         },
-
+        {
+            locale: 'en',
+            key: 'others_badges',
+            loader: async () => (await import('../../lang/en/user/othersBadges.json')).default,
+        },
         // Spanish loaders
         {
             locale: 'es',
@@ -266,6 +270,11 @@ export const config = {
             key: 'profile_security',
             routes: ['/account/config/security'],
             loader: async () => (await import('../../lang/es/user/security.json')).default,
+        },
+        {
+            locale: 'es',
+            key: 'others_badges',
+            loader: async () => (await import('../../lang/es/user/othersBadges.json')).default,
         },
     ],
 };
