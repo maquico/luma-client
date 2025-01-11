@@ -73,9 +73,9 @@
 
 
 	// Suscribirse al store para recibir cambios
-	$: selectedProjectStore.subscribe((value) => {
-		selectedProject = value;
-	});
+	//$: selectedProjectStore.subscribe((value) => {
+	//	selectedProject = value;
+	//});
 </script>
 
 <nav>

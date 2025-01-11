@@ -37,6 +37,7 @@
 	}
 
 	const handleUpdate = () => {
+		console.log('handleUpdate');
 		loadRewards();
 	};
 
@@ -55,15 +56,15 @@
     	}
 
     	// Filter by project
-    	if (project) {
-    	    filteredRewards = filteredRewards.filter((reward) => reward.Proyecto_ID === project); // Compare by 'Proyecto_ID'
-    	}
+    	//if (project) {
+    	//    filteredRewards = filteredRewards.filter((reward) => reward.metadata.projectId === project);// Compare by 'Proyecto_ID'
+    	//}
 
     	// Sort by price
     	if (priceOrder === PRICE_ORDER_OPTIONS.HIGH_LOW) {
-    	    filteredRewards.sort((a, b) => b.precio - a.precio);
+    	    filteredRewards.sort((a, b) => b.price - a.price);
     	} else if (priceOrder === PRICE_ORDER_OPTIONS.LOW_HIGH) {
-    	    filteredRewards.sort((a, b) => a.precio - b.precio);
+    	    filteredRewards.sort((a, b) => a.price - b.price);
     	}
 	}
 
@@ -80,10 +81,11 @@
 			return;
 		}
 		axios
-			.get(`https://luma-server.onrender.com/api/rewards/project/${selectedProject}`)
+			.get(`https://luma-server.onrender.com/api/rewards/user/${userId}`)
 			.then((response) => {
 				rewards = response.data;
-				filteredRewards = [...rewards];
+				// Filter rewards based on .metadata.projectId
+				filteredRewards = rewards.filter((reward) => reward.metadata.projectId === selectedProject);
 				console.log('Recompensas:', response.data, 'ProjectId:', selectedProject);
 			})
 			.catch((error) => {
@@ -119,26 +121,24 @@
 	$: selectedProjectStore.subscribe((value) => {
 		console.log('DETECTED CHANGE', value);
 		selectedProject = value;
-		if (selectedProject) {
-			loadRewards(); // Cargar recompensas dinámicamente al cambiar el proyecto
-		}
+		filteredRewards = rewards.filter((reward) => reward.metadata.projectId === selectedProject);
 	});
 
+	// Reactive filtered rewards
+
 	// subscribe to the refreshReward store
-	$: refreshReward.subscribe((value) => {
-		console.log('refreshReward:', value);
-		if (value === true) {
-			loadRewards();
-			toggle();
-		}
-	});
+	//$: refreshReward.subscribe((value) => {
+	//	console.log('refreshReward:', value);
+	//	if (value === true) {
+	//		loadRewards();
+	//		toggle();
+	//	}
+	//});
 
 	// Lógica en onMount
 	onMount(() => {
-		if (selectedProject) {
-			//loadRewardsFunction.set(loadRewards); // Guardar función para cargar recompensas en el store
-			loadRewards(); // Cargar recompensas solo si hay un proyecto seleccionado
-		}
+		loadRewards();
+
 	});
 </script>
 
@@ -150,13 +150,13 @@
 				on:click={() => {
 					if (isProjectLeader) {
 						showModal = true;
-						rewardIdModal = reward.Recompensa_ID;
+						rewardIdModal = reward.id;
 						console.log('rewardIdModal:', rewardIdModal);
 					}
 				}}
 			>
 				<div class="flex justify-between items-center p-2 bg-white text-gray-700">
-					<span>{reward.nombre}</span>
+					<span>{reward.name}</span>
 					<div class="flex items-center space-x-2">
 						<button class="text-gray-500 hover:text-gray-700">
 							<Info class="w-5 h-5" />
@@ -166,8 +166,8 @@
 
 				<div class="flex justify-center items-center h-24 bg-gray-100">
 					<img
-						src={reward.Iconos.foto}
-						alt="{reward.nombre} icon"
+						src={reward.metadata.icon.image}
+						alt="{reward.metadata.icon.name} icon"
 						class="h-full max-w-full object-contain"
 					/>
 				</div>
@@ -178,10 +178,10 @@
 						<span>{$t('shop_customize.capacity')}</span>
 					</div>
 					<div class="flex justify-between text-sm font-bold text-gray-900 mb-2">
-						<span>{reward.cantidad}</span>
-						<span>{reward.totalCompras}/{reward.limite}</span>
+						<span>{reward.totalAvailable}</span>
+						<span>{reward.totalBought}/{reward.totalCapacity}</span>
 					</div>
-					{#if reward.totalCompras === reward.limite}
+					{#if reward.available === false}
 						<button
 							class="w-full bg-purple-200 text-purple-600 font-bold py-1 rounded-md cursor-not-allowed"
 							disabled
@@ -191,9 +191,9 @@
 					{:else}
 						<button
 							class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-1 rounded-md"
-							on:click={() => redeemReward(reward.Recompensa_ID)}
+							on:click={() => redeemReward(reward.id)}
 						>
-							${reward.precio}
+							${reward.price}
 						</button>
 					{/if}
 				</div>

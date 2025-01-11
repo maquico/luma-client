@@ -64,7 +64,7 @@
 		currentPath = path;
 		dispatch('tabChange', path); // Emitir el evento tabChange con la ruta
 	}
-</script>
+</script>	
 
 <section role="tablist" class="tabs tabs-bordered flex items-center bg-gray-50">
 	<div class="tabs-container ml-72">
