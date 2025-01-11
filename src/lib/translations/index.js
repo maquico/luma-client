@@ -147,6 +147,29 @@ export const config = {
             key: 'others_badges',
             loader: async () => (await import('../../lang/en/user/othersBadges.json')).default,
         },
+        {
+            locale: 'en',
+            key: 'shop_sidebar',
+            loader: async () => (await import('../../lang/en/navbars/shop.sidebar.json')).default,
+        },
+        {
+            locale: 'en',
+            key: 'shop_navbar',
+            routes: ['/shop/general', '/shop/customize'],
+            loader: async () => (await import('../../lang/en/navbars/shop.navbar.json')).default,
+        },
+        {
+            locale: 'en',
+            key: 'shop_customize',
+            routes: ['/shop/customize'],
+            loader: async () => (await import('../../lang/en/shop/customize.json')).default,
+        },
+        {
+            locale: 'en',
+            key: 'shop_general',
+            routes: ['/shop/general'],
+            loader: async () => (await import('../../lang/en/shop/general.json')).default,
+        },
         // Spanish loaders
         {
             locale: 'es',
@@ -275,6 +298,29 @@ export const config = {
             locale: 'es',
             key: 'others_badges',
             loader: async () => (await import('../../lang/es/user/othersBadges.json')).default,
+        },
+        {
+            locale: 'es',
+            key: 'shop_sidebar',
+            loader: async () => (await import('../../lang/es/navbars/shop.sidebar.json')).default,
+        },
+        {
+            locale: 'es',
+            key: 'shop_navbar',
+            routes: ['/shop/general', '/shop/customize'],
+            loader: async () => (await import('../../lang/en/navbars/shop.navbar.json')).default,
+        },
+        {
+            locale: 'es',
+            key: 'shop_customize',
+            routes: ['/shop/customize'],
+            loader: async () => (await import('../../lang/es/shop/customize.json')).default,
+        },
+        {
+            locale: 'es',
+            key: 'shop_general',
+            routes: ['/shop/general'],
+            loader: async () => (await import('../../lang/es/shop/general.json')).default,
         },
     ],
 };

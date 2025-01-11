@@ -8,6 +8,7 @@
 	import CreateRewardModal from '$components/modals/createReward.modal.svelte';
 	import { API_BASE_URL } from '$lib/stores/apiStore.js';
 	import axios from 'axios';
+	import { t } from '$lib/translations';
 
 	const dispatch = createEventDispatcher(); // Crear un despachador de eventos
 	let currentPath;
@@ -73,7 +74,7 @@
 			href="/shop/general"
 			on:click|preventDefault={() => handleTabClick('/shop/general')}
 		>
-			RECOMPENSAS GENERALES
+			{$t('shop_navbar.general')}
 		</a>
 
 		<a
@@ -82,7 +83,7 @@
 			href="/shop/customize"
 			on:click|preventDefault={() => handleTabClick('/shop/customize')}
 		>
-			RECOMPENSAS PERSONALIZADAS
+			{$t('shop_navbar.custom')}
 		</a>
 	</div>
 

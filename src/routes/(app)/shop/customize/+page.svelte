@@ -7,6 +7,18 @@
 	import { refreshReward, toggle } from '$src/lib/stores/refreshReward.js';
 	import CreateRewardModal from '$components/modals/createReward.modal.svelte';
 	import { showToast } from '$src/lib/stores/toastStore.js';
+	import { t } from '$lib/translations';
+
+	const AVAILABILITY_OPTIONS = {
+    	ALL: 'all',
+    	AVAILABLE: 'available',
+    	BOUGHT: 'boughts',
+	};
+
+	const PRICE_ORDER_OPTIONS = {
+	    LOW_HIGH: 'low_high',
+	    HIGH_LOW: 'high_low',
+	};
 
 	let isProjectLeader = true;
 
@@ -28,30 +40,31 @@
 		loadRewards();
 	};
 
-	// Función para aplicar los filtros
 	function applyFilters(filterValues) {
-		const { project, availability, priceOrder } = filterValues;
+    	const { project, availability, priceOrder } = filterValues;
+		console.log('Applying filters:', { availability });
+		
+    	filteredRewards = [...rewards]; // Reset the filtered rewards to all rewards first.
 
-		// Filtramos según disponibilidad
-		if (availability === 'Disponibles para comprar') {
-			filteredRewards = rewards.filter((reward) => reward.available === true);
-		} else if (availability === 'Compradas') {
-			filteredRewards = rewards.filter((reward) => reward.available === false);
-		} else {
-			filteredRewards = [...rewards];
-		}
+    	// Filter by availability
+    	if (availability === AVAILABILITY_OPTIONS.AVAILABLE) {
+			console.log()
+    	    filteredRewards = filteredRewards.filter((reward) => reward.available === true);
+    	} else if (availability === AVAILABILITY_OPTIONS.BOUGHT) {
+    	    filteredRewards = filteredRewards.filter((reward) => reward.available === false);
+    	}
 
-		// Ordenar si se seleccionó
-		if (priceOrder === 'Mayor a menor') {
-			filteredRewards.sort((a, b) => b.price - a.price);
-		} else if (priceOrder === 'Menor a mayor') {
-			filteredRewards.sort((a, b) => a.price - b.price);
-		}
+    	// Filter by project
+    	if (project) {
+    	    filteredRewards = filteredRewards.filter((reward) => reward.Proyecto_ID === project); // Compare by 'Proyecto_ID'
+    	}
 
-		// Filtra por proyecto si está seleccionado
-		if (project) {
-			filteredRewards = filteredRewards.filter((reward) => reward.id === project);
-		}
+    	// Sort by price
+    	if (priceOrder === PRICE_ORDER_OPTIONS.HIGH_LOW) {
+    	    filteredRewards.sort((a, b) => b.precio - a.precio);
+    	} else if (priceOrder === PRICE_ORDER_OPTIONS.LOW_HIGH) {
+    	    filteredRewards.sort((a, b) => a.precio - b.precio);
+    	}
 	}
 
 	// Suscribirse al store para recibir cambios
@@ -87,18 +100,18 @@
 				rewardId: rewardId
 			});
 			console.log('Recompensa canjeada:', response.data);
-			showToast('Recompensa canjeada con éxito', { type: 'success', duration: 5000 });
+			showToast($t('shop_customize.buy_success'), { type: 'success', duration: 5000 });
 			loadRewards(); // Recarga recompensas después del canje
 		} catch (error) {
 			console.error('Error al canjear la recompensa:', error.response?.data || error.message);
 			if (error.response.data.startsWith('User does not have enough coins')) {
-				showToast('Este usuario no tiene monedas suficientes para canjear la recompensa.', {
+				showToast($t('shop_customize.not_enough_gems'), {
 					theme: 'light',
 					type: 'error',
 					duration: 5000
 				});
 			} else {
-				showToast(error.response.data, { theme: 'light', type: 'error', duration: 5000 });
+				showToast($t('shop_customize.buy_error'), { theme: 'light', type: 'error', duration: 5000 });
 			}
 		}
 	};
@@ -161,8 +174,8 @@
 
 				<div class="p-2">
 					<div class="flex justify-between text-sm text-gray-500 mb-2">
-						<span>Disponible</span>
-						<span>Capacidad</span>
+						<span>{$t('shop_customize.available')}</span>
+						<span>{$t('shop_customize.capacity')}</span>
 					</div>
 					<div class="flex justify-between text-sm font-bold text-gray-900 mb-2">
 						<span>{reward.cantidad}</span>
@@ -173,7 +186,7 @@
 							class="w-full bg-purple-200 text-purple-600 font-bold py-1 rounded-md cursor-not-allowed"
 							disabled
 						>
-							Comprado
+						{$t('shop_customize.bought')}
 						</button>
 					{:else}
 						<button

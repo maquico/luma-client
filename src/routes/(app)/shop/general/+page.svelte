@@ -3,14 +3,27 @@
 	import axios from 'axios';
 	import { filters } from '$src/lib/stores/filterStore.js';
 	import { showToast } from '$src/lib/stores/toastStore.js';
+	import { t } from '$lib/translations';
 
 	let customThemes = [];
 	let userData = JSON.parse(localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token'));
 	let userId = userData.user.id;
 
+	const AVAILABILITY_OPTIONS = {
+    	ALL: 'all',
+    	AVAILABLE: 'available',
+    	BOUGHT: 'boughts',
+	};
+
+	const PRICE_ORDER_OPTIONS = {
+	    LOW_HIGH: 'low_high',
+	    HIGH_LOW: 'high_low',
+	};
+
+
 	let activeButton = {
 		id: null,
-		text: 'Utilizar',
+		text: $t('shop_general.select'),
 		disabled: false
 	};
 
@@ -28,25 +41,24 @@
 		return null;
 	}
 
-	// Función para aplicar los filtros
 	function applyFilters(filterValues) {
-		const { availability, priceOrder } = filterValues;
+    	const { availability, priceOrder } = filterValues;
 
-		// Filtrar la lógica según tus requisitos, por ejemplo:
-		if (availability === 'Disponibles para comprar') {
-			filteredThemes = customThemes.filter((theme) => theme.available === true);
-		} else if (availability === 'Compradas') {
-			filteredThemes = customThemes.filter((theme) => theme.available === false);
-		} else {
-			filteredThemes = [...customThemes];
-		}
+		filteredThemes = [...customThemes]; // Reset the filtered themes to all themes first.
+    	// Filter by availability
+    	if (availability === AVAILABILITY_OPTIONS.AVAILABLE) {
+			console.log()
+    	    filteredThemes = filteredThemes.filter((reward) => reward.available === true);
+    	} else if (availability === AVAILABILITY_OPTIONS.BOUGHT) {
+    	    filteredThemes= filteredThemes.filter((reward) => reward.available === false);
+    	}
 
-		// Ordenar si se seleccionó
-		if (priceOrder === 'Mayor a menor') {
-			filteredThemes.sort((a, b) => b.price - a.price);
-		} else if (priceOrder === 'Menor a mayor') {
-			filteredThemes.sort((a, b) => a.price - b.price);
-		}
+    	// Sort by price
+    	if (priceOrder === PRICE_ORDER_OPTIONS.HIGH_LOW) {
+    	    filteredThemes.sort((a, b) => b.price - a.price);
+    	} else if (priceOrder === PRICE_ORDER_OPTIONS.LOW_HIGH) {
+    	    filteredThemes.sort((a, b) => a.price - b.price);
+    	}
 	}
 
 	// Suscribirse al store para recibir cambios
@@ -121,7 +133,7 @@
 		// Actualizar el estado del botón
 		activeButton = {
 			id: theme.id,
-			text: 'Seleccionado',
+			text: $t('shop_general.selected'),
 			disabled: true
 		};
 	}
@@ -135,18 +147,18 @@
 				rewardType: 'theme'
 			});
 			console.log('Canje exitoso:', response.data);
-			showToast('Tema canjeado con éxito', { type: 'success', duration: 5000 });
+			showToast($t('shop_general.buy_success'), { type: 'success', duration: 5000 });
 			fetchRewards();
 		} catch (error) {
 			console.error('Error en el canje:', error);
 			if (error.response.data.startsWith('User does not have enough coins')) {
-				showToast('Este usuario no tiene monedas suficientes para canjear la recompensa.', {
+				showToast($t('shop_general.not_enough_coins'), {
 					theme: 'light',
 					type: 'error',
 					duration: 5000
 				});
 			} else {
-				showToast(error.response.data, { theme: 'light', type: 'error', duration: 5000 });
+				showToast($t('shop_general.buy_error'), { theme: 'light', type: 'error', duration: 5000 });
 			}
 		}
 	}
@@ -174,8 +186,8 @@
 
 				<div class="p-2">
 					<div class="flex justify-between text-sm text-gray-500 mb-2">
-						<span>Disponible</span>
-						<span>Capacidad</span>
+						<span>{$t('shop_general.available')}</span>
+						<span>{$t('shop_general.capacity')}</span>
 					</div>
 					<div class="flex justify-between text-sm font-bold text-gray-900 mb-2">
 						<span>{theme.totalAvailable}</span>
@@ -188,7 +200,7 @@
 							on:click={() => setTheme(theme)}
 							disabled={activeButton.id === theme.id ? activeButton.disabled : false}
 						>
-							{activeButton.id === theme.id ? activeButton.text : 'Seleccionar'}
+							{activeButton.id === theme.id ? activeButton.text : $t('shop_general.select')}
 						</button>
 					{:else}
 						<button

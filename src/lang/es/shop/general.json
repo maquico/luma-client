@@ -1,0 +1,10 @@
+{
+    "select": "Seleccionar",
+    "selected": "Seleccionado",
+    "buy_success": "Tema comprado con éxito",
+    "not_enough_coins": "No tienes suficientes monedas para comprar este tema",
+    "buy_error": "Ocurrió un error al comprar el tema",
+    "available": "Disponible",
+    "capacity": "Capacidad"
+}
+

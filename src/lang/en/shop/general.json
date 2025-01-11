@@ -1,0 +1,9 @@
+{
+    "select": "Select",
+    "selected": "Selected",
+    "buy_success": "Theme bought successfully",
+    "not_enough_coins": "You don't have enough coins to buy this theme",
+    "buy_error": "An error occurred while buying the theme",
+    "available": "Available",
+    "capacity": "Capacity"
+}
