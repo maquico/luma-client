@@ -24,14 +24,14 @@ export const config = {
         {
             locale: 'en',
             key: 'profile_sidebar',
-            routes: ['/account/config/language'],
+            routes: ['/account/config/language', '/account/config/profile', '/account/config/badge', '/account/config/security'],
             loader: async () => (await import('../../lang/en/navbars/profile.sidebar.json')).default,
         },
         {
             locale: 'en',
             key: 'profile_config_lang',
             routes: ['/account/config/language'],
-            loader: async () => (await import('../../lang/en/user/config.json')).default,
+            loader: async () => (await import('../../lang/en/user/language.json')).default,
         },
         {
             locale: 'en',
@@ -124,6 +124,25 @@ export const config = {
             key: 'invite',
             loader: async () => (await import('../../lang/en/modals/invite.json')).default,
         },
+        {
+            locale: 'en',
+            key: 'profile_config',
+            routes: ['/account/config/profile'],
+            loader: async () => (await import('../../lang/en/user/profile.json')).default,
+        },
+        {
+            locale: 'en',
+            key: 'profile_badges',
+            routes: ['/account/config/badge'],
+            loader: async () => (await import('../../lang/en/user/badges.json')).default,
+        },
+        {
+            locale: 'en',
+            key: 'profile_security',
+            routes: ['/account/config/security'],
+            loader: async () => (await import('../../lang/en/user/security.json')).default,
+        },
+
         // Spanish loaders
         {
             locale: 'es',
@@ -134,14 +153,14 @@ export const config = {
         {
             locale: 'es',
             key: 'profile_sidebar',
-            routes: ['/account/config/language'],
+            routes: ['/account/config/language', '/account/config/profile', '/account/config/badge', '/account/config/security'],
             loader: async () => (await import('../../lang/es/navbars/profile.sidebar.json')).default,
         },
         {
             locale: 'es',
             key: 'profile_config_lang',
             routes: ['/account/config/language'],
-            loader: async () => (await import('../../lang/es/user/config.json')).default,
+            loader: async () => (await import('../../lang/es/user/language.json')).default,
         },
         {
             locale: 'es',
@@ -229,6 +248,24 @@ export const config = {
             locale: 'es',
             key: 'invite',
             loader: async () => (await import('../../lang/es/modals/invite.json')).default,
+        },
+        {
+            locale: 'es',
+            key: 'profile_config',
+            routes: ['/account/config/profile'],
+            loader: async () => (await import('../../lang/es/user/profile.json')).default,
+        },
+        {
+            locale: 'es',
+            key: 'profile_badges',
+            routes: ['/account/config/badge'],
+            loader: async () => (await import('../../lang/es/user/badges.json')).default,
+        },
+        {
+            locale: 'es',
+            key: 'profile_security',
+            routes: ['/account/config/security'],
+            loader: async () => (await import('../../lang/es/user/security.json')).default,
         },
     ],
 };

@@ -1,0 +1,13 @@
+{
+    "dont_match": "Las contraseñas no coinciden",
+    "wrong_current": "Contraseña actual incorrecta",
+    "update_success": "Contraseña actualizada con éxito",
+    "update_fail": "Error durante la actualización de la contraseña",
+    "security": "Seguridad",
+    "current": "Contraseña actual",
+    "new": "Nueva contraseña",
+    "confirm_new": "Confirmar nueva contraseña",
+    "placeholder": "Escribe aquí...",
+    "cancel": "Cancelar",
+    "save": "Guardar"
+}
