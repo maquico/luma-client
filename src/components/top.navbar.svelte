@@ -27,7 +27,7 @@
 		if (storedData) {
 			// Parse the JSON data to access user info
 			const sessionData = JSON.parse(storedData);
-			console.log(sessionData);
+			// console.log(sessionData);
 
 			userName = `${sessionData.user.user_metadata.first_name} ${sessionData.user.user_metadata.last_name}`;
 			userMail = sessionData.user.user_metadata.email;
@@ -43,7 +43,7 @@
 				console.error('Error:', error);
 			})
 			.then((response) => {
-				console.log('Success:', response.data);
+				// console.log('Success:', response.data);
 				setUserData(response.data[0]);
 				userCoins = $userData.monedas;
 				currentLevel = $userData.nivel;
