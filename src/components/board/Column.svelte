@@ -21,6 +21,7 @@
 	export let items;
 	export let onDrop;
 	export let statusId;
+	let originalItems = []
 	let isLeader = true
 
 	// Function to open the modal and await user response
@@ -61,11 +62,11 @@
 
 		// Prevent the drop if the task is being dropped into the same status column
 		const itemIdx = items.findIndex(item => item.id === id);
+		const previousStatusId = originalItems.find(item => item.id === id)?.statusId;
 
 		//TODO: validaciones a lugar: para el estado APPROVED, el usuario que lo hace tiene que tener rol de Lider, y la tarea debe de tener un usuario asignado
-		//TODO: dropped item deleted from the UI, fix this issue
 		// Check if we're dropping in the "Approved" status column and if the user has leader role
-		if (statusId === 4 && isLeader) {
+		if (statusId === 4 && previousStatusId !== 4  && isLeader) {
 			// TODO: hay un error, que cuando cambio una tarea de APPROVED a DONE, me sale nuevamente el modal
 			// TODO: tambien, cuando declino la aprobacion, el card se elimina de la ui
 			const approved = await openApprovalModal();
