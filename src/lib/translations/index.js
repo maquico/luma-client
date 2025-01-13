@@ -124,6 +124,31 @@ export const config = {
             key: 'invite',
             loader: async () => (await import('../../lang/en/modals/invite.json')).default,
         },
+        {
+            locale: 'en',
+            key: 'login',
+            loader: async () => (await import('../../lang/en/account/login.json')).default,
+        },
+        {
+            locale: 'en',
+            key: 'register',
+            loader: async () => (await import('../../lang/en/account/register.json')).default,
+        },
+        {
+            locale: 'en',
+            key: 'redirect',
+            loader: async () => (await import('../../lang/en/account/redirect.json')).default,
+        },
+        {
+            locale: 'en',
+            key: 'reset',
+            loader: async () => (await import('../../lang/en/account/resetPassword.json')).default,
+        },
+        {
+            locale: 'en',
+            key: 'checkEmail',
+            loader: async () => (await import('../../lang/en/account/register.checkEmail.json')).default,
+        },
         // Spanish loaders
         {
             locale: 'es',
@@ -229,6 +254,31 @@ export const config = {
             locale: 'es',
             key: 'invite',
             loader: async () => (await import('../../lang/es/modals/invite.json')).default,
+        },
+        {
+            locale: 'es',
+            key: 'login',
+            loader: async () => (await import('../../lang/es/account/login.json')).default,
+        },
+        {
+            locale: 'es',
+            key: 'register',
+            loader: async () => (await import('../../lang/es/account/register.json')).default,
+        },
+        {
+            locale: 'es',
+            key: 'redirect',
+            loader: async () => (await import('../../lang/es/account/redirect.json')).default,
+        },
+        {
+            locale: 'es',
+            key: 'reset',
+            loader: async () => (await import('../../lang/es/account/resetPassword.json')).default,
+        },
+        {
+            locale: 'es',
+            key: 'checkEmail',
+            loader: async () => (await import('../../lang/es/account/register.checkEmail.json')).default,
         },
     ],
 };
