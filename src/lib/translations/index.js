@@ -170,6 +170,18 @@ export const config = {
             routes: ['/shop/general'],
             loader: async () => (await import('../../lang/en/shop/general.json')).default,
         },
+        {
+            locale: 'en',
+            key: 'create_reward',
+            routes: ['/shop/customize'],
+            loader: async () => (await import('../../lang/en/modals/createReward.json')).default,
+        },
+        {
+            locale: 'en',
+            key: 'delete_reward',
+            routes: ['/shop/customize'],
+            loader: async () => (await import('../../lang/en/modals/deleteReward.json')).default,
+        },
         // Spanish loaders
         {
             locale: 'es',
@@ -321,6 +333,18 @@ export const config = {
             key: 'shop_general',
             routes: ['/shop/general'],
             loader: async () => (await import('../../lang/es/shop/general.json')).default,
+        },
+        {
+            locale: 'es',
+            key: 'create_reward',
+            routes: ['/shop/customize'],
+            loader: async () => (await import('../../lang/es/modals/createReward.json')).default,
+        },
+        {
+            locale: 'es',
+            key: 'delete_reward',
+            routes: ['/shop/customize'],
+            loader: async () => (await import('../../lang/es/modals/deleteReward.json')).default,
         },
     ],
 };

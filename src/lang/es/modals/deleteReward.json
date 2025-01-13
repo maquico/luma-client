@@ -1,0 +1,9 @@
+{
+    "delete_success": "Recompensa eliminada con éxito",
+    "delete_error": "Error durante la eliminación de la recompensa",
+    "delete_reward": "Eliminar recompensa",
+    "you_sure": "¿Estás seguro de que quieres eliminar esta recompensa? Esta acción no se puede deshacer",
+    "not_leader": "No tienes el rol necesario para esta acción",
+    "delete": "Eliminar",
+    "cancel": "Cancelar"
+}
