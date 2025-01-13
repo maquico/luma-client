@@ -1,0 +1,10 @@
+{
+  "email_placeholder": "Correo",
+  "password_placeholder": "Contraseña",
+  "invalid_input_message": "Usuario o contraseña incorrectos",
+  "main_button_action": "Ingresar",
+  "forgot_password": "¿Has olvidado la contraseña?",
+  "no_account_question": "¿No tienes una cuenta? ",
+  "register_question": "Registrar usuario",
+  "invalid_credentials": "Credenciales incorrectas"
+}

@@ -2,7 +2,6 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { createEventDispatcher } from 'svelte';
-	import { Gem } from 'lucide-svelte';
 	import gemImage from '$assets/gem.png';
 	import { selectedProjectStore } from '$src/lib/stores/selectedProjectStore.js';
 	import CreateRewardModal from '$components/modals/createReward.modal.svelte';
@@ -128,7 +127,7 @@
 		display: flex;
 		justify-content: flex-end;
 		align-items: center;
-    margin-right: 1.5rem;
+		margin-right: 1.5rem;
 		/*position: absolute;*/
 		/*right: 10px;*/
 		/*top: 70px;*/

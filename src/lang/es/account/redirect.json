@@ -1,0 +1,7 @@
+{
+  "redirect_message": "No estas autenticado, favor de hacer login",
+  "have_account": "¿Ya tienes una cuenta? ",
+  "login": "Iniciar sesión",
+  "no_account": "¿No tienes una cuenta? ",
+  "register": "Registrar usuario"
+}

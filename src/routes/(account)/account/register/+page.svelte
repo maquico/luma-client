@@ -5,6 +5,7 @@
 	import axios from 'axios';
 	import { showToast } from '$lib/stores/toastStore';
 	import { goto } from '$app/navigation';
+	import { t } from '$lib/translations';
 
 	let name;
 	let lastName;
@@ -28,13 +29,13 @@
 							console.log(response.data);
 							// Optionally redirect after successful registration
 							console.log('successfull register');
-							showToast("¡Registro exitoso! 🎉 Tu cuenta ha sido creada correctamente.", { theme: 'light', type: 'success', duration: 5000 });
+							showToast($t('register.tst_successful'), { theme: 'light', type: 'success', duration: 5000 });
 							goto('/account/register/checkemail');
 						})
 						.catch((error) => {
 							console.error('Error:', error);
 							if(error.response.data.startsWith("Password should be at least 8 characters")){
-								showToast("La contraseña debe tener al menos 8 caracteres e incluir al menos una letra minúscula, una letra mayúscula, un número y un carácter especial.", { theme: 'light', type: 'error', duration: 5000 });
+								showToast($t('register.tst_8_char_password'), { theme: 'light', type: 'error', duration: 5000 });
 							}else{
 								showToast(error.response.data, { theme: 'light', type: 'error', duration: 5000 });
 							}
@@ -42,16 +43,16 @@
 					invalidInput = false;
 				}else{
 					console.error('Error: Los campos de contraseña no coinciden.');
-					showToast('Los campos de contraseña no coinciden', { theme: 'light', type: 'error', duration: 5000 });
+					showToast($t('register.tst_passwords_dont_match'), { theme: 'light', type: 'error', duration: 5000 });
 				}
 			} else {
 				console.error('Error: El formato del correo electrónico no es válido');
-				showToast('El formato del correo electrónico no es válido', { theme: 'light',  type: 'error', duration: 5000 });
+				showToast($t('register.tst_invalid_email'), { theme: 'light',  type: 'error', duration: 5000 });
 				invalidInput = true;
 			}
 		} catch (error) {
 			showToast(`El registro ha fallado debido a un problema interno. Contacta al soporte.`, { theme: 'light', type: 'error', duration: 5000 });
-			console.error('Error: El registro ha fallado debido a un problema interno. Contacta al soporte.', error.response ? error.response.data : error.message);
+			console.error($t('register.tst_request_error'), error.response ? error.response.data : error.message);
 			invalidInput = true;
 		}
 	}
@@ -77,7 +78,7 @@
 					type="text"
 					name="name"
 					id="name"
-					placeholder="Nombre"
+					placeholder="{$t('register.name_placeholder')}"
 					bind:value={name}
 					size="30"
 					required
@@ -91,7 +92,7 @@
 					type="text"
 					name="lastName"
 					id="lastName"
-					placeholder="Apellido"
+					placeholder="{$t('register.last_name_placeholder')}"
 					bind:value={lastName}
 					size="30"
 					required
@@ -105,7 +106,7 @@
 					type="text"
 					name="email"
 					id="email"
-					placeholder="Correo"
+					placeholder="{$t('register.email_placeholder')}"
 					bind:value={email}
 					size="30"
 					required
@@ -120,7 +121,7 @@
 					name="password"
 					id="password"
 					class="grow"
-					placeholder="Contraseña"
+					placeholder="{$t('register.password_placeholder')}"
 					bind:value={password}
 					required
 				/>
@@ -144,7 +145,7 @@
 					name="confirmPassword"
 					id="confirmPassword"
 					class="grow"
-					placeholder="Confirmar contraseña"
+					placeholder="{$t('register.confirm_password_placeholder')}"
 					bind:value={confirmPassword}
 					required
 				/>
@@ -159,11 +160,11 @@
 					<div class="swap-off"><EyeOff /></div>
 				</label>
 			</label>
-			<ButtonComponent label="Registrarse" isPrimary="true"/>
+			<ButtonComponent label="{$t('register.main_button_action')}" isPrimary="true"/>
 		</form>
 	</div>
 	<div class="card">
-		<a href="/account/login">¿Ya tienes una cuenta? <span>Iniciar sesión</span></a>
+		<a href="/account/login">{$t('register.have_account')}<span>{$t('register.login_button')}</span></a>
 	</div>
 </div>
 

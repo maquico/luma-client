@@ -6,12 +6,12 @@
 			<input type="hidden" name="inviteToken" value={inviteToken} />
 
 			<label class="input input-bordered flex items-center gap-2 {invalidInput? 'input-error': ''}">
-				<input type="text" name="email" id="email" placeholder="Correo" bind:value={email} size="30" required/>
+				<input type="text" name="email" id="email" placeholder="{$t('login.email_placeholder')}" bind:value={email} size="30" required/>
 				<Mail />
 			</label>
 			<div class="group">
 				<label class="input input-bordered flex items-center gap-2 {invalidInput? 'input-error': ''}">
-					<input type="password" name="password" id="password" class="grow" placeholder="Contraseña" bind:value={password} required/>
+					<input type="password" name="password" id="password" class="grow" placeholder="{$t('login.password_placeholder')}" bind:value={password} required/>
 					<label class="swap">
 						<input type="checkbox" on:click={() => {showPassword()}}/>
 						<div class="swap-on"><Eye /></div>
@@ -21,21 +21,21 @@
 				{#if invalidInput}
 					<div id="input-error-info">
 						<CircleAlert fill="red" color="white" size="16px"/>
-						<p class="text-red-600">Usuario o contraseña incorrectos</p>
+						<p class="text-red-600">{$t('login.invalid_input_message')}</p>
 					</div>
 				{/if}
 			</div>
 			<button type="submit" class="btn btn-primary">
-				Ingresar
+				{$t('login.main_button_action')}
 			</button>
 
 		</form>
 		<div class="divider">O</div>
-		<a href="/account/password/reset">¿Has olvidado la contraseña?</a>
+		<a href="/account/password/reset">{$t('login.forgot_password')}</a>
 	</div>
 
 	<div class="card">
-		<a href="/account/register">¿No tienes una cuenta? <span>Registrar usuario</span></a>
+		<a href="/account/register">{$t('login.no_account_question')}<span>{$t('login.register_question')}</span></a>
 	</div>
 </div>
 
@@ -46,7 +46,8 @@
 	import { enhance } from "$app/forms";
 	import { CircleAlert, Eye, EyeOff, Mail } from 'lucide-svelte';
 	import { showToast } from '$lib/stores/toastStore';
-  
+	import { t } from '$lib/translations';
+
 	let email = '';
 	let password = '';
 	let invalidInput = false;
@@ -62,7 +63,7 @@
 		const { data, error } = await logIn(email, password);
 		if (error) {
 		  console.log('Error logIn', error);
-		  showToast('Credenciales incorrectas', { theme: 'light', type: 'error', duration: 5000 });
+		  showToast($t('login.invalid_credentials'), { theme: 'light', type: 'error', duration: 5000 });
 		  invalidInput = true;
 		} else {
 		  // Redirect to the invite check route
@@ -70,7 +71,7 @@
 		}
 	  } else {
 		console.log('Wrong email format or password is empty');
-		showToast('Credenciales incorrectas', { theme: 'light', type: 'error', duration: 5000 });
+		showToast($t('login.invalid_credentials'), { theme: 'light', type: 'error', duration: 5000 });
 		invalidInput = true;
 	  }
 	}

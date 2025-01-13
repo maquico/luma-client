@@ -1,27 +1,26 @@
 <script>
 	import image from '$lib/assets/checkemail-img.png';
 	import { ChevronLeft } from 'lucide-svelte';
+	import { t } from '$lib/translations';
 </script>
 
 <div class="checkemail-container">
 	<div class="card checkemail">
 		<div class="text-section">
-			<h1>Revisa tu correo</h1>
+			<h1>{$t('checkEmail.check_email')}</h1>
 			<p>
-				Hemos enviado un correo electrónico a <strong>tu dirección de correo</strong> con un enlace para
-				completar el registro.
+				{$t('checkEmail.instruction_1')}
 			</p>
 			<p>
-				Por favor, revisa tu bandeja de entrada y sigue las instrucciones del correo para activar tu
-				cuenta.
+				{$t('checkEmail.instruction_2')}
 			</p>
 			<p>
-				Si no ves el correo en tu bandeja de entrada, revisa tu carpeta de spam o correo no deseado.
+				{$t('checkEmail.instruction_3')}
 			</p>
 			<hr />
 			<div class="button-container">
 				<ChevronLeft class="chevron-icon" />
-				<a href="/account/login" class="btn-secondary"> Regresar </a>
+				<a href="/account/login"> {$t('checkEmail.back_button')} </a>
 			</div>
 		</div>
 		<div class="divider"></div>
