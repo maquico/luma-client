@@ -1,0 +1,15 @@
+{
+  "name_placeholder": "Name",
+  "last_name_placeholder": "Last Name",
+  "email_placeholder": "Email",
+  "password_placeholder": "Password",
+  "confirm_password_placeholder": "Confirm Password",
+  "main_button_action": "Register",
+  "have_account": "Already have an account? ",
+  "login_button": "Log In",
+  "tst_successful": "Registration successful! Your account has been created.",
+  "tst_8_char_password": "The password must be at least 8 characters long and include at least one lowercase letter, one uppercase letter, one number, and one special character.",
+  "tst_passwords_dont_match": "The password fields do not match",
+  "tst_invalid_email": "The email format is not valid",
+  "tst_request_error": "Error: Registration failed due to an internal issue. Please contact support."
+}
