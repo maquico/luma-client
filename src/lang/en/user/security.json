@@ -1,0 +1,13 @@
+{
+    "dont_match": "Passwords don't match",
+    "wrong_current": "Wrong current password",
+    "update_success": "Password updated successfully",
+    "update_fail": "Error during password update",
+    "security": "Security",
+    "current": "Current password",
+    "new": "New password",
+    "confirm_new": "Confirm new password",
+    "placeholder": "Type here...",
+    "cancel": "Cancel",
+    "save": "Save"
+}

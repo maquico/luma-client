@@ -6,6 +6,6 @@
     "update_success": "Rol actualizado con éxito",
     "not_leader": "No tienes el rol necesario para realizar esta acción",
     "team_config": "Configuración del equipo",
-    "invite": "Invitar miembro",
+    "invite": "Invitar",
     "loading": "Cargando..."
 }

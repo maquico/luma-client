@@ -2,19 +2,20 @@
 	<div class="card login">
 		<img src={logo} alt="luma-logo"/>
 		<img class="not-logged-in" src={notloggedin} alt="user-notloggedin"/>
-		<p>No estas autenticado, favor de hacer login</p>
+		<p>{$t('redirect.redirect_message')}</p>
 <!--		<div class="divider">O</div>-->
-		<a href="/account/login">¿Ya tienes una cuenta? <span>Iniciar sesión</span></a>
+		<a href="/account/login">{$t('redirect.have_account')}<span>{$t('redirect.login')}</span></a>
 	</div>
 
 	<div class="card">
-		<a href="/account/register">¿No tienes una cuenta? <span>Registrar usuario</span></a>
+		<a href="/account/register">{$t('redirect.no_account')} <span>{$t('redirect.register')}</span></a>
 	</div>
 </div>
 
 <script>
 	import logo from '$lib/assets/luma-logo.png'
 	import notloggedin from '$lib/assets/user-notloggedin.png'
+	import { t } from '$lib/translations';
 </script>
 
 <style>

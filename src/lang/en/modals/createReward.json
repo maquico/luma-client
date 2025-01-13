@@ -1,0 +1,24 @@
+{
+    "update_success": "Reward updated successfully",
+    "update_error": "Error during reward update",
+    "not_leader": "You don't have the role needed for this action",
+    "create_success": "Reward created successfully",
+    "create_error": "Error creating reward",
+    "project_name": "Project name",
+    "you_are_leader": "Project in which you are a leader",
+    "reward_name": "Reward name",
+    "reward_placeholder": "Reward name",
+    "quantity": "Quantity",
+    "quantity_placeholder": "Reward quantity",
+    "icon": "Icon",
+    "price": "Price",
+    "price_placeholder": "Reward price",
+    "limit": "Limit",
+    "limit_placeholder": "Reward per member limit",
+    "description": "Description",
+    "description_placeholder": "Reward description",
+    "save": "Save",
+    "edit": "Edit Reward",
+    "create": "Create Reward"
+}
+

@@ -1,0 +1,10 @@
+{
+  "email_placeholder": "Email",
+  "password_placeholder": "Password",
+  "invalid_input_message": "Wrong email or password",
+  "main_button_action": "Login",
+  "forgot_password": "Forgot password?",
+  "no_account_question": "Don't have account? ",
+  "register_question": "Register user",
+  "invalid_credentials": "Incorrect credentials"
+}

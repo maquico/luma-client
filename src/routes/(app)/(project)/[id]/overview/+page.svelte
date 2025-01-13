@@ -8,12 +8,41 @@
 	console.log($projectData);
 
 	let loading = true
+	let maxCharsPerParagraph = 300;
+	let colors = [
+		'rgb(255, 113, 74)',    // Luma-orange
+		'rgb(255, 119, 151)',   // Luma-secondary-color-pink
+		'rgb(105, 45, 215)'     // Luma-violet
+	];
 
 	onMount(() => {
 		setTimeout(() => {
 			loading = false
 		}, 1500)
 	})
+
+	function splitIntoParagraphs(text, maxLength) {
+		let paragraphs = [];
+		let sentences = text.split('. '); // Split by sentence boundaries
+
+		let currentParagraph = '';
+
+		for (let sentence of sentences) {
+			if ((currentParagraph + sentence).length <= maxLength) {
+				currentParagraph += (currentParagraph ? '. ' : '') + sentence;
+			} else {
+				paragraphs.push(currentParagraph.trim());
+				currentParagraph = sentence;
+			}
+		}
+
+		// Push the last paragraph if it exists
+		if (currentParagraph) {
+			paragraphs.push(currentParagraph.trim());
+		}
+
+		return paragraphs.map(paragraph => paragraph.replace(/\n/g, '<br>')); // Replace any newlines with <br>
+	}
 </script>
 
 {#if loading}
@@ -28,7 +57,9 @@
 
 		<div class="content">
 			<div class="main-content">
-				<p> {$projectData.descripcion}</p>
+				{#each splitIntoParagraphs($projectData.descripcion, maxCharsPerParagraph) as paragraph}
+					<p>{@html paragraph}</p>
+				{/each}
 			</div>
 
 			<aside>

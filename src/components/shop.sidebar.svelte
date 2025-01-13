@@ -3,12 +3,34 @@
 	import axios from 'axios';
 	import { filters } from '../lib/stores/filterStore.js';
 	import { selectedProjectStore } from '$src/lib/stores/selectedProjectStore.js';
+	import { t } from '$lib/translations';
 
 	export let showProjectSelect; // Recibe la prop desde el componente padre
 
+	const AVAILABILITY_OPTIONS = {
+    	ALL: 'all',
+    	AVAILABLE: 'available',
+    	BOUGHT: 'boughts',
+	};
+
+	const PRICE_ORDER_OPTIONS = {
+	    LOW_HIGH: 'low_high',
+	    HIGH_LOW: 'high_low',
+	};
+
 	let projectsOptions = [];
-	let availableOptions = ['Todas', 'Disponibles para comprar', 'Compradas'];
-	let priceOptions = ['Menor a mayor', 'Mayor a menor'];
+	
+	let availableOptions = [
+    	{ key: AVAILABILITY_OPTIONS.ALL, label: $t('shop_sidebar.all') },
+    	{ key: AVAILABILITY_OPTIONS.AVAILABLE, label: $t('shop_sidebar.available') },
+    	{ key: AVAILABILITY_OPTIONS.BOUGHT, label: $t('shop_sidebar.boughts') },
+	];
+
+	let priceOptions = [
+	    { key: PRICE_ORDER_OPTIONS.LOW_HIGH, label: $t('shop_sidebar.low_high') },
+	    { key: PRICE_ORDER_OPTIONS.HIGH_LOW, label: $t('shop_sidebar.high_low') },
+	];
+
 	let selectedProject = '';
 	let selectedAvailability = '';
 	let selectedPriceOrder = '';
@@ -41,18 +63,19 @@
 	});
 
 	const handleConfirm = () => {
-		filters.set({
-			project: selectedProject,
-			availability: selectedAvailability,
-			priceOrder: selectedPriceOrder
-		});
-		selectedProjectStore.set(selectedProject); // Actualiza el store
+    	filters.set({
+    	    project: selectedProject,
+    	    availability: selectedAvailability,
+    	    priceOrder: selectedPriceOrder,
+    	});
+    	selectedProjectStore.set(selectedProject);
 	};
 
+
 	// Suscribirse al store para recibir cambios
-	$: selectedProjectStore.subscribe((value) => {
-		selectedProject = value;
-	});
+	//$: selectedProjectStore.subscribe((value) => {
+	//	selectedProject = value;
+	//});
 </script>
 
 <nav>
@@ -69,20 +92,21 @@
 	{/if}
 
 	<select class="select select-bordered w-full max-w-xs" bind:value={selectedAvailability}>
-		<option value="" disabled>Selecciona Disponibilidad</option>
+		<option value="" disabled>{$t('shop_sidebar.availability')}</option>
 		{#each availableOptions as option}
-			<option>{option}</option>
+			<option value={option.key}>{option.label}</option>
 		{/each}
 	</select>
-
+	
 	<select class="select select-bordered w-full max-w-xs" bind:value={selectedPriceOrder}>
-		<option value="" disabled>Selecciona Ordenar</option>
+		<option value="" disabled>{$t('shop_sidebar.price_sorting')}</option>
 		{#each priceOptions as option}
-			<option>{option}</option>
+			<option value={option.key}>{option.label}</option>
 		{/each}
 	</select>
+	
 
-	<button class="btn btn-primary w-full max-w-xs" on:click={handleConfirm}>Confirmar</button>
+	<button class="btn btn-primary w-full max-w-xs" on:click={handleConfirm}>{$t('shop_sidebar.confirm')}</button>
 </nav>
 
 <style>

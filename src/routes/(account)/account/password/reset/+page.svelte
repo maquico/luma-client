@@ -2,8 +2,8 @@
 	<div class="card reset">
 			{#if currentStep === 0}
 				<div id="first-step">
-					<h1>Recuperar contraseña</h1>
-					<p> Introduce tu correo, se te enviara un código único de 6 dígitos que tendrás que validar </p>
+					<h1>{$t('reset.recover_password')}</h1>
+					<p>{$t('reset.instruction_1')}</p>
 					<form on:submit|preventDefault={sendEmailOTP}>
 						<div class="group">
 							<label class="input input-bordered flex items-center gap-2 {invalidInput? 'input-error': ''}">
@@ -11,7 +11,7 @@
 									type="text"
 									name="email"
 									id="email"
-									placeholder="Correo"
+									placeholder="{$t('reset.email_placeholder')}"
 									size="30"
 									required
 									bind:value={email}/>
@@ -19,25 +19,25 @@
 							{#if invalidInput}
 								<div id="input-error-info">
 									<CircleAlert  fill="red" color="white" size="16px"/>
-									<p class="text-red-600">Correo invalido</p>
+									<p class="text-red-600">{$t('reset.invalid_mail')}</p>
 								</div>
 							{/if}
 						</div>
 						<button type="submit" class="btn btn-primary" disabled={loading}>
 							{#if loading}
-								<span class="spinner"></span> Cargando...
+								<span class="spinner"></span> {$t('reset.button_loading')}
 							{:else}
-								Ingresar
+								{$t('reset.step0_formButton')}
 							{/if}
 						</button>
 					</form>
 				</div>
 			{:else if currentStep === 1}
 				<div id="second-step">
-					<h1>Ingresa OTP</h1>
+					<h1>{$t('reset.enter_OTP')}</h1>
 					<div class="info">
-						<p> Ingresa el código de 6 dígitos enviado a <span> {email} </span> </p>
-						<p> Este código vence en 2 horas  </p>
+						<p> {$t('reset.instruction_2')} {email} </p>
+						<p> {$t('reset.instruction_3')}  </p>
 					</div>
 					<form on:submit|preventDefault={validateOTP}>
 						<div class="group">
@@ -59,35 +59,34 @@
 							{#if invalidInput}
 								<div id="input-error-info">
 									<CircleAlert  fill="red" color="white" size="16px"/>
-									<p class="text-red-600">OTP incorrecto</p>
+									<p class="text-red-600">{$t('reset.invalid_OTP')}</p>
 								</div>
 							{/if}
 						</div>
 <!--						TODO: añadir un conteo regresivo que indique el tiempo restante de validez de la OTP-->
 						<button type="submit" class="btn btn-primary" disabled="{loading}">
 							{#if loading}
-								<span class="spinner"></span> Cargando...
+								<span class="spinner"></span> {$t('reset.button_loading')}
 							{:else}
-								Ingresar
+								{$t('reset.step0_formButton')}
 							{/if}
 						</button>
 						<div class="flex items-center justify-center text-sm font-medium space-x-1 text-gray-500">
-							<p>¿No recibiste el código?</p>
-<!--							TODO: volver a mandar el OTP-->
+							<p>{$t('reset.resent_OTP')}</p>
 							<span
 															class="flex flex-row items-center text-blue-600 cursor-pointer"
 															on:click={resendEmailOTP}>
-								{canResend ? 'Reenviar' : `Reintentar en ${resendCooldown}s`}
+								{canResend ? $t('reset.resent_OTP_message') : `${$t('reset.resent_OTP_retry')} ${resendCooldown}s`}
 							</span>
 						</div>
 					</form>
 				</div>
 			{:else if currentStep === 2}
 				<div id="third-step">
-					<h1>Cambiar contraseña</h1>
+					<h1>{$t('reset.change_password')}</h1>
 					<form on:submit|preventDefault={validateAndConfirmNewPassword}>
 						<label class="input input-bordered flex items-center gap-2 {invalidInput? 'input-error': ''}">
-							<input type="password" name="password" id="password" class="grow" placeholder="Contraseña" bind:value={newPassword} required/>
+							<input type="password" name="password" id="password" class="grow" placeholder="{$t('reset.password_placeholder')}" bind:value={newPassword} required/>
 							<label class="swap">
 								<input type="checkbox" on:click={() => {showPassword()}}/>
 								<div class="swap-on"><Eye /></div>
@@ -96,7 +95,7 @@
 						</label>
 						<div class="group">
 							<label class="input input-bordered flex items-center gap-2 {invalidInput? 'input-error': ''}">
-								<input type="password" name="password" id="confirmPassword" class="grow" placeholder="Contraseña" bind:value={confirmNewPassword} required/>
+								<input type="password" name="password" id="confirmPassword" class="grow" placeholder="{$t('reset.password_placeholder')}" bind:value={confirmNewPassword} required/>
 								<label class="swap">
 									<input type="checkbox" on:click={() => {showConfirmPassword()}}/>
 									<div class="swap-on"><Eye /></div>
@@ -106,12 +105,12 @@
 							{#if invalidInput}
 								<div id="input-error-info">
 									<CircleAlert  fill="red" color="white" size="16px"/>
-									<p class="text-red-600">Ambas contraseñas no coinciden</p>
+									<p class="text-red-600">{$t('reset.passwords_dont_match')}</p>
 								</div>
 							{/if}
 						</div>
 						<button type="submit" class="btn btn-primary">
-							Confirmar
+							{$t('reset.step2_formButton')}
 						</button>
 					</form>
 				</div>
@@ -132,7 +131,7 @@
 	</div>
 
 	<div class="card">
-		<a href="/account/login">Regresar a inicio de sesión</a>
+		<a href="/account/login">{$t('reset.return_login')}</a>
 	</div>
 </div>
 
@@ -143,6 +142,7 @@
 	import { Eye, EyeOff, CircleAlert  } from 'lucide-svelte';
 	import axios from 'axios';
 	import { showToast } from '$lib/stores/toastStore.js';
+	import { t } from '$lib/translations';
 
 	let loading = false;
 	let currentStep = 0
@@ -180,7 +180,7 @@
 					console.log(error);
 
 					if (error.response.data.startsWith("Signups not allowed for otp")) {
-						showToast('No existe una cuenta asociado al correo ingresado', {theme: 'dark', type: 'error', duration: 5000})
+						showToast($t('reset.tst_no_associated_email'), {theme: 'dark', type: 'error', duration: 5000})
 					}else{
 						showToast(error.response.data, {theme: 'dark', type: 'error', duration: 5000})
 					}
@@ -210,7 +210,7 @@
 
 		await axios.post('https://luma-server.onrender.com/api/user/otp/send', { email: email })
 			.then((response) => {
-				showToast('Se ha enviado un nuevo código OTP a su correo electrónico', {
+				showToast($t('reset.tst_send_OTP'), {
 					theme: 'dark',
 					type: 'success',
 					duration: 5000
@@ -219,7 +219,7 @@
 			})
 			.catch((error) => {
 				console.log(error);
-				showToast('Hubo un error al reenviar el OTP. Intente de nuevo más tarde.', {
+				showToast($t('reset.tst_error_OTP'), {
 					theme: 'dark',
 					type: 'error',
 					duration: 5000
@@ -247,9 +247,9 @@
 				console.log(error);
 
 				if (error.response.data.startsWith("Verify requires either a token or a token hash")) {
-					showToast('Ingrese el OTP enviado a su correo electronico', {theme: 'dark', type: 'error', duration: 5000})
+					showToast($t('reset.tst_enter_OTP'), {theme: 'dark', type: 'error', duration: 5000})
 				}else if(error.response.data.startsWith("Token has expired or is invalid")){
-					showToast('El OTP ha caducado o no es válido', {theme: 'dark', type: 'error', duration: 5000})
+					showToast($t('reset.tst_expired_OTP'), {theme: 'dark', type: 'error', duration: 5000})
 				}else{
 					showToast(error.response.data, {theme: 'dark', type: 'error', duration: 5000})
 				}
@@ -269,13 +269,13 @@
 				})
 				.then((response) => {
 					console.log(response);
-					showToast('Cambio de contraseña exitoso', {theme: 'dark', type: 'success', duration: 5000})
+					showToast($t('reset.tst_successful_reset'), {theme: 'dark', type: 'success', duration: 5000})
 					goto('/account/login')
 				})
 				.catch((error) => {
 					console.log(error);
 					if(error.response.data.startsWith("Password should be at least 8 characters")){
-						showToast("La contraseña debe tener al menos 8 caracteres e incluir al menos una letra minúscula, una letra mayúscula, un número y un carácter especial.", { theme: 'dark', type: 'error', duration: 5000 });
+						showToast($t('reset.tst_invalid_password_requeriments'), { theme: 'dark', type: 'error', duration: 5000 });
 					}else{
 						showToast(error.response.data, { theme: 'dark', type: 'error', duration: 5000 });
 					}

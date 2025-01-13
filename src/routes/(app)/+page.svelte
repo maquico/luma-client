@@ -122,7 +122,9 @@
 					<!--{#if frequentProjects.length === 0}-->
 					<div class="left">
 						<label class="input input-bordered flex items-center gap-2">
-							<ListFilter />
+							<div class="text-primary">
+								<ListFilter/>
+							</div>
 							<input
 								type="text"
 								name="search"

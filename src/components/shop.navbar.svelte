@@ -7,6 +7,7 @@
 	import CreateRewardModal from '$components/modals/createReward.modal.svelte';
 	import { API_BASE_URL } from '$lib/stores/apiStore.js';
 	import axios from 'axios';
+	import { t } from '$lib/translations';
 
 	const dispatch = createEventDispatcher(); // Crear un despachador de eventos
 	let currentPath;
@@ -62,7 +63,7 @@
 		currentPath = path;
 		dispatch('tabChange', path); // Emitir el evento tabChange con la ruta
 	}
-</script>
+</script>	
 
 <section role="tablist" class="tabs tabs-bordered flex items-center bg-gray-50">
 	<div class="tabs-container ml-72">
@@ -72,7 +73,7 @@
 			href="/shop/general"
 			on:click|preventDefault={() => handleTabClick('/shop/general')}
 		>
-			RECOMPENSAS GENERALES
+			{$t('shop_navbar.general')}
 		</a>
 
 		<a
@@ -81,7 +82,7 @@
 			href="/shop/customize"
 			on:click|preventDefault={() => handleTabClick('/shop/customize')}
 		>
-			RECOMPENSAS PERSONALIZADAS
+			{$t('shop_navbar.custom')}
 		</a>
 	</div>
 

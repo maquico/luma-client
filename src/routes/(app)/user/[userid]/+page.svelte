@@ -4,6 +4,7 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import { goto} from '$app/navigation';
+	import { t } from '$lib/translations';
 
 	let showModal = false;
 	let selectedBadge
@@ -130,7 +131,7 @@
 <div class="main">
 	<div class="side-bar">
 		<div class="search-container">
-			<input type="text" placeholder="Buscar perfiles" class="search-bar" bind:value={searchQuery}>
+			<input type="text" placeholder={$t('others_badges.search')} class="search-bar" bind:value={searchQuery}>
 		</div>
 
 		<div class="profiles-container">
@@ -141,7 +142,7 @@
 					</div>
 				{/each}
 			{:else}
-				<p>No users found.</p>
+				<p>{$t('others_badges.no_users')}</p>
 			{/if}
 		</div>
 	</div>
@@ -163,7 +164,7 @@
 
 				<div class="user-details">
 					{#if loading} <!-- Estado de carga -->
-						<p>Loading user data...</p>
+						<p>{$t('others_badges.loading_users')}</p>
 					{:else} <!-- Datos cargados -->
 						<p class="name">{userData.nombre} {userData.apellido}</p>
 						<p class="mail">{userData.correo}</p>
@@ -173,13 +174,13 @@
 		</div>
 
 		<div class="badge-title-container">
-			<p class="badge-title">Insignias</p>
+			<p class="badge-title">{$t('others_badges.badges')}</p>
 			<p> {userBadges.length} / {badges.length} </p>
 		</div>
 		<div class="scrollable">
 			<div class="badges-pagination">
 				{#if loading} <!--Loading state-->
-					<p>Loading...</p>
+					<p>{$t('others_badges.loading_badges')}</p>
 				{:else} <!--Loading state-->
 					{#if userBadges.length > 0} <!-- Check for badges -->
 						{#each getCurrentPageItems(currentPage) as badge}
@@ -189,7 +190,7 @@
 							</div>
 						{/each}
 					{:else} <!-- No results (badges) -->
-						<p>No badges available.</p>
+						<p>{$t('others_badges.no_badges')}</p>
 					{/if}
 				{/if} <!--End of Loading state-->
 
@@ -197,12 +198,11 @@
 
 					{#if userBadges.length > 0}
 						<div class="pagination-controls">
-							<button on:click={prevPage} disabled={currentPage === 1}>Previous</button>
-							<span>Page {currentPage} of {Math.ceil(userBadges.length / itemsPerPage)}</span>
-							<button on:click={nextPage} disabled={currentPage === Math.ceil(userBadges.length / itemsPerPage)}>Next</button>
+							<button on:click={prevPage} disabled={currentPage === 1}>{$t('others_badges.previous')}</button>
+							<span>{$t('others_badges.page')} {currentPage} {$t('others_badges.of')} {Math.ceil(userBadges.length / itemsPerPage)}</span>
+							<button on:click={nextPage} disabled={currentPage === Math.ceil(userBadges.length / itemsPerPage)}>{$t('others_badges.next')}</button>
 						</div>
 					{/if}
-
 			</div>
 		</div>
 </div>

@@ -1,0 +1,10 @@
+{
+    "availability": "Filter by availability",
+    "price_sorting": "Sort by price", 
+    "confirm": "Confirm",
+    "all": "All",
+    "available": "Available for buying",
+    "boughts": "Bought",
+    "low_high": "Lowest to highest",
+    "high_low": "Highest to lowest"
+}
