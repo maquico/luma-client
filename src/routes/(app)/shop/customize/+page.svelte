@@ -32,6 +32,17 @@
 	let rewardIdModal;
 	let modalTypeReward = 'reward';
 
+	$: selectedProjectStore.subscribe((value) => {
+		console.log('DETECTED CHANGE', value);
+		selectedProject = value;
+		if(rewards.length > 0) {
+			filteredRewards = rewards.filter((reward) => reward.metadata.projectId === selectedProject);
+		} else {
+			loadRewards();
+			filteredRewards = rewards.filter((reward) => reward.metadata.projectId === selectedProject);
+		}
+	});
+
 	function handleClose() {
 		showModal = false;
 	}
@@ -56,9 +67,9 @@
     	}
 
     	// Filter by project
-    	//if (project) {
-    	//    filteredRewards = filteredRewards.filter((reward) => reward.metadata.projectId === project);// Compare by 'Proyecto_ID'
-    	//}
+    	if (project) {
+    	    filteredRewards = filteredRewards.filter((reward) => reward.metadata.projectId === project);// Compare by 'Proyecto_ID'
+    	}
 
     	// Sort by price
     	if (priceOrder === PRICE_ORDER_OPTIONS.HIGH_LOW) {
@@ -117,12 +128,6 @@
 			}
 		}
 	};
-
-	$: selectedProjectStore.subscribe((value) => {
-		console.log('DETECTED CHANGE', value);
-		selectedProject = value;
-		filteredRewards = rewards.filter((reward) => reward.metadata.projectId === selectedProject);
-	});
 
 	// Reactive filtered rewards
 
