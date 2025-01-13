@@ -1,0 +1,7 @@
+{
+  "check_email": "Revisa tu correo",
+  "instruction_1": "Hemos enviado un correo electrónico a tu dirección de correo con un enlace para completar el registro.",
+  "instruction_2": "Por favor, revisa tu bandeja de entrada y sigue las instrucciones del correo para activar tu cuenta.",
+  "instruction_3": "Si no ves el correo en tu bandeja de entrada, revisa tu carpeta de spam o correo no deseado.",
+  "back_button": "Regresar"
+}
