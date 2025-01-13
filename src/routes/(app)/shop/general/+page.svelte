@@ -4,10 +4,11 @@
 	import { filters } from '$src/lib/stores/filterStore.js';
 	import { showToast } from '$src/lib/stores/toastStore.js';
 	import { t } from '$lib/translations';
+	import { userData } from '$lib/stores/userStore.js';
 
 	let customThemes = [];
-	let userData = JSON.parse(localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token'));
-	let userId = userData.user.id;
+	let userLocalData = JSON.parse(localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token'));
+	let userId = userLocalData.user.id;
 
 	const AVAILABILITY_OPTIONS = {
     	ALL: 'all',
@@ -138,6 +139,16 @@
 		};
 	}
 
+	function reduceUserCoins(coins) {
+		userData.update((current) => {
+			console.log('Reduciendo monedas:', current.monedas, coins);
+			return {
+				...current, // Keep the existing values
+				monedas: current.monedas - coins, // Update the specific attribute
+			};
+		});
+	}
+
 	async function redeemTheme(themeId) {
 		try {
 			console.log('Intentando canjear el tema:', themeId, userId);
@@ -148,6 +159,9 @@
 			});
 			console.log('Canje exitoso:', response.data);
 			showToast($t('shop_general.buy_success'), { type: 'success', duration: 5000 });
+			// Find theme by id to get price
+			const theme = customThemes.find((t) => t.id === themeId);
+			reduceUserCoins(theme.price);
 			fetchRewards();
 		} catch (error) {
 			console.error('Error en el canje:', error);
