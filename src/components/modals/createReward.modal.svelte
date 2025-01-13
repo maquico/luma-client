@@ -6,6 +6,7 @@
 	import { showToast } from '$src/lib/stores/toastStore.js';
 	import { selectedProjectStore } from '$src/lib/stores/selectedProjectStore.js';
     import { toggle } from '$src/lib/stores/refreshReward.js';
+    import { t } from '$lib/translations';
 
     const dispatch = createEventDispatcher();
 
@@ -158,7 +159,7 @@
                     )
                     .then((response) => {
                         console.log('Reward details updated:', response.data);
-                        showToast('Detalles de recompensa actualizados', { type: 'success', duration: 5000 });
+                        showToast($t('create_reward.update_success'), { type: 'success', duration: 5000 });
                     })
                     .catch((error) => {
                         console.error('Error updating reward details:', error);
@@ -166,12 +167,17 @@
                         if (error.response) {
                             // Check if the status code is 400
                             if (error.response.status === 400 || error.response.status === 403) {
-                                showToast(error.response.data, { type: 'warning', duration: 5000 });
-                                return;
+                                if (error.response.data === 'El usuario no tiene permisos para editar el proyecto.') {
+                                    showToast($t('create_reward.not_leader'), { type: 'warning', duration: 5000 });
+                                    return;
+                                } else {
+                                    showToast(error.response.data, { type: 'warning', duration: 5000 });
+                                    return;
+                                }
                             }
                         }
                         // Generic error toast
-                        showToast('Error updating reward details', { type: 'error', duration: 5000 });
+                        showToast($t('create_reward.update_error'), { type: 'error', duration: 5000 });
                     });
                     dispatch('update');
                 }
@@ -188,19 +194,24 @@
                 })
 				.then((response) => {
 					console.log('Reward created:', response.data);
-					showToast('Recompensa creada exitosamente', { type: 'success', duration: 5000 });
+					showToast($t('create_reward.create_success'), { type: 'success', duration: 5000 });
 				})
 				.catch((error) => {
 					console.error('Error updating rewards details:', error);
 					if (error.response) {
-                            // Check if the status code is 400
-                            if (error.response.status === 400 || error.response.status === 403) {
+                        // Check if the status code is 400
+                        if (error.response.status === 400 || error.response.status === 403) {
+                            if (error.response.data === 'El usuario no tiene permisos de líder para crear recompensas.') {
+                                showToast($t('create_reward.not_leader'), { type: 'warning', duration: 5000 });
+                                return;
+                            } else {
                                 showToast(error.response.data, { type: 'warning', duration: 5000 });
                                 return;
                             }
                         }
-                        // Generic error toast
-                        showToast('Error updating reward details', { type: 'error', duration: 5000 });
+                    }
+                    // Generic error toast
+                    showToast($t('create_reward.create_error'), { type: 'error', duration: 5000 });
                 });
                 selectedProjectStore.set('0');
                 selectedProjectStore.set(formData.projectId);
@@ -216,7 +227,7 @@
 {#if show}
     <Modal
         header
-		title={isEdit ? 'Edit Reward' : 'Create Reward'}
+		title={isEdit ? $t('create_reward.edit') : $t('create_reward.create') }
         controls
         controlsOptions
         on:close={close}
@@ -227,25 +238,25 @@
         <form on:submit|preventDefault={validate}>
             <div class="overview">
 				<br/>
-                <p class="project-name">Project name</p>
+                <p class="project-name">{$t('create_reward.project_name')}</p>
                 <select class="select select-bordered w-full max-w-xs" 
 				bind:value={formData.projectId}
 				disabled={isEdit}
 				required>
-                    <option value="" disabled>Proyecto en el que eres Lider</option>
+                    <option value="" disabled>{$t('create_reward.you_are_leader')}</option>
                     {#each projectsOptions as option}
                         <option value={option.value}>{option.label}</option>
                     {/each}
                 </select>
             </div>
 
-            <p class="reward-name">Reward name</p>
+            <p class="reward-name">{$t('create_reward.reward_name')}</p>
             <label class="input input-bordered flex items-center gap-2">
                 <input type="text"
 				bind:value={formData.name}
 				disabled={!isEditable}
 				class="grow"
-				placeholder="Reward name"
+				placeholder={$t('create_reward.reward_placeholder')}
 				required/>
             </label>
 
@@ -253,7 +264,7 @@
                 <div class="row">
                     <label class="form-control w-full max-w-xs">
                         <div class="label">
-                            <span class="label-text">Cantidad</span>
+                            <span class="label-text">{$t('create_reward.quantity')}</span>
                         </div>
                         <label class="input input-bordered flex items-center gap-2">
                             <input
@@ -262,7 +273,7 @@
                                 bind:value={formData.quantity}
 								disabled={!isEditable}
                                 class="grow"
-                                placeholder="Reward quantity"
+                                placeholder={$t('create_reward.quantity_placeholder')}
 								required
                             />
                         </label>
@@ -270,7 +281,7 @@
 
                     <label class="form-control w-full max-w-xs">
                         <div class="label">
-                            <span class="label-text">Icono</span>
+                            <span class="label-text">{$t('create_reward.icon')}</span>
                         </div>
                         <select class="select select-bordered"
                         bind:value={formData.icon}
@@ -286,7 +297,7 @@
                 <div class="row">
                     <label class="form-control w-full max-w-xs">
                         <div class="label">
-                            <span class="label-text">Precio</span>
+                            <span class="label-text">{$t('create_reward.price')}</span>
                         </div>
                         <label class="input input-bordered flex items-center gap-2">
                             <input
@@ -295,7 +306,7 @@
                                 bind:value={formData.price}
 								disabled={!isEditable}
                                 class="grow"
-                                placeholder="Reward price"
+                                placeholder={$t('create_reward.price_placeholder')}
 								required
                             />
                         </label>
@@ -303,7 +314,7 @@
 
                     <label class="form-control w-full max-w-xs">
                         <div class="label">
-                            <span class="label-text">Límite</span>
+                            <span class="label-text">{$t('create_reward.limit')}</span>
                         </div>
                         <label class="input input-bordered flex items-center gap-2">
                             <input
@@ -313,7 +324,7 @@
                                 bind:value={formData.capacity}
 								disabled={!isEditable}
                                 class="grow"
-                                placeholder="Reward capacity"
+                                placeholder={$t('create_reward.limit_placeholder')}
 								required
                             />
                         </label>
@@ -323,18 +334,18 @@
 
             <label class="form-control">
                 <div class="label">
-                    <span class="label-text">Descripción</span>
+                    <span class="label-text">{$t('create_reward.description')}</span>
                 </div>
                 <textarea
                     class="textarea textarea-bordered h-24"
                     bind:value={formData.description}
 					disabled={!isEditable}
-                    placeholder="Descricion de la recompensa"
+                    placeholder={$t('create_reward.description_placeholder')}
                 ></textarea>
             </label>
 
             <div class="controls">
-                <button type="submit" class="btn btn-primary"> Guardar </button>
+                <button type="submit" class="btn btn-primary"> {$t('create_reward.save')} </button>
             </div>
         </form>
     </Modal>

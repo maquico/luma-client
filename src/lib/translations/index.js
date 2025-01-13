@@ -24,14 +24,14 @@ export const config = {
         {
             locale: 'en',
             key: 'profile_sidebar',
-            routes: ['/account/config/language'],
+            routes: ['/account/config/language', '/account/config/profile', '/account/config/badge', '/account/config/security'],
             loader: async () => (await import('../../lang/en/navbars/profile.sidebar.json')).default,
         },
         {
             locale: 'en',
             key: 'profile_config_lang',
             routes: ['/account/config/language'],
-            loader: async () => (await import('../../lang/en/user/config.json')).default,
+            loader: async () => (await import('../../lang/en/user/language.json')).default,
         },
         {
             locale: 'en',
@@ -126,6 +126,64 @@ export const config = {
         },
         {
             locale: 'en',
+            key: 'profile_config',
+            routes: ['/account/config/profile'],
+            loader: async () => (await import('../../lang/en/user/profile.json')).default,
+        },
+        {
+            locale: 'en',
+            key: 'profile_badges',
+            routes: ['/account/config/badge'],
+            loader: async () => (await import('../../lang/en/user/badges.json')).default,
+        },
+        {
+            locale: 'en',
+            key: 'profile_security',
+            routes: ['/account/config/security'],
+            loader: async () => (await import('../../lang/en/user/security.json')).default,
+        },
+        {
+            locale: 'en',
+            key: 'others_badges',
+            loader: async () => (await import('../../lang/en/user/othersBadges.json')).default,
+        },
+        {
+            locale: 'en',
+            key: 'shop_sidebar',
+            loader: async () => (await import('../../lang/en/navbars/shop.sidebar.json')).default,
+        },
+        {
+            locale: 'en',
+            key: 'shop_navbar',
+            routes: ['/shop/general', '/shop/customize'],
+            loader: async () => (await import('../../lang/en/navbars/shop.navbar.json')).default,
+        },
+        {
+            locale: 'en',
+            key: 'shop_customize',
+            routes: ['/shop/customize'],
+            loader: async () => (await import('../../lang/en/shop/customize.json')).default,
+        },
+        {
+            locale: 'en',
+            key: 'shop_general',
+            routes: ['/shop/general'],
+            loader: async () => (await import('../../lang/en/shop/general.json')).default,
+        },
+        {
+            locale: 'en',
+            key: 'create_reward',
+            routes: ['/shop/customize'],
+            loader: async () => (await import('../../lang/en/modals/createReward.json')).default,
+        },
+        {
+            locale: 'en',
+            key: 'delete_reward',
+            routes: ['/shop/customize'],
+            loader: async () => (await import('../../lang/en/modals/deleteReward.json')).default,
+        },
+        {
+            locale: 'en',
             key: 'login',
             loader: async () => (await import('../../lang/en/account/login.json')).default,
         },
@@ -159,14 +217,14 @@ export const config = {
         {
             locale: 'es',
             key: 'profile_sidebar',
-            routes: ['/account/config/language'],
+            routes: ['/account/config/language', '/account/config/profile', '/account/config/badge', '/account/config/security'],
             loader: async () => (await import('../../lang/es/navbars/profile.sidebar.json')).default,
         },
         {
             locale: 'es',
             key: 'profile_config_lang',
             routes: ['/account/config/language'],
-            loader: async () => (await import('../../lang/es/user/config.json')).default,
+            loader: async () => (await import('../../lang/es/user/language.json')).default,
         },
         {
             locale: 'es',
@@ -254,6 +312,64 @@ export const config = {
             locale: 'es',
             key: 'invite',
             loader: async () => (await import('../../lang/es/modals/invite.json')).default,
+        },
+        {
+            locale: 'es',
+            key: 'profile_config',
+            routes: ['/account/config/profile'],
+            loader: async () => (await import('../../lang/es/user/profile.json')).default,
+        },
+        {
+            locale: 'es',
+            key: 'profile_badges',
+            routes: ['/account/config/badge'],
+            loader: async () => (await import('../../lang/es/user/badges.json')).default,
+        },
+        {
+            locale: 'es',
+            key: 'profile_security',
+            routes: ['/account/config/security'],
+            loader: async () => (await import('../../lang/es/user/security.json')).default,
+        },
+        {
+            locale: 'es',
+            key: 'others_badges',
+            loader: async () => (await import('../../lang/es/user/othersBadges.json')).default,
+        },
+        {
+            locale: 'es',
+            key: 'shop_sidebar',
+            loader: async () => (await import('../../lang/es/navbars/shop.sidebar.json')).default,
+        },
+        {
+            locale: 'es',
+            key: 'shop_navbar',
+            routes: ['/shop/general', '/shop/customize'],
+            loader: async () => (await import('../../lang/en/navbars/shop.navbar.json')).default,
+        },
+        {
+            locale: 'es',
+            key: 'shop_customize',
+            routes: ['/shop/customize'],
+            loader: async () => (await import('../../lang/es/shop/customize.json')).default,
+        },
+        {
+            locale: 'es',
+            key: 'shop_general',
+            routes: ['/shop/general'],
+            loader: async () => (await import('../../lang/es/shop/general.json')).default,
+        },
+        {
+            locale: 'es',
+            key: 'create_reward',
+            routes: ['/shop/customize'],
+            loader: async () => (await import('../../lang/es/modals/createReward.json')).default,
+        },
+        {
+            locale: 'es',
+            key: 'delete_reward',
+            routes: ['/shop/customize'],
+            loader: async () => (await import('../../lang/es/modals/deleteReward.json')).default,
         },
         {
             locale: 'es',

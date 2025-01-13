@@ -1,0 +1,8 @@
+{
+    "profile": "Perfil",
+    "name": "Nombre",
+    "last_name": "Apellido",
+    "email": "Correo electrónico",
+    "save": "Guardar",
+    "placeholder": "Escribe aquí..."
+}

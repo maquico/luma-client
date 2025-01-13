@@ -3,6 +3,7 @@
 	import { LockKeyhole } from 'lucide-svelte';
 	import axios from 'axios';
 	import { onMount } from 'svelte';
+	import { t } from '$lib/translations';
 
 	let showModal = false;
 	let selectedBadge;
@@ -40,12 +41,12 @@
 </script>
 
 <div class="content">
-	<p class="title">Insignias</p>
+	<p class="title">{$t('profile_badges.badges')}</p>
 
 	<div class="scrollable">
 		<div class="badges-grid">
 			{#if loading}  <!-- Loading state-->
-				<div> Loading ... </div>
+				<div> {$t('profile_badges.loading')} </div>
 			{:else} <!-- Fulfilled state-->
 				{#each badges as badge}
 					<div

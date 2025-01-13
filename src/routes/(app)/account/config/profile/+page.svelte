@@ -2,7 +2,8 @@
 	import axios from 'axios';
 	import { onMount } from 'svelte';
 	import { showToast } from '$lib/stores/toastStore';
-	import { browser } from '$app/environment'; // Import browser check
+	import { browser } from '$app/environment';
+	import { t } from '$lib/translations';
 
 	let name;
 	let lastName;
@@ -82,37 +83,37 @@
 </script>
 
 <div class="content">
-	<p class="title">Profile</p>
+	<p class="title">{$t('profile_config.profile')}</p>
 
 	<div class="container">
 		<label for="username">
-			<span>Nombre</span>
+			<span>{$t('profile_config.name')}</span>
 			<input
 				id="username"
 				type="text"
-				placeholder={name ? name : 'Type here'}
+				placeholder={name ? name : $t('profile_config.placeholder')}
 				required
 				bind:value={name}
 			/>
 		</label>
 
 		<label for="lastname">
-			<span>Apellido</span>
+			<span>{$t('profile_config.last_name')}</span>
 			<input
 				id="lastname"
 				type="text"
-				placeholder={lastName ? lastName : 'Type here'}
+				placeholder={lastName ? lastName : $t('profile_config.placeholder')}
 				required
 				bind:value={lastName}
 			/>
 		</label>
 
 		<label for="mail">
-			<span>Correo electrónico</span>
+			<span>{$t('profile_config.email')}</span>
 			<input
 				id="mail"
 				type="text"
-				placeholder={email ? email : 'Type here'}
+				placeholder={email ? email : $t('profile_config.placeholder')}
 				required
 				bind:value={email}
 			/>
@@ -125,7 +126,7 @@
 					changeUserDetails();
 				}}
 			>
-				Guardar
+				{$t('profile_config.save')}
 			</button>
 		</div>
 	</div>

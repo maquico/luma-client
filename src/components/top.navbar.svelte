@@ -49,6 +49,13 @@
 				currentLevel = $userData.nivel;
 			});
 	});
+  
+  // React to user data changes
+	$: userData.subscribe((value) => {
+		if (value) {
+			userCoins = value.monedas;
+		}
+	});
 
 	async function signOut() {
 		// console.log(getSession());
