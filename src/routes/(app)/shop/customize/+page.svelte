@@ -8,16 +8,17 @@
 	import CreateRewardModal from '$components/modals/createReward.modal.svelte';
 	import { showToast } from '$src/lib/stores/toastStore.js';
 	import { t } from '$lib/translations';
+	import gemImage from '$assets/gem.png';
 
 	const AVAILABILITY_OPTIONS = {
-    	ALL: 'all',
-    	AVAILABLE: 'available',
-    	BOUGHT: 'boughts',
+		ALL: 'all',
+		AVAILABLE: 'available',
+		BOUGHT: 'boughts'
 	};
 
 	const PRICE_ORDER_OPTIONS = {
-	    LOW_HIGH: 'low_high',
-	    HIGH_LOW: 'high_low',
+		LOW_HIGH: 'low_high',
+		HIGH_LOW: 'high_low'
 	};
 
 	let isProjectLeader = true;
@@ -35,7 +36,7 @@
 	$: selectedProjectStore.subscribe((value) => {
 		console.log('DETECTED CHANGE', value);
 		selectedProject = value;
-		if(rewards.length > 0) {
+		if (rewards.length > 0) {
 			filteredRewards = rewards.filter((reward) => reward.metadata.projectId === selectedProject);
 		} else {
 			loadRewards();
@@ -53,30 +54,30 @@
 	};
 
 	function applyFilters(filterValues) {
-    	const { project, availability, priceOrder } = filterValues;
+		const { project, availability, priceOrder } = filterValues;
 		console.log('Applying filters:', { availability });
-		
-    	filteredRewards = [...rewards]; // Reset the filtered rewards to all rewards first.
 
-    	// Filter by availability
-    	if (availability === AVAILABILITY_OPTIONS.AVAILABLE) {
-			console.log()
-    	    filteredRewards = filteredRewards.filter((reward) => reward.available === true);
-    	} else if (availability === AVAILABILITY_OPTIONS.BOUGHT) {
-    	    filteredRewards = filteredRewards.filter((reward) => reward.available === false);
-    	}
+		filteredRewards = [...rewards]; // Reset the filtered rewards to all rewards first.
 
-    	// Filter by project
-    	if (project) {
-    	    filteredRewards = filteredRewards.filter((reward) => reward.metadata.projectId === project);// Compare by 'Proyecto_ID'
-    	}
+		// Filter by availability
+		if (availability === AVAILABILITY_OPTIONS.AVAILABLE) {
+			console.log();
+			filteredRewards = filteredRewards.filter((reward) => reward.available === true);
+		} else if (availability === AVAILABILITY_OPTIONS.BOUGHT) {
+			filteredRewards = filteredRewards.filter((reward) => reward.available === false);
+		}
 
-    	// Sort by price
-    	if (priceOrder === PRICE_ORDER_OPTIONS.HIGH_LOW) {
-    	    filteredRewards.sort((a, b) => b.price - a.price);
-    	} else if (priceOrder === PRICE_ORDER_OPTIONS.LOW_HIGH) {
-    	    filteredRewards.sort((a, b) => a.price - b.price);
-    	}
+		// Filter by project
+		if (project) {
+			filteredRewards = filteredRewards.filter((reward) => reward.metadata.projectId === project); // Compare by 'Proyecto_ID'
+		}
+
+		// Sort by price
+		if (priceOrder === PRICE_ORDER_OPTIONS.HIGH_LOW) {
+			filteredRewards.sort((a, b) => b.price - a.price);
+		} else if (priceOrder === PRICE_ORDER_OPTIONS.LOW_HIGH) {
+			filteredRewards.sort((a, b) => a.price - b.price);
+		}
 	}
 
 	// Suscribirse al store para recibir cambios
@@ -124,7 +125,11 @@
 					duration: 5000
 				});
 			} else {
-				showToast($t('shop_customize.buy_error'), { theme: 'light', type: 'error', duration: 5000 });
+				showToast($t('shop_customize.buy_error'), {
+					theme: 'light',
+					type: 'error',
+					duration: 5000
+				});
 			}
 		}
 	};
@@ -143,7 +148,6 @@
 	// Lógica en onMount
 	onMount(() => {
 		loadRewards();
-
 	});
 </script>
 
@@ -189,14 +193,15 @@
 							class="w-full bg-purple-200 text-purple-600 font-bold py-1 rounded-md cursor-not-allowed"
 							disabled
 						>
-						{$t('shop_customize.bought')}
+							{$t('shop_customize.bought')}
 						</button>
 					{:else}
 						<button
-							class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-1 rounded-md"
+							class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-1 rounded-md flex items-center justify-center gap-2"
 							on:click={() => redeemReward(reward.id)}
 						>
-							${reward.price}
+							<img src={gemImage} alt="Luma-gem" class="w-4 h-4" />
+							<span>{reward.price}</span>
 						</button>
 					{/if}
 				</div>

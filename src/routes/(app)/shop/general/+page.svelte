@@ -5,22 +5,22 @@
 	import { showToast } from '$src/lib/stores/toastStore.js';
 	import { t } from '$lib/translations';
 	import { userData } from '$lib/stores/userStore.js';
+	import coinImage from '$assets/coin.png';
 
 	let customThemes = [];
 	let userLocalData = JSON.parse(localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token'));
 	let userId = userLocalData.user.id;
 
 	const AVAILABILITY_OPTIONS = {
-    	ALL: 'all',
-    	AVAILABLE: 'available',
-    	BOUGHT: 'boughts',
+		ALL: 'all',
+		AVAILABLE: 'available',
+		BOUGHT: 'boughts'
 	};
 
 	const PRICE_ORDER_OPTIONS = {
-	    LOW_HIGH: 'low_high',
-	    HIGH_LOW: 'high_low',
+		LOW_HIGH: 'low_high',
+		HIGH_LOW: 'high_low'
 	};
-
 
 	let activeButton = {
 		id: null,
@@ -43,23 +43,23 @@
 	}
 
 	function applyFilters(filterValues) {
-    	const { availability, priceOrder } = filterValues;
+		const { availability, priceOrder } = filterValues;
 
 		filteredThemes = [...customThemes]; // Reset the filtered themes to all themes first.
-    	// Filter by availability
-    	if (availability === AVAILABILITY_OPTIONS.AVAILABLE) {
-			console.log()
-    	    filteredThemes = filteredThemes.filter((reward) => reward.available === true);
-    	} else if (availability === AVAILABILITY_OPTIONS.BOUGHT) {
-    	    filteredThemes= filteredThemes.filter((reward) => reward.available === false);
-    	}
+		// Filter by availability
+		if (availability === AVAILABILITY_OPTIONS.AVAILABLE) {
+			console.log();
+			filteredThemes = filteredThemes.filter((reward) => reward.available === true);
+		} else if (availability === AVAILABILITY_OPTIONS.BOUGHT) {
+			filteredThemes = filteredThemes.filter((reward) => reward.available === false);
+		}
 
-    	// Sort by price
-    	if (priceOrder === PRICE_ORDER_OPTIONS.HIGH_LOW) {
-    	    filteredThemes.sort((a, b) => b.price - a.price);
-    	} else if (priceOrder === PRICE_ORDER_OPTIONS.LOW_HIGH) {
-    	    filteredThemes.sort((a, b) => a.price - b.price);
-    	}
+		// Sort by price
+		if (priceOrder === PRICE_ORDER_OPTIONS.HIGH_LOW) {
+			filteredThemes.sort((a, b) => b.price - a.price);
+		} else if (priceOrder === PRICE_ORDER_OPTIONS.LOW_HIGH) {
+			filteredThemes.sort((a, b) => a.price - b.price);
+		}
 	}
 
 	// Suscribirse al store para recibir cambios
@@ -144,7 +144,7 @@
 			console.log('Reduciendo monedas:', current.monedas, coins);
 			return {
 				...current, // Keep the existing values
-				monedas: current.monedas - coins, // Update the specific attribute
+				monedas: current.monedas - coins // Update the specific attribute
 			};
 		});
 	}
@@ -216,10 +216,11 @@
 						</button>
 					{:else}
 						<button
-							class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-1 rounded-md"
+							class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-1 rounded-md flex items-center justify-center gap-2"
 							on:click={() => redeemTheme(theme.id)}
 						>
-							${theme.price}
+							<img src={coinImage} alt="Luma-coin" class="w-4 h-4" />
+							<span>{theme.price}</span>
 						</button>
 					{/if}
 				</div>
