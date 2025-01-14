@@ -151,7 +151,7 @@
 	});
 </script>
 
-<div class="h-screen w-full overflow-y-auto p-4 bg-white">
+<div class="w-full p-4 bg-white">
 	<div class="grid grid-cols-4 gap-[var(--luma-element-spacing)]">
 		{#each filteredRewards as reward}
 			<div
