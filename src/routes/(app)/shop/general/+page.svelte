@@ -6,10 +6,12 @@
 	import { t } from '$lib/translations';
 	import { userData } from '$lib/stores/userStore.js';
 	import coinImage from '$assets/coin.png';
+	import { onMount } from 'svelte';
 
 	let customThemes = [];
 	let userLocalData = JSON.parse(localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token'));
 	let userId = userLocalData.user.id;
+	let loading = true
 
 	const AVAILABILITY_OPTIONS = {
 		ALL: 'all',
@@ -29,6 +31,12 @@
 	};
 
 	let filteredThemes = [];
+
+	onMount(async () => {
+		await fetchThemes();
+		await fetchRewards();
+		loading = false
+	})
 
 	function isValidHex(color) {
 		return /^#([0-9A-F]{3}|[0-9A-F]{6})$/i.test(color);
@@ -119,14 +127,6 @@
 		}
 	}
 
-	// Llamar a ambas funciones cuando el componente se monte
-	async function initializeData() {
-		await fetchThemes();
-		await fetchRewards();
-	}
-
-	initializeData();
-
 	function setTheme(theme) {
 		// Establecer el tema como activo
 		document.querySelector('html').setAttribute('data-theme', theme.name);
@@ -177,6 +177,12 @@
 		}
 	}
 </script>
+
+{#if loading}
+	<div class="overlay">
+		<span class="loader"></span>
+	</div>
+{/if}
 
 <div class="w-full p-4 bg-white">
 	<div class="grid grid-cols-4 gap-[var(--luma-element-spacing)]">
@@ -237,4 +243,50 @@
 			2px 0 4px rgba(0, 0, 0, 0.05),
 			-2px 0 4px rgba(0, 0, 0, 0.05);
 	}
+
+
+  .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-size: 1.5rem;
+      z-index: 1000;
+  }
+
+  .loader {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      position: relative;
+      animation: rotate 1s linear infinite
+  }
+  .loader::before {
+      content: "";
+      box-sizing: border-box;
+      position: absolute;
+      inset: 0px;
+      border-radius: 50%;
+      border: 5px solid #FFF;
+      animation: prixClipFix 2s linear infinite ;
+  }
+
+  @keyframes rotate {
+      100%   {transform: rotate(360deg)}
+  }
+
+  @keyframes prixClipFix {
+      0%   {clip-path:polygon(50% 50%,0 0,0 0,0 0,0 0,0 0)}
+      25%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 0,100% 0,100% 0)}
+      50%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,100% 100%,100% 100%)}
+      75%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,0 100%,0 100%)}
+      100% {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,0 100%,0 0)}
+  }
+
 </style>

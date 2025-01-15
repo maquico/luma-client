@@ -59,8 +59,8 @@
 	>
 		<p>{$t('delete_task.you_sure')} </p>
 			<div class="controls">
-				<button class="btn-delete" on:click={validate}>{$t('delete_task.delete')}</button> 
-				<button class="btn-cancel" on:click={close}>{$t('delete_task.cancel')}</button>  
+				<button class="btn-cancel" on:click={close}>{$t('delete_task.cancel')}</button>
+				<button class="btn-delete" on:click={validate}>{$t('delete_task.delete')}</button>
 			</div>
 	</Modal>
 {/if}
@@ -74,17 +74,19 @@
 	}
 
 	.controls button{
-			border-radius: 1rem;
+			margin-top: 1rem;
+			border-radius: 0.4rem;
 			padding: 0.5rem 1rem;
-			border: 1px solid var(--luma-color-gray-500);
+			/*border: 1px solid var(--luma-color-gray-500);*/
 	}
 
-	.btn-delete:hover{
+	.btn-delete{
 			color: white;
 			background-color: var(--luma-color-red-error);
   }
 
-  .btn-cancel:hover{
-      background-color: var(--luma-color-gray-200);
+  .btn-cancel{
+      border: 1px solid var(--luma-color-gray-300);
+      /*background-color: var(--luma-color-gray-200);*/
   }
 </style>

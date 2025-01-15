@@ -62,17 +62,34 @@
 	<Modal header closeByBackgroundClick title={$t('delete_reward.delete_reward')} on:close={close}>
 		<p>{$t('delete_reward.you_sure')}</p>
 		<div class="controls">
-			<button type="button" class="btn" on:click={deleteReward}> {$t('delete_reward.delete')} </button>
-			<button type="button" class="btn" on:click={close}> {$t('delete_reward.cancel')} </button>
+			<button type="button" class="btn-cancel" on:click={close}> {$t('delete_reward.cancel')} </button>
+			<button type="button" class="btn-delete" on:click={deleteReward}> {$t('delete_reward.delete')} </button>
 		</div>
 	</Modal>
 {/if}
 
 <style>
-	.controls {
-		display: flex;
-		justify-content: flex-end;
-		gap: 1rem;
-		margin-top: 1rem;
-	}
+    .controls{
+        display: flex;
+        justify-content: end;
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .controls button{
+        margin-top: 1rem;
+        border-radius: 0.4rem;
+        padding: 0.5rem 1rem;
+        /*border: 1px solid var(--luma-color-gray-500);*/
+    }
+
+    .btn-delete{
+        color: white;
+        background-color: var(--luma-color-red-error);
+    }
+
+    .btn-cancel{
+        border: 1px solid var(--luma-color-gray-300);
+        /*background-color: var(--luma-color-gray-200);*/
+    }
 </style>

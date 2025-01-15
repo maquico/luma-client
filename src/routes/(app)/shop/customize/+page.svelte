@@ -32,6 +32,7 @@
 	let showModal = false;
 	let rewardIdModal;
 	let modalTypeReward = 'reward';
+	let loading = true
 
 	$: selectedProjectStore.subscribe((value) => {
 		console.log('DETECTED CHANGE', value);
@@ -86,23 +87,24 @@
 	});
 
 	// Función para traer recompensas (sincrónica)
-	const loadRewards = () => {
+	async function loadRewards(){
 		console.log('Cargando recompensas...', selectedProject);
 		if (!selectedProject) {
 			console.log('No hay proyecto seleccionado');
 			return;
 		}
-		axios
+		await axios
 			.get(`https://luma-server.onrender.com/api/rewards/user/${userId}`)
 			.then((response) => {
 				rewards = response.data;
 				// Filter rewards based on .metadata.projectId
 				filteredRewards = rewards.filter((reward) => reward.metadata.projectId === selectedProject);
 				console.log('Recompensas:', response.data, 'ProjectId:', selectedProject);
+				loading = false
 			})
 			.catch((error) => {
 				console.error('Error al cargar las recompensas:', error);
-			});
+			})
 	};
 
 	// Función para canjear una recompensa
@@ -146,10 +148,16 @@
 	//});
 
 	// Lógica en onMount
-	onMount(() => {
-		loadRewards();
+	onMount(async () => {
+		await loadRewards();
 	});
 </script>
+
+{#if loading}
+	<div class="overlay">
+		<span class="loader"></span>
+	</div>
+{/if}
 
 <div class="w-full p-4 bg-white">
 	<div class="grid grid-cols-4 gap-[var(--luma-element-spacing)]">
@@ -227,4 +235,50 @@
 			2px 0 4px rgba(0, 0, 0, 0.05),
 			-2px 0 4px rgba(0, 0, 0, 0.05);
 	}
+
+
+  .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-size: 1.5rem;
+      z-index: 1000;
+  }
+
+  .loader {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      position: relative;
+      animation: rotate 1s linear infinite
+  }
+  .loader::before {
+      content: "";
+      box-sizing: border-box;
+      position: absolute;
+      inset: 0px;
+      border-radius: 50%;
+      border: 5px solid #FFF;
+      animation: prixClipFix 2s linear infinite ;
+  }
+
+  @keyframes rotate {
+      100%   {transform: rotate(360deg)}
+  }
+
+  @keyframes prixClipFix {
+      0%   {clip-path:polygon(50% 50%,0 0,0 0,0 0,0 0,0 0)}
+      25%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 0,100% 0,100% 0)}
+      50%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,100% 100%,100% 100%)}
+      75%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,0 100%,0 100%)}
+      100% {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,0 100%,0 0)}
+  }
+
 </style>
