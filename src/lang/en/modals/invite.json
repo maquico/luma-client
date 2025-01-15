@@ -7,5 +7,6 @@
     "cancel": "Cancel",
     "send": "Send",
     "invalid_email": "Invalid email",
-    "required_email": "Email is required"
+    "required_email": "Email is required",
+    "max_members": "You have reached the maximum number of members for this project"
 }
