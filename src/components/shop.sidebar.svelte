@@ -112,7 +112,6 @@
 <style>
 	nav {
 		background-color: white;
-		height: 100vh; /* Altura completa de la barra lateral */
 		width: 280px; /* Ancho de la barra lateral */
 		padding: 1rem;
 		display: flex;
