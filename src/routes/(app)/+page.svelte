@@ -61,7 +61,7 @@
 
 				showToast(`${$t('home.badge_success')} ${badgeName}`, {
 					type: 'info',
-					duration: 5000,
+					duration: 25000,
 					theme: 'dark'
 				});
 			})
