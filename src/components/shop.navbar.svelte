@@ -4,6 +4,7 @@
 	import { createEventDispatcher } from 'svelte';
 	import gemImage from '$assets/gem.png';
 	import { selectedProjectStore } from '$src/lib/stores/selectedProjectStore.js';
+	import { selectedProjectDetailStore } from '$src/lib/stores/selectedProjectDetailStore.js';
 	import CreateRewardModal from '$components/modals/createReward.modal.svelte';
 	import { API_BASE_URL } from '$lib/stores/apiStore.js';
 	import axios from 'axios';
@@ -38,14 +39,17 @@
 
 				// If the project is found, assign the gems
 				if (selectedProjectData) {
-					userGems = selectedProjectData.currentUserGems;
-					selectedProjectUserRole = selectedProjectData.queryingUserRole;
-					console.log('User Role:', selectedProjectUserRole);
-					console.log('User Gems:', userGems);
+					selectedProjectDetailStore.set(selectedProjectData);
 				} else {
 					console.log('Project not found');
 				}
 			});
+	});
+
+	$: selectedProjectDetailStore.subscribe((value) => {
+		console.log('DETAIL STORE CHANGE', value);
+		selectedProjectUserRole = value.queryingUserRole;
+		userGems = value.currentUserGems;
 	});
 
 	onMount(() => {
