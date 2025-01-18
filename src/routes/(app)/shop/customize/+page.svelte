@@ -4,10 +4,12 @@
 	import axios from 'axios';
 	import { filters } from '$src/lib/stores/filterStore.js';
 	import { selectedProjectStore } from '$src/lib/stores/selectedProjectStore.js';
+	import { selectedProjectDetailStore } from '$src/lib/stores/selectedProjectDetailStore.js';
 	import { refreshReward, toggle } from '$src/lib/stores/refreshReward.js';
 	import CreateRewardModal from '$components/modals/createReward.modal.svelte';
 	import { showToast } from '$src/lib/stores/toastStore.js';
 	import { t } from '$lib/translations';
+	
 
 	const AVAILABILITY_OPTIONS = {
     	ALL: 'all',
@@ -51,6 +53,17 @@
 		console.log('handleUpdate');
 		loadRewards();
 	};
+
+	function reduceUserGems(gems) {
+		selectedProjectDetailStore.update((current) => {
+			console.log("CURRENT ", current)
+			console.log('Reduciendo gemas:', current.currentUserGems, gems);
+			return {
+				...current, // Keep the existing values
+				currentUserGems: current.currentUserGems - gems, // Update the specific attribute
+			};
+		});
+	}
 
 	function applyFilters(filterValues) {
     	const { project, availability, priceOrder } = filterValues;
@@ -105,7 +118,7 @@
 	};
 
 	// Función para canjear una recompensa
-	const redeemReward = async (rewardId) => {
+	const redeemReward = async (rewardId, rewardPrice) => {
 		try {
 			console.log('Canjeando recompensa:', rewardId, userId);
 			const response = await axios.post('https://luma-server.onrender.com/api/rewards/buy', {
@@ -113,6 +126,7 @@
 				rewardId: rewardId
 			});
 			console.log('Recompensa canjeada:', response.data);
+			reduceUserGems(rewardPrice);
 			showToast($t('shop_customize.buy_success'), { type: 'success', duration: 5000 });
 			loadRewards(); // Recarga recompensas después del canje
 		} catch (error) {
@@ -194,7 +208,7 @@
 					{:else}
 						<button
 							class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-1 rounded-md"
-							on:click={() => redeemReward(reward.id)}
+							on:click={() => redeemReward(reward.id, reward.price)}
 						>
 							${reward.price}
 						</button>
