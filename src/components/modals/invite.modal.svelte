@@ -22,6 +22,7 @@
 	}
 
 	// Send invitation with validation and error handling
+	
 	async function sendInvitation() {
 		if (!invitationMail) {
 			showToast($t('invite.required_email'), { type: 'warning', duration: 5000, theme: 'dark' });
@@ -31,7 +32,10 @@
 			showToast($t('invite.invalid_email'), { type: 'warning', duration: 5000, theme: 'dark'  });
 			return;
 		}
-
+		if ($projectData.miembros.length === 6) {
+			showToast($t('invite.max_members'), { type: 'warning', duration: 5000, theme: 'dark'  });
+			return;
+		}
 		await axios
 			.post('https://luma-server.onrender.com/api/invitation/send/', {
 				email: invitationMail,

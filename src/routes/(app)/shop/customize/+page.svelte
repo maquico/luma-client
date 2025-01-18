@@ -9,17 +9,17 @@
 	import CreateRewardModal from '$components/modals/createReward.modal.svelte';
 	import { showToast } from '$src/lib/stores/toastStore.js';
 	import { t } from '$lib/translations';
-	
+  import gemImage from '$assets/gem.png';
 
 	const AVAILABILITY_OPTIONS = {
-    	ALL: 'all',
-    	AVAILABLE: 'available',
-    	BOUGHT: 'boughts',
+		ALL: 'all',
+		AVAILABLE: 'available',
+		BOUGHT: 'boughts'
 	};
 
 	const PRICE_ORDER_OPTIONS = {
-	    LOW_HIGH: 'low_high',
-	    HIGH_LOW: 'high_low',
+		LOW_HIGH: 'low_high',
+		HIGH_LOW: 'high_low'
 	};
 
 	let isProjectLeader = true;
@@ -33,11 +33,12 @@
 	let showModal = false;
 	let rewardIdModal;
 	let modalTypeReward = 'reward';
+	let loading = true
 
 	$: selectedProjectStore.subscribe((value) => {
 		console.log('DETECTED CHANGE', value);
 		selectedProject = value;
-		if(rewards.length > 0) {
+		if (rewards.length > 0) {
 			filteredRewards = rewards.filter((reward) => reward.metadata.projectId === selectedProject);
 		} else {
 			loadRewards();
@@ -66,30 +67,30 @@
 	}
 
 	function applyFilters(filterValues) {
-    	const { project, availability, priceOrder } = filterValues;
+		const { project, availability, priceOrder } = filterValues;
 		console.log('Applying filters:', { availability });
-		
-    	filteredRewards = [...rewards]; // Reset the filtered rewards to all rewards first.
 
-    	// Filter by availability
-    	if (availability === AVAILABILITY_OPTIONS.AVAILABLE) {
-			console.log()
-    	    filteredRewards = filteredRewards.filter((reward) => reward.available === true);
-    	} else if (availability === AVAILABILITY_OPTIONS.BOUGHT) {
-    	    filteredRewards = filteredRewards.filter((reward) => reward.available === false);
-    	}
+		filteredRewards = [...rewards]; // Reset the filtered rewards to all rewards first.
 
-    	// Filter by project
-    	if (project) {
-    	    filteredRewards = filteredRewards.filter((reward) => reward.metadata.projectId === project);// Compare by 'Proyecto_ID'
-    	}
+		// Filter by availability
+		if (availability === AVAILABILITY_OPTIONS.AVAILABLE) {
+			console.log();
+			filteredRewards = filteredRewards.filter((reward) => reward.available === true);
+		} else if (availability === AVAILABILITY_OPTIONS.BOUGHT) {
+			filteredRewards = filteredRewards.filter((reward) => reward.available === false);
+		}
 
-    	// Sort by price
-    	if (priceOrder === PRICE_ORDER_OPTIONS.HIGH_LOW) {
-    	    filteredRewards.sort((a, b) => b.price - a.price);
-    	} else if (priceOrder === PRICE_ORDER_OPTIONS.LOW_HIGH) {
-    	    filteredRewards.sort((a, b) => a.price - b.price);
-    	}
+		// Filter by project
+		if (project) {
+			filteredRewards = filteredRewards.filter((reward) => reward.metadata.projectId === project); // Compare by 'Proyecto_ID'
+		}
+
+		// Sort by price
+		if (priceOrder === PRICE_ORDER_OPTIONS.HIGH_LOW) {
+			filteredRewards.sort((a, b) => b.price - a.price);
+		} else if (priceOrder === PRICE_ORDER_OPTIONS.LOW_HIGH) {
+			filteredRewards.sort((a, b) => a.price - b.price);
+		}
 	}
 
 	// Suscribirse al store para recibir cambios
@@ -98,23 +99,24 @@
 	});
 
 	// Función para traer recompensas (sincrónica)
-	const loadRewards = () => {
+	async function loadRewards(){
 		console.log('Cargando recompensas...', selectedProject);
 		if (!selectedProject) {
 			console.log('No hay proyecto seleccionado');
 			return;
 		}
-		axios
+		await axios
 			.get(`https://luma-server.onrender.com/api/rewards/user/${userId}`)
 			.then((response) => {
 				rewards = response.data;
 				// Filter rewards based on .metadata.projectId
 				filteredRewards = rewards.filter((reward) => reward.metadata.projectId === selectedProject);
 				console.log('Recompensas:', response.data, 'ProjectId:', selectedProject);
+				loading = false
 			})
 			.catch((error) => {
 				console.error('Error al cargar las recompensas:', error);
-			});
+			})
 	};
 
 	// Función para canjear una recompensa
@@ -138,7 +140,11 @@
 					duration: 5000
 				});
 			} else {
-				showToast($t('shop_customize.buy_error'), { theme: 'light', type: 'error', duration: 5000 });
+				showToast($t('shop_customize.buy_error'), {
+					theme: 'light',
+					type: 'error',
+					duration: 5000
+				});
 			}
 		}
 	};
@@ -155,13 +161,18 @@
 	//});
 
 	// Lógica en onMount
-	onMount(() => {
-		loadRewards();
-
+	onMount(async () => {
+		await loadRewards();
 	});
 </script>
 
-<div class="h-screen w-full overflow-y-auto p-4 bg-white">
+{#if loading}
+	<div class="overlay">
+		<span class="loader"></span>
+	</div>
+{/if}
+
+<div class="w-full p-4 bg-white">
 	<div class="grid grid-cols-4 gap-[var(--luma-element-spacing)]">
 		{#each filteredRewards as reward}
 			<div
@@ -203,14 +214,15 @@
 							class="w-full bg-purple-200 text-purple-600 font-bold py-1 rounded-md cursor-not-allowed"
 							disabled
 						>
-						{$t('shop_customize.bought')}
+							{$t('shop_customize.bought')}
 						</button>
 					{:else}
 						<button
-							class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-1 rounded-md"
+							class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-1 rounded-md flex items-center justify-center gap-2"
 							on:click={() => redeemReward(reward.id, reward.price)}
 						>
-							${reward.price}
+							<img src={gemImage} alt="Luma-gem" class="w-4 h-4" />
+							<span>{reward.price}</span>
 						</button>
 					{/if}
 				</div>
@@ -236,4 +248,50 @@
 			2px 0 4px rgba(0, 0, 0, 0.05),
 			-2px 0 4px rgba(0, 0, 0, 0.05);
 	}
+
+
+  .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-size: 1.5rem;
+      z-index: 1000;
+  }
+
+  .loader {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      position: relative;
+      animation: rotate 1s linear infinite
+  }
+  .loader::before {
+      content: "";
+      box-sizing: border-box;
+      position: absolute;
+      inset: 0px;
+      border-radius: 50%;
+      border: 5px solid #FFF;
+      animation: prixClipFix 2s linear infinite ;
+  }
+
+  @keyframes rotate {
+      100%   {transform: rotate(360deg)}
+  }
+
+  @keyframes prixClipFix {
+      0%   {clip-path:polygon(50% 50%,0 0,0 0,0 0,0 0,0 0)}
+      25%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 0,100% 0,100% 0)}
+      50%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,100% 100%,100% 100%)}
+      75%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,0 100%,0 100%)}
+      100% {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,0 100%,0 0)}
+  }
+
 </style>

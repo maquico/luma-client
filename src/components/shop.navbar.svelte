@@ -155,21 +155,20 @@
 	}
 
 	.create-reward-btn {
-		width: 40px;
-		height: 40px;
+		width: 35px;
+		height: 35px;
 		border-radius: 50%;
 		background-color: #692dd7;
 		color: white;
-		font-size: 1.5rem;
 		display: flex;
-		align-items: center;
 		justify-content: center;
-		border: none;
 		cursor: pointer;
+    font-weight: bold;
+		font-size: 1.5rem;
+    line-height: 1.9rem;
 		transition:
 			background-color 0.3s,
 			box-shadow 0.3s;
-		box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
 	}
 
 	.create-reward-btn:hover {

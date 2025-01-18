@@ -5,22 +5,24 @@
 	import { showToast } from '$src/lib/stores/toastStore.js';
 	import { t } from '$lib/translations';
 	import { userData } from '$lib/stores/userStore.js';
+	import coinImage from '$assets/coin.png';
+	import { onMount } from 'svelte';
 
 	let customThemes = [];
 	let userLocalData = JSON.parse(localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token'));
 	let userId = userLocalData.user.id;
+	let loading = true
 
 	const AVAILABILITY_OPTIONS = {
-    	ALL: 'all',
-    	AVAILABLE: 'available',
-    	BOUGHT: 'boughts',
+		ALL: 'all',
+		AVAILABLE: 'available',
+		BOUGHT: 'boughts'
 	};
 
 	const PRICE_ORDER_OPTIONS = {
-	    LOW_HIGH: 'low_high',
-	    HIGH_LOW: 'high_low',
+		LOW_HIGH: 'low_high',
+		HIGH_LOW: 'high_low'
 	};
-
 
 	let activeButton = {
 		id: null,
@@ -29,6 +31,12 @@
 	};
 
 	let filteredThemes = [];
+
+	onMount(async () => {
+		await fetchThemes();
+		await fetchRewards();
+		loading = false
+	})
 
 	function isValidHex(color) {
 		return /^#([0-9A-F]{3}|[0-9A-F]{6})$/i.test(color);
@@ -43,23 +51,23 @@
 	}
 
 	function applyFilters(filterValues) {
-    	const { availability, priceOrder } = filterValues;
+		const { availability, priceOrder } = filterValues;
 
 		filteredThemes = [...customThemes]; // Reset the filtered themes to all themes first.
-    	// Filter by availability
-    	if (availability === AVAILABILITY_OPTIONS.AVAILABLE) {
-			console.log()
-    	    filteredThemes = filteredThemes.filter((reward) => reward.available === true);
-    	} else if (availability === AVAILABILITY_OPTIONS.BOUGHT) {
-    	    filteredThemes= filteredThemes.filter((reward) => reward.available === false);
-    	}
+		// Filter by availability
+		if (availability === AVAILABILITY_OPTIONS.AVAILABLE) {
+			console.log();
+			filteredThemes = filteredThemes.filter((reward) => reward.available === true);
+		} else if (availability === AVAILABILITY_OPTIONS.BOUGHT) {
+			filteredThemes = filteredThemes.filter((reward) => reward.available === false);
+		}
 
-    	// Sort by price
-    	if (priceOrder === PRICE_ORDER_OPTIONS.HIGH_LOW) {
-    	    filteredThemes.sort((a, b) => b.price - a.price);
-    	} else if (priceOrder === PRICE_ORDER_OPTIONS.LOW_HIGH) {
-    	    filteredThemes.sort((a, b) => a.price - b.price);
-    	}
+		// Sort by price
+		if (priceOrder === PRICE_ORDER_OPTIONS.HIGH_LOW) {
+			filteredThemes.sort((a, b) => b.price - a.price);
+		} else if (priceOrder === PRICE_ORDER_OPTIONS.LOW_HIGH) {
+			filteredThemes.sort((a, b) => a.price - b.price);
+		}
 	}
 
 	// Suscribirse al store para recibir cambios
@@ -119,14 +127,6 @@
 		}
 	}
 
-	// Llamar a ambas funciones cuando el componente se monte
-	async function initializeData() {
-		await fetchThemes();
-		await fetchRewards();
-	}
-
-	initializeData();
-
 	function setTheme(theme) {
 		// Establecer el tema como activo
 		document.querySelector('html').setAttribute('data-theme', theme.name);
@@ -144,7 +144,7 @@
 			console.log('Reduciendo monedas:', current.monedas, coins);
 			return {
 				...current, // Keep the existing values
-				monedas: current.monedas - coins, // Update the specific attribute
+				monedas: current.monedas - coins // Update the specific attribute
 			};
 		});
 	}
@@ -178,7 +178,13 @@
 	}
 </script>
 
-<div class="h-screen w-full overflow-y-auto p-4 bg-white">
+{#if loading}
+	<div class="overlay">
+		<span class="loader"></span>
+	</div>
+{/if}
+
+<div class="w-full p-4 bg-white">
 	<div class="grid grid-cols-4 gap-[var(--luma-element-spacing)]">
 		{#each filteredThemes as theme}
 			<div class="bg-white rounded-lg custom-shadow overflow-hidden flex flex-col justify-between">
@@ -216,10 +222,11 @@
 						</button>
 					{:else}
 						<button
-							class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-1 rounded-md"
+							class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-1 rounded-md flex items-center justify-center gap-2"
 							on:click={() => redeemTheme(theme.id)}
 						>
-							${theme.price}
+							<img src={coinImage} alt="Luma-coin" class="w-4 h-4" />
+							<span>{theme.price}</span>
 						</button>
 					{/if}
 				</div>
@@ -236,4 +243,50 @@
 			2px 0 4px rgba(0, 0, 0, 0.05),
 			-2px 0 4px rgba(0, 0, 0, 0.05);
 	}
+
+
+  .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-size: 1.5rem;
+      z-index: 1000;
+  }
+
+  .loader {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      position: relative;
+      animation: rotate 1s linear infinite
+  }
+  .loader::before {
+      content: "";
+      box-sizing: border-box;
+      position: absolute;
+      inset: 0px;
+      border-radius: 50%;
+      border: 5px solid #FFF;
+      animation: prixClipFix 2s linear infinite ;
+  }
+
+  @keyframes rotate {
+      100%   {transform: rotate(360deg)}
+  }
+
+  @keyframes prixClipFix {
+      0%   {clip-path:polygon(50% 50%,0 0,0 0,0 0,0 0,0 0)}
+      25%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 0,100% 0,100% 0)}
+      50%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,100% 100%,100% 100%)}
+      75%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,0 100%,0 100%)}
+      100% {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,0 100%,0 0)}
+  }
+
 </style>
