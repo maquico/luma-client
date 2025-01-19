@@ -17,9 +17,9 @@
 	let userMail = 'jdoe@acme.com';
 	let userCoins = 'loading...';
 
-	let currentLevel = 'loading...';  // Current level of the user
-	let currentXP = 75;    // Current experience points
-	let maxXP = 100;       // Maximum experience points for the current level
+	let currentLevel = 1;  // Current level of the user
+	let currentXP = 0;  // Current experience points
+	let maxXP = 500;       // Maximum experience points for the current level
 
 	onMount(() => {
 		const storedData = localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token');
@@ -43,10 +43,11 @@
 				console.error('Error:', error);
 			})
 			.then((response) => {
-				// console.log('Success:', response.data);
+				console.log('Success:', response.data);
 				setUserData(response.data[0]);
 				userCoins = $userData.monedas;
 				currentLevel = $userData.nivel;
+				currentXP = $userData.experiencia;
 			});
 	});
   
@@ -94,7 +95,7 @@
 			<div class="progress-bar">
 				<div
 					class="progress-fill bg-primary"
-					style="width: {Math.min((currentXP / maxXP) * 100, 100)}%;"
+					style="width: {Math.min(((currentXP / currentLevel) / maxXP) * 100, 100)}%;"
 				></div>
 			</div>
 
