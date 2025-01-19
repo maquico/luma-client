@@ -35,6 +35,14 @@
 	onMount(async () => {
 		await fetchThemes();
 		await fetchRewards();
+		const savedThemeId = localStorage.getItem('activeThemeId');
+		console.log('Tema activo guardado:', savedThemeId);
+		if (savedThemeId) {
+			const savedTheme = customThemes.find((theme) => theme.id === parseInt(savedThemeId));
+			if (savedTheme) {
+				setTheme(savedTheme, false); // No deshabilites el botón aquí
+			}
+		}
 		loading = false;
 	});
 
@@ -127,7 +135,7 @@
 		}
 	}
 
-	function setTheme(theme) {
+	function setTheme(theme, save = true) {
 		// Establecer el tema como activo
 		document.querySelector('html').setAttribute('data-theme', theme.name);
 
@@ -137,6 +145,10 @@
 			text: $t('shop_general.selected'),
 			disabled: true
 		};
+
+		if (save) {
+			localStorage.setItem('activeThemeId', theme.id);
+		}
 	}
 
 	function reduceUserCoins(coins) {
@@ -237,9 +249,9 @@
 </div>
 
 <style>
-    .main-content{
-        height: 90vh;
-    }
+	.main-content {
+		height: 90vh;
+	}
 
 	.custom-shadow {
 		box-shadow:
