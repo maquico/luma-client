@@ -245,7 +245,7 @@
     				startDate: formatDateForDB(startDate),
     				endDate: formatDateForDB(endDate),
     				time: formData.time,
-    				userId: userId,
+    				userId: formData.userId? formData.userId : userId,
     				tags: formData.tags,
     				description: formData.description
 				}
@@ -327,7 +327,7 @@
                         class="select select-bordered w-full"
                         bind:value={formData.userId}
                         required
-						disabled={isFieldRestricted('userId')}
+												disabled={isFieldRestricted('userId')}
                     >
                         <option value="" disabled selected>{$t('create_task.select_user')}</option>
                         {#each projectMembers as member}
