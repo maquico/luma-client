@@ -16,8 +16,9 @@
 	export let controlsOptions = false;
 	export let closeByBackgroundClick = false;
 	export let deleteModalType = 'task';
-	export let rewardID;
-	export let data = {};
+	export let rewardID = 0;
+  export let data = {}
+
 	export let isEdit = false;
 
 	// Delete Task Modal

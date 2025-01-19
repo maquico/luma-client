@@ -10,7 +10,9 @@
 	import { showToast } from '$src/lib/stores/toastStore.js';
 	import { shouldRefreshRewards } from '$src/lib/stores/refreshRewardStore.js';
 	import { t } from '$lib/translations';
-	import gemImage from '$assets/gem.png';
+  import gemImage from '$assets/gem.png';
+	import CustomRewardDetailModal from '$components/modals/customRewardDetail.modal.svelte'
+
 
 	const AVAILABILITY_OPTIONS = {
 		ALL: 'all',
@@ -31,10 +33,15 @@
 	let rewards = [];
 	let filteredRewards = [];
 	let selectedProject = null;
-	let showModal = false;
+	let showCreateEditModal = false;
+	let showRewardDetailModal = false;
 	let rewardIdModal;
 	let modalTypeReward = 'reward';
-	let loading = true;
+	let loading = true
+	let modalTitle;
+	let modalDescription;
+	let modalIcon;
+
 
 	$: selectedProjectStore.subscribe((value) => {
 		console.log('DETECTED CHANGE', value);
@@ -47,8 +54,14 @@
 		}
 	});
 
+	$: selectedProjectDetailStore.subscribe((value) => {
+		console.log('DETAIL STORE CHANGE', value);
+		isProjectLeader = value.queryingUserRole === "Lider";
+	});
+
 	function handleClose() {
-		showModal = false;
+		showCreateEditModal = false;
+		showRewardDetailModal = false;
 	}
 
 	const handleUpdate = () => {
@@ -181,23 +194,41 @@
 	</div>
 {/if}
 
+<CustomRewardDetailModal
+	show={showRewardDetailModal}
+	title={modalTitle}
+	description={modalDescription}
+	icon={modalIcon}
+	on:close={handleClose}
+>
+</CustomRewardDetailModal>
+
 <div class="w-full p-4 bg-white">
 	<div class="grid grid-cols-4 gap-[var(--luma-element-spacing)]">
+		{#if filteredRewards.length === 0}
+			<div class="col-span-4 flex justify-center items-center h-64 bg-gray-100 rounded-lg">
+				<span class="text-gray-500">{$t('shop_customize.no_rewards')}</span>
+			</div>
+		{/if}
 		{#each filteredRewards as reward}
 			<div
 				class="bg-white rounded-lg custom-shadow overflow-hidden flex flex-col justify-between"
-				on:click={() => {
-					if (isProjectLeader) {
-						showModal = true;
-						rewardIdModal = reward.id;
-						console.log('rewardIdModal:', rewardIdModal);
-					}
-				}}
 			>
 				<div class="flex justify-between items-center p-2 bg-white text-gray-700">
 					<span>{reward.name}</span>
 					<div class="flex items-center space-x-2">
-						<button class="text-gray-500 hover:text-gray-700"> </button>
+						<button class="text-gray-500 hover:text-gray-700" on:click={() => {
+							if (isProjectLeader) {
+								showCreateEditModal = true;
+								rewardIdModal = reward.id;
+								console.log('rewardIdModal:', rewardIdModal);
+							} else {
+								showRewardDetailModal = true;
+								modalTitle = reward.name;
+								modalDescription = reward.description || $t('shop_customize.no_description');
+								modalIcon = reward.metadata.icon.image;
+							}
+						}}> <Info class="w-5 h-5" /> </button>
 					</div>
 				</div>
 
@@ -227,8 +258,18 @@
 						</button>
 					{:else}
 						<button
-							class="w-full bg-primary hover:filter hover:brightness-90 text-white font-bold py-1 rounded-md flex items-center justify-center gap-2"
-							on:click={() => redeemReward(reward.id, reward.price)}
+							class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-1 rounded-md flex items-center justify-center gap-2"
+							on:click={() => {
+								if (!isProjectLeader) {
+									redeemReward(reward.id, reward.price)
+								} else {
+									showToast($t('shop_customize.leader_cannot_buy'), {
+										theme: 'dark',
+										type: 'warning',
+										duration: 5000
+									});
+								}
+							}}
 						>
 							<img src={gemImage} alt="Luma-gem" class="w-4 h-4" />
 							<span>{reward.price}</span>
@@ -241,7 +282,7 @@
 </div>
 
 <CreateRewardModal
-	show={showModal}
+	show={showCreateEditModal}
 	rewardId={rewardIdModal}
 	modalType={modalTypeReward}
 	isEdit={true}
