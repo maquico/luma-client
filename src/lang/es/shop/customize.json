@@ -4,5 +4,8 @@
     "buy_error": "Ocurrió un error al comprar la recompensa",
     "available": "Disponible",
     "capacity": "Capacidad",
-    "bought": "Comprado"
+    "bought": "Comprado",
+    "no_rewards": "No hay recompensas disponibles en este proyecto",
+    "leader_cannot_buy": "Como lider no puedes comprar recompensas.",
+    "no_description": "No hay descripción."
 }

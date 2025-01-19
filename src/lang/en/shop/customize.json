@@ -4,5 +4,8 @@
     "buy_error": "An error occurred while buying the reward",
     "available": "Available",
     "capacity": "Capacity",
-    "bought": "Bought"
+    "bought": "Bought",
+    "no_rewards": "There are no rewards available in this project",
+    "leader_cannot_buy": "As a leader you can't buy rewards.",
+    "no_description": "No description." 
 }
