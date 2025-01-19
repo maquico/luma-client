@@ -184,7 +184,7 @@
 	</div>
 {/if}
 
-<div class="w-full p-4 bg-white">
+<div class="w-full p-4 bg-white main-content">
 	<div class="grid grid-cols-4 gap-[var(--luma-element-spacing)]">
 		{#each filteredThemes as theme}
 			<div class="bg-white rounded-lg custom-shadow overflow-hidden flex flex-col justify-between">
@@ -237,6 +237,10 @@
 </div>
 
 <style>
+    .main-content{
+        height: 90vh;
+    }
+
 	.custom-shadow {
 		box-shadow:
 			0 2px 4px rgba(0, 0, 0, 0.05),
