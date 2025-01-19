@@ -220,14 +220,14 @@
 					</div>
 					{#if reward.available === false}
 						<button
-							class="w-full bg-purple-200 text-purple-600 font-bold py-1 rounded-md cursor-not-allowed"
+							class="w-full bg-primary/20 text-primary font-bold py-1 rounded-md cursor-not-allowed"
 							disabled
 						>
 							{$t('shop_customize.bought')}
 						</button>
 					{:else}
 						<button
-							class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-1 rounded-md flex items-center justify-center gap-2"
+							class="w-full bg-primary hover:filter hover:brightness-90 text-white font-bold py-1 rounded-md flex items-center justify-center gap-2"
 							on:click={() => redeemReward(reward.id, reward.price)}
 						>
 							<img src={gemImage} alt="Luma-gem" class="w-4 h-4" />
