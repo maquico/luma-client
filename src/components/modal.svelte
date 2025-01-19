@@ -17,7 +17,7 @@
 	export let closeByBackgroundClick = false;
 	export let deleteModalType = 'task';
 	export let rewardID;
-  	export let data = {}
+	export let data = {};
 	export let isEdit = false;
 
 	// Delete Task Modal
@@ -32,11 +32,11 @@
 		show = false;
 		dispatch('close');
 	};
-  
-  const handleDelete = () => {
+
+	const handleDelete = () => {
 		show = false;
-		dispatch('delete')
-	}
+		dispatch('delete');
+	};
 </script>
 
 <div>
@@ -60,30 +60,30 @@
 						<div class="controls">
 							{#if controlsOptions}
 								{#if isEdit}
-								<button
-									use:clickOutside
-									on:click_outside={() => {
-										if (userDropdown) userDropdown = !userDropdown;
-									}}
-									on:click={() => {
-										userDropdown = !userDropdown;
-									}}
-								>
-									<Ellipsis />
-								</button>
-								
-								<div class="dropdown-menu-container {userDropdown ? 'open' : ''}">
-									<div class="dropdown-menu">
-										<button
-											on:click={() => {
-												showModal = true;
-											}}
-										>
-										{$t('modal.delete')}
-											<Trash2 size={20} />
-										</button>
+									<button
+										use:clickOutside
+										on:click_outside={() => {
+											if (userDropdown) userDropdown = !userDropdown;
+										}}
+										on:click={() => {
+											userDropdown = !userDropdown;
+										}}
+									>
+										<Ellipsis />
+									</button>
+
+									<div class="dropdown-menu-container {userDropdown ? 'open' : ''}">
+										<div class="dropdown-menu">
+											<button
+												on:click={() => {
+													showModal = true;
+												}}
+											>
+												{$t('modal.delete')}
+												<Trash2 size={20} />
+											</button>
+										</div>
 									</div>
-								</div>
 								{/if}
 							{/if}
 							<button on:click={close}>
@@ -101,10 +101,15 @@
 </div>
 
 {#if deleteModalType === 'reward' && isEdit}
-	<DeleteRewardModal show={showModal} rewardId={rewardID} on:close={handleClose} />
+	<DeleteRewardModal
+		show={showModal}
+		rewardId={rewardID}
+		on:close={handleClose}
+		on:delete={handleDelete}
+	/>
 	{console.log('Modal Type', deleteModalType)}
-{:else if deleteModalType === 'task' && isEdit} 
-	<DeleteTaskModal show={showModal} data={data} on:close={handleClose} on:delete={handleDelete}/>
+{:else if deleteModalType === 'task' && isEdit}
+	<DeleteTaskModal show={showModal} {data} on:close={handleClose} on:delete={handleDelete} />
 	{console.log('Modal Type:', deleteModalType)}
 {/if}
 

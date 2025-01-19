@@ -1,8 +1,8 @@
 <script>
 	import Modal from '$components/modal.svelte';
 	import { createEventDispatcher } from 'svelte';
-	import { showToast } from '$lib/stores/toastStore';
 	import axios from 'axios';
+	import { showToast } from '$lib/stores/toastStore';
 	import { t } from '$lib/translations';
 
 	const dispatch = createEventDispatcher();
@@ -34,7 +34,7 @@
 					type: 'success',
 					duration: 5000
 				});
-				close();
+				dispatch('delete');
 			})
 			.catch((error) => {
 				console.error('Error al eliminar la recompensa', error);
@@ -62,6 +62,8 @@
 					duration: 5000
 				});
 			});
+
+		close();
 	}
 </script>
 
