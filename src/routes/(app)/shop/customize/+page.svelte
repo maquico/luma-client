@@ -8,9 +8,11 @@
 	import { refreshReward, toggle } from '$src/lib/stores/refreshReward.js';
 	import CreateRewardModal from '$components/modals/createReward.modal.svelte';
 	import { showToast } from '$src/lib/stores/toastStore.js';
+	import { shouldRefreshRewards } from '$src/lib/stores/refreshRewardStore.js';
 	import { t } from '$lib/translations';
-  	import gemImage from '$assets/gem.png';
+  import gemImage from '$assets/gem.png';
 	import CustomRewardDetailModal from '$components/modals/customRewardDetail.modal.svelte'
+
 
 	const AVAILABILITY_OPTIONS = {
 		ALL: 'all',
@@ -40,6 +42,7 @@
 	let modalDescription;
 	let modalIcon;
 
+
 	$: selectedProjectStore.subscribe((value) => {
 		console.log('DETECTED CHANGE', value);
 		selectedProject = value;
@@ -68,11 +71,11 @@
 
 	function reduceUserGems(gems) {
 		selectedProjectDetailStore.update((current) => {
-			console.log("CURRENT ", current)
+			console.log('CURRENT ', current);
 			console.log('Reduciendo gemas:', current.currentUserGems, gems);
 			return {
 				...current, // Keep the existing values
-				currentUserGems: current.currentUserGems - gems, // Update the specific attribute
+				currentUserGems: current.currentUserGems - gems // Update the specific attribute
 			};
 		});
 	}
@@ -105,12 +108,20 @@
 	}
 
 	// Suscribirse al store para recibir cambios
-	const unsubscribe = filters.subscribe((filterValues) => {
+	const unsubscribeFilters = filters.subscribe((filterValues) => {
 		applyFilters(filterValues);
 	});
 
+	// Suscribirse al store para recargar las recompensas
+	const unsubscribeRefreshRewards = shouldRefreshRewards.subscribe((value) => {
+		if (value) {
+			loadRewards();
+			shouldRefreshRewards.set(false); // Resetear el estado
+		}
+	});
+
 	// Función para traer recompensas (sincrónica)
-	async function loadRewards(){
+	async function loadRewards() {
 		console.log('Cargando recompensas...', selectedProject);
 		if (!selectedProject) {
 			console.log('No hay proyecto seleccionado');
@@ -123,12 +134,12 @@
 				// Filter rewards based on .metadata.projectId
 				filteredRewards = rewards.filter((reward) => reward.metadata.projectId === selectedProject);
 				console.log('Recompensas:', response.data, 'ProjectId:', selectedProject);
-				loading = false
+				loading = false;
 			})
 			.catch((error) => {
 				console.error('Error al cargar las recompensas:', error);
-			})
-	};
+			});
+	}
 
 	// Función para canjear una recompensa
 	const redeemReward = async (rewardId, rewardPrice) => {
@@ -240,7 +251,7 @@
 					</div>
 					{#if reward.available === false}
 						<button
-							class="w-full bg-purple-200 text-purple-600 font-bold py-1 rounded-md cursor-not-allowed"
+							class="w-full bg-primary/20 text-primary font-bold py-1 rounded-md cursor-not-allowed"
 							disabled
 						>
 							{$t('shop_customize.bought')}
@@ -288,49 +299,59 @@
 			-2px 0 4px rgba(0, 0, 0, 0.05);
 	}
 
+	.overlay {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: rgba(0, 0, 0, 0.5);
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		color: white;
+		font-size: 1.5rem;
+		z-index: 1000;
+	}
 
-  .overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: white;
-      font-size: 1.5rem;
-      z-index: 1000;
-  }
+	.loader {
+		width: 48px;
+		height: 48px;
+		border-radius: 50%;
+		position: relative;
+		animation: rotate 1s linear infinite;
+	}
+	.loader::before {
+		content: '';
+		box-sizing: border-box;
+		position: absolute;
+		inset: 0px;
+		border-radius: 50%;
+		border: 5px solid #fff;
+		animation: prixClipFix 2s linear infinite;
+	}
 
-  .loader {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      position: relative;
-      animation: rotate 1s linear infinite
-  }
-  .loader::before {
-      content: "";
-      box-sizing: border-box;
-      position: absolute;
-      inset: 0px;
-      border-radius: 50%;
-      border: 5px solid #FFF;
-      animation: prixClipFix 2s linear infinite ;
-  }
+	@keyframes rotate {
+		100% {
+			transform: rotate(360deg);
+		}
+	}
 
-  @keyframes rotate {
-      100%   {transform: rotate(360deg)}
-  }
-
-  @keyframes prixClipFix {
-      0%   {clip-path:polygon(50% 50%,0 0,0 0,0 0,0 0,0 0)}
-      25%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 0,100% 0,100% 0)}
-      50%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,100% 100%,100% 100%)}
-      75%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,0 100%,0 100%)}
-      100% {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,0 100%,0 0)}
-  }
-
+	@keyframes prixClipFix {
+		0% {
+			clip-path: polygon(50% 50%, 0 0, 0 0, 0 0, 0 0, 0 0);
+		}
+		25% {
+			clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 0, 100% 0, 100% 0);
+		}
+		50% {
+			clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 100% 100%, 100% 100%);
+		}
+		75% {
+			clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 100%);
+		}
+		100% {
+			clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 0);
+		}
+	}
 </style>
