@@ -43,6 +43,12 @@
 		shouldRefreshRewards.set(true); // Notificar que se debe recargar
 	};
 
+	const handleDelete = () => {
+		show = false;
+		dispatch('delete');
+		shouldRefreshRewards.set(true); // Notificar que se debe recargar
+	};
+
 	// Set role and determine if fields are editable
 	const setRoleAndEditable = () => {
 		const selectedProject = userProjects.find((p) => p.Proyecto_ID === formData.projectId);
@@ -232,6 +238,7 @@
 		controls
 		controlsOptions
 		on:close={close}
+		on:delete={handleDelete}
 		rewardID={rewardId}
 		{isEdit}
 		deleteModalType={'reward'}
