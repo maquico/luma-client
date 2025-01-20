@@ -25,7 +25,7 @@
 	};
 
 	let activeButton = {
-		id: null,
+		id: 4,
 		text: $t('shop_general.select'),
 		disabled: false
 	};
@@ -35,13 +35,11 @@
 	onMount(async () => {
 		await fetchThemes();
 		await fetchRewards();
-		const savedThemeId = localStorage.getItem('activeThemeId');
-		console.log('Tema activo guardado:', savedThemeId);
-		if (savedThemeId) {
-			const savedTheme = customThemes.find((theme) => theme.id === parseInt(savedThemeId));
-			if (savedTheme) {
-				setTheme(savedTheme, false); // No deshabilites el botón aquí
-			}
+		// Cargar tema activo desde localStorage o usar predeterminado
+		const savedThemeId = parseInt(localStorage.getItem('activeThemeId')) || 4;
+		const savedTheme = customThemes.find((theme) => theme.id === savedThemeId);
+		if (savedTheme) {
+			setTheme(savedTheme, false);
 		}
 		loading = false;
 	});
@@ -148,6 +146,7 @@
 
 		if (save) {
 			localStorage.setItem('activeThemeId', theme.id);
+			console.log('Tema activo guardado:', theme.id);
 		}
 	}
 
