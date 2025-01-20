@@ -68,14 +68,7 @@
 		// Check if we're dropping in the "Approved" status column and if the user has leader role
 		if (statusId === 4 && previousStatusId !== 4  && isLeader) {
 			// TODO: hay un error, que cuando cambio una tarea de APPROVED a DONE, me sale nuevamente el modal
-			// TODO: tambien, cuando declino la aprobacion, el card se elimina de la ui
 			const approved = await openApprovalModal();
-			if (!approved) {
-				// If not approved, show a toast and reset items
-				showToast($t('project_board.task_approval'), { type: 'warning', duration: 5000 });
-				items = [...items]; // Revert items to the original state
-				return;
-			}
 		} else if (statusId === 4 && !isLeader) {
 			showToast($t('project_board.requires_leader'), { type: 'warning', duration: 5000 });
 			items = [...items]; // Revert items to the original state
@@ -116,6 +109,9 @@
 					showToast($t('project_board.error_status'), { type: 'error', duration: 5000 })
 					return
 				})
+				.finally( ()=> {
+					dispatch('update')
+				})
 		}
 	}
 
@@ -125,6 +121,11 @@
 
 		approvalStatus = event.detail.detail === "approved"; // true if "approved", false if "denied"
 		document.dispatchEvent(new CustomEvent('close', { detail: approvalStatus }));
+	}
+
+	function handleDeny(){
+		showToast($t('project_board.task_approval'), { type: 'warning', duration: 5000 });
+		dispatch('update');
 	}
 
 </script>
@@ -146,7 +147,7 @@
 	</div>
 </div>
 
-<ApproveTaskModal show={showModal} on:close={handleClose}/>
+<ApproveTaskModal show={showModal} on:close={handleClose} on:deny={handleDeny}/>
 
 <style>
     .wrapper {
