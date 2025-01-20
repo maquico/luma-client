@@ -351,7 +351,7 @@ export const config = {
             locale: 'es',
             key: 'shop_navbar',
             routes: ['/shop/general', '/shop/customize'],
-            loader: async () => (await import('../../lang/en/navbars/shop.navbar.json')).default,
+            loader: async () => (await import('../../lang/es/navbars/shop.navbar.json')).default,
         },
         {
             locale: 'es',
