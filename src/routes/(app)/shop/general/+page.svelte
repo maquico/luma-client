@@ -11,7 +11,7 @@
 	let customThemes = [];
 	let userLocalData = JSON.parse(localStorage.getItem('sb-kyttbsnmnrayejpbxmpp-auth-token'));
 	let userId = userLocalData.user.id;
-	let loading = true
+	let loading = true;
 
 	const AVAILABILITY_OPTIONS = {
 		ALL: 'all',
@@ -25,7 +25,7 @@
 	};
 
 	let activeButton = {
-		id: null,
+		id: 4,
 		text: $t('shop_general.select'),
 		disabled: false
 	};
@@ -35,8 +35,14 @@
 	onMount(async () => {
 		await fetchThemes();
 		await fetchRewards();
-		loading = false
-	})
+		// Cargar tema activo desde localStorage o usar predeterminado
+		const savedThemeId = parseInt(localStorage.getItem('activeThemeId')) || 4;
+		const savedTheme = customThemes.find((theme) => theme.id === savedThemeId);
+		if (savedTheme) {
+			setTheme(savedTheme, false);
+		}
+		loading = false;
+	});
 
 	function isValidHex(color) {
 		return /^#([0-9A-F]{3}|[0-9A-F]{6})$/i.test(color);
@@ -127,7 +133,7 @@
 		}
 	}
 
-	function setTheme(theme) {
+	function setTheme(theme, save = true) {
 		// Establecer el tema como activo
 		document.querySelector('html').setAttribute('data-theme', theme.name);
 
@@ -137,6 +143,11 @@
 			text: $t('shop_general.selected'),
 			disabled: true
 		};
+
+		if (save) {
+			localStorage.setItem('activeThemeId', theme.id);
+			console.log('Tema activo guardado:', theme.id);
+		}
 	}
 
 	function reduceUserCoins(coins) {
@@ -184,7 +195,7 @@
 	</div>
 {/if}
 
-<div class="w-full p-4 bg-white">
+<div class="w-full p-4 bg-white main-content">
 	<div class="grid grid-cols-4 gap-[var(--luma-element-spacing)]">
 		{#each filteredThemes as theme}
 			<div class="bg-white rounded-lg custom-shadow overflow-hidden flex flex-col justify-between">
@@ -213,8 +224,8 @@
 					</div>
 					{#if theme.totalBought === 1}
 						<button
-							class={`w-full text-purple-600 font-bold py-1 rounded-md 
-						${activeButton.id === theme.id ? 'bg-purple-200 border-none' : 'bg-white border border-purple-600'}`}
+							class={`w-full text-primary font-bold py-1 rounded-md 
+							${activeButton.id === theme.id ? 'bg-primary/20 border-none' : 'bg-white border border-primary hover:filter hover:bg-primary/5'}`}
 							on:click={() => setTheme(theme)}
 							disabled={activeButton.id === theme.id ? activeButton.disabled : false}
 						>
@@ -222,7 +233,8 @@
 						</button>
 					{:else}
 						<button
-							class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-1 rounded-md flex items-center justify-center gap-2"
+							class="w-full bg-primary text-white font-bold py-1 rounded-md flex items-center justify-center gap-2
+						hover:filter hover:brightness-90"
 							on:click={() => redeemTheme(theme.id)}
 						>
 							<img src={coinImage} alt="Luma-coin" class="w-4 h-4" />
@@ -236,6 +248,10 @@
 </div>
 
 <style>
+	.main-content {
+		height: 90vh;
+	}
+
 	.custom-shadow {
 		box-shadow:
 			0 2px 4px rgba(0, 0, 0, 0.05),
@@ -244,49 +260,59 @@
 			-2px 0 4px rgba(0, 0, 0, 0.05);
 	}
 
+	.overlay {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: rgba(0, 0, 0, 0.5);
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		color: white;
+		font-size: 1.5rem;
+		z-index: 1000;
+	}
 
-  .overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: white;
-      font-size: 1.5rem;
-      z-index: 1000;
-  }
+	.loader {
+		width: 48px;
+		height: 48px;
+		border-radius: 50%;
+		position: relative;
+		animation: rotate 1s linear infinite;
+	}
+	.loader::before {
+		content: '';
+		box-sizing: border-box;
+		position: absolute;
+		inset: 0px;
+		border-radius: 50%;
+		border: 5px solid #fff;
+		animation: prixClipFix 2s linear infinite;
+	}
 
-  .loader {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      position: relative;
-      animation: rotate 1s linear infinite
-  }
-  .loader::before {
-      content: "";
-      box-sizing: border-box;
-      position: absolute;
-      inset: 0px;
-      border-radius: 50%;
-      border: 5px solid #FFF;
-      animation: prixClipFix 2s linear infinite ;
-  }
+	@keyframes rotate {
+		100% {
+			transform: rotate(360deg);
+		}
+	}
 
-  @keyframes rotate {
-      100%   {transform: rotate(360deg)}
-  }
-
-  @keyframes prixClipFix {
-      0%   {clip-path:polygon(50% 50%,0 0,0 0,0 0,0 0,0 0)}
-      25%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 0,100% 0,100% 0)}
-      50%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,100% 100%,100% 100%)}
-      75%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,0 100%,0 100%)}
-      100% {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,0 100%,0 0)}
-  }
-
+	@keyframes prixClipFix {
+		0% {
+			clip-path: polygon(50% 50%, 0 0, 0 0, 0 0, 0 0, 0 0);
+		}
+		25% {
+			clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 0, 100% 0, 100% 0);
+		}
+		50% {
+			clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 100% 100%, 100% 100%);
+		}
+		75% {
+			clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 100%);
+		}
+		100% {
+			clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 0);
+		}
+	}
 </style>

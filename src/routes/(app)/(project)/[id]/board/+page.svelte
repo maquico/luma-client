@@ -7,8 +7,6 @@
 	import { onMount } from 'svelte';
 	import { t } from '$lib/translations';
 
-	// console.log($projectData);
-
 	onMount(async () => {
 		loading = true
 		if (!$projectData) {
@@ -50,11 +48,6 @@
 	function handleClose() {
 		showModal = false;
 	}
-
-	// function handleBoardUpdated(newColumnsData) {
-	// 	// if you wanted to update a database or a server, this is where you would do it
-	// 	// $data = newColumnsData;
-	// }
 
 	async function getTags(projectId){
 		await axios.get(`https://luma-server.onrender.com/api/task/tags/${projectId}`)
@@ -115,7 +108,6 @@
     	    console.error("Error updating board tasks:", error);
     	}
 	}
-
 
 	// Receive the create event directly from the CreateTaskModal
 		function handleCreate(event) {

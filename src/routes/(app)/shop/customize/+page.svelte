@@ -4,11 +4,14 @@
 	import axios from 'axios';
 	import { filters } from '$src/lib/stores/filterStore.js';
 	import { selectedProjectStore } from '$src/lib/stores/selectedProjectStore.js';
+	import { selectedProjectDetailStore } from '$src/lib/stores/selectedProjectDetailStore.js';
 	import { refreshReward, toggle } from '$src/lib/stores/refreshReward.js';
 	import CreateRewardModal from '$components/modals/createReward.modal.svelte';
 	import { showToast } from '$src/lib/stores/toastStore.js';
+	import { shouldRefreshRewards } from '$src/lib/stores/refreshRewardStore.js';
 	import { t } from '$lib/translations';
 	import gemImage from '$assets/gem.png';
+	import CustomRewardDetailModal from '$components/modals/customRewardDetail.modal.svelte';
 
 	const AVAILABILITY_OPTIONS = {
 		ALL: 'all',
@@ -29,10 +32,14 @@
 	let rewards = [];
 	let filteredRewards = [];
 	let selectedProject = null;
-	let showModal = false;
+	let showCreateEditModal = false;
+	let showRewardDetailModal = false;
 	let rewardIdModal;
 	let modalTypeReward = 'reward';
-	let loading = true
+	let loading = true;
+	let modalTitle;
+	let modalDescription;
+	let modalIcon;
 
 	$: selectedProjectStore.subscribe((value) => {
 		console.log('DETECTED CHANGE', value);
@@ -45,14 +52,31 @@
 		}
 	});
 
+	$: selectedProjectDetailStore.subscribe((value) => {
+		console.log('DETAIL STORE CHANGE', value);
+		isProjectLeader = value.queryingUserRole === 'Lider';
+	});
+
 	function handleClose() {
-		showModal = false;
+		showCreateEditModal = false;
+		showRewardDetailModal = false;
 	}
 
 	const handleUpdate = () => {
 		console.log('handleUpdate');
 		loadRewards();
 	};
+
+	function reduceUserGems(gems) {
+		selectedProjectDetailStore.update((current) => {
+			console.log('CURRENT ', current);
+			console.log('Reduciendo gemas:', current.currentUserGems, gems);
+			return {
+				...current, // Keep the existing values
+				currentUserGems: current.currentUserGems - gems // Update the specific attribute
+			};
+		});
+	}
 
 	function applyFilters(filterValues) {
 		const { project, availability, priceOrder } = filterValues;
@@ -82,12 +106,20 @@
 	}
 
 	// Suscribirse al store para recibir cambios
-	const unsubscribe = filters.subscribe((filterValues) => {
+	const unsubscribeFilters = filters.subscribe((filterValues) => {
 		applyFilters(filterValues);
 	});
 
+	// Suscribirse al store para recargar las recompensas
+	const unsubscribeRefreshRewards = shouldRefreshRewards.subscribe((value) => {
+		if (value) {
+			loadRewards();
+			shouldRefreshRewards.set(false); // Resetear el estado
+		}
+	});
+
 	// Función para traer recompensas (sincrónica)
-	async function loadRewards(){
+	async function loadRewards() {
 		console.log('Cargando recompensas...', selectedProject);
 		if (!selectedProject) {
 			console.log('No hay proyecto seleccionado');
@@ -100,15 +132,15 @@
 				// Filter rewards based on .metadata.projectId
 				filteredRewards = rewards.filter((reward) => reward.metadata.projectId === selectedProject);
 				console.log('Recompensas:', response.data, 'ProjectId:', selectedProject);
-				loading = false
+				loading = false;
 			})
 			.catch((error) => {
 				console.error('Error al cargar las recompensas:', error);
-			})
-	};
+			});
+	}
 
 	// Función para canjear una recompensa
-	const redeemReward = async (rewardId) => {
+	const redeemReward = async (rewardId, rewardPrice) => {
 		try {
 			console.log('Canjeando recompensa:', rewardId, userId);
 			const response = await axios.post('https://luma-server.onrender.com/api/rewards/buy', {
@@ -116,6 +148,7 @@
 				rewardId: rewardId
 			});
 			console.log('Recompensa canjeada:', response.data);
+			reduceUserGems(rewardPrice);
 			showToast($t('shop_customize.buy_success'), { type: 'success', duration: 5000 });
 			loadRewards(); // Recarga recompensas después del canje
 		} catch (error) {
@@ -159,23 +192,43 @@
 	</div>
 {/if}
 
+<CustomRewardDetailModal
+	show={showRewardDetailModal}
+	title={modalTitle}
+	description={modalDescription}
+	icon={modalIcon}
+	on:close={handleClose}
+></CustomRewardDetailModal>
+
 <div class="w-full p-4 bg-white">
 	<div class="grid grid-cols-4 gap-[var(--luma-element-spacing)]">
+		{#if filteredRewards.length === 0}
+			<div class="col-span-4 flex justify-center items-center h-64 bg-gray-100 rounded-lg">
+				<span class="text-gray-500">{$t('shop_customize.no_rewards')}</span>
+			</div>
+		{/if}
 		{#each filteredRewards as reward}
-			<div
-				class="bg-white rounded-lg custom-shadow overflow-hidden flex flex-col justify-between"
-				on:click={() => {
-					if (isProjectLeader) {
-						showModal = true;
-						rewardIdModal = reward.id;
-						console.log('rewardIdModal:', rewardIdModal);
-					}
-				}}
-			>
+			<div class="bg-white rounded-lg custom-shadow overflow-hidden flex flex-col justify-between">
 				<div class="flex justify-between items-center p-2 bg-white text-gray-700">
 					<span>{reward.name}</span>
 					<div class="flex items-center space-x-2">
-						<button class="text-gray-500 hover:text-gray-700"> </button>
+						<button
+							class="text-gray-500 hover:text-gray-700"
+							on:click={() => {
+								if (isProjectLeader) {
+									showCreateEditModal = true;
+									rewardIdModal = reward.id;
+									console.log('rewardIdModal:', rewardIdModal);
+								} else {
+									showRewardDetailModal = true;
+									modalTitle = reward.name;
+									modalDescription = reward.description || $t('shop_customize.no_description');
+									modalIcon = reward.metadata.icon.image;
+								}
+							}}
+						>
+							<Info class="w-5 h-5" />
+						</button>
 					</div>
 				</div>
 
@@ -198,15 +251,26 @@
 					</div>
 					{#if reward.available === false}
 						<button
-							class="w-full bg-purple-200 text-purple-600 font-bold py-1 rounded-md cursor-not-allowed"
+							class="w-full bg-primary/20 text-primary font-bold py-1 rounded-md cursor-not-allowed"
 							disabled
 						>
 							{$t('shop_customize.bought')}
 						</button>
 					{:else}
 						<button
-							class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-1 rounded-md flex items-center justify-center gap-2"
-							on:click={() => redeemReward(reward.id)}
+							class="w-full bg-primary text-white font-bold py-1 rounded-md flex items-center justify-center gap-2
+						hover:filter hover:brightness-90"
+							on:click={() => {
+								if (!isProjectLeader) {
+									redeemReward(reward.id, reward.price);
+								} else {
+									showToast($t('shop_customize.leader_cannot_buy'), {
+										theme: 'dark',
+										type: 'warning',
+										duration: 5000
+									});
+								}
+							}}
 						>
 							<img src={gemImage} alt="Luma-gem" class="w-4 h-4" />
 							<span>{reward.price}</span>
@@ -219,7 +283,7 @@
 </div>
 
 <CreateRewardModal
-	show={showModal}
+	show={showCreateEditModal}
 	rewardId={rewardIdModal}
 	modalType={modalTypeReward}
 	isEdit={true}
@@ -236,49 +300,59 @@
 			-2px 0 4px rgba(0, 0, 0, 0.05);
 	}
 
+	.overlay {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: rgba(0, 0, 0, 0.5);
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		color: white;
+		font-size: 1.5rem;
+		z-index: 1000;
+	}
 
-  .overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: white;
-      font-size: 1.5rem;
-      z-index: 1000;
-  }
+	.loader {
+		width: 48px;
+		height: 48px;
+		border-radius: 50%;
+		position: relative;
+		animation: rotate 1s linear infinite;
+	}
+	.loader::before {
+		content: '';
+		box-sizing: border-box;
+		position: absolute;
+		inset: 0px;
+		border-radius: 50%;
+		border: 5px solid #fff;
+		animation: prixClipFix 2s linear infinite;
+	}
 
-  .loader {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      position: relative;
-      animation: rotate 1s linear infinite
-  }
-  .loader::before {
-      content: "";
-      box-sizing: border-box;
-      position: absolute;
-      inset: 0px;
-      border-radius: 50%;
-      border: 5px solid #FFF;
-      animation: prixClipFix 2s linear infinite ;
-  }
+	@keyframes rotate {
+		100% {
+			transform: rotate(360deg);
+		}
+	}
 
-  @keyframes rotate {
-      100%   {transform: rotate(360deg)}
-  }
-
-  @keyframes prixClipFix {
-      0%   {clip-path:polygon(50% 50%,0 0,0 0,0 0,0 0,0 0)}
-      25%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 0,100% 0,100% 0)}
-      50%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,100% 100%,100% 100%)}
-      75%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,0 100%,0 100%)}
-      100% {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,0 100%,0 0)}
-  }
-
+	@keyframes prixClipFix {
+		0% {
+			clip-path: polygon(50% 50%, 0 0, 0 0, 0 0, 0 0, 0 0);
+		}
+		25% {
+			clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 0, 100% 0, 100% 0);
+		}
+		50% {
+			clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 100% 100%, 100% 100%);
+		}
+		75% {
+			clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 100%);
+		}
+		100% {
+			clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 0);
+		}
+	}
 </style>

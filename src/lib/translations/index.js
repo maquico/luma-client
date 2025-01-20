@@ -207,6 +207,12 @@ export const config = {
             key: 'checkEmail',
             loader: async () => (await import('../../lang/en/account/register.checkEmail.json')).default,
         },
+        {
+            locale: 'en',
+            key: 'detail_custom_reward',
+            routes: ['/shop/customize'],
+            loader: async () => (await import('../../lang/en/modals/detailCustomReward.json')).default,
+        },
         // Spanish loaders
         {
             locale: 'es',
@@ -345,7 +351,7 @@ export const config = {
             locale: 'es',
             key: 'shop_navbar',
             routes: ['/shop/general', '/shop/customize'],
-            loader: async () => (await import('../../lang/en/navbars/shop.navbar.json')).default,
+            loader: async () => (await import('../../lang/es/navbars/shop.navbar.json')).default,
         },
         {
             locale: 'es',
@@ -395,6 +401,12 @@ export const config = {
             locale: 'es',
             key: 'checkEmail',
             loader: async () => (await import('../../lang/es/account/register.checkEmail.json')).default,
+        },
+        {
+            locale: 'es',
+            key: 'detail_custom_reward',
+            routes: ['/shop/customize'],
+            loader: async () => (await import('../../lang/es/modals/detailCustomReward.json')).default,
         },
     ],
 };

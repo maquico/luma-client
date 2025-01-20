@@ -12,6 +12,11 @@
 		dispatch('close', { detail: result  });
 	}
 
+	function deny(){
+		show = false;
+		dispatch('deny')
+	}
+
 </script>
 
 {#if show}
@@ -27,7 +32,7 @@
 
 			<div class="controls">
 				<button class="btn-approve" on:click={() => close("approved")}>{$t('approve_task.approve')}</button> <!-- Approve button -->
-				<button class="btn-decline" on:click={() => close("denied")}>{$t('approve_task.deny')}</button>  <!-- Deny button -->
+				<button class="btn-decline" on:click={() => deny()}>{$t('approve_task.deny')}</button>  <!-- Deny button -->
 			</div>
 
 		</div>
