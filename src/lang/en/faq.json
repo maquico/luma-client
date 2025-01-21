@@ -1,24 +1,24 @@
 {
   "faq_title": "Frequently Asked Questions",
   "id_1": 1,
-  "title_1": "Who can modify the value in coins, effort, and priority of a task?",
-  "response_1": "Only project leaders and organization leaders can modify these fields.",
+  "title_1": "Who can modify the value in gems, effort, and priority of a task?",
+  "response_1": "Only project leaders can modify these fields.",
 
   "id_2": 2,
   "title_2": "Can I delete a task within a project?",
   "response_2": "Only project leaders and organization leaders have permission to delete tasks.",
 
   "id_3": 3,
-  "title_3": "How is the coin value of a task calculated?",
-  "response_3": "The system automatically calculates the coin value based on the effort and priority assigned to the task at the time of its creation.",
+  "title_3": "How is the gem value of a task calculated?",
+  "response_3": "The system automatically calculates the gem value based on the effort and priority assigned to the task at the time of its creation. The higher the effort and priority, the more gems the task is worth.",
 
   "id_4": 4,
   "title_4": "What are gems and coins used for in LUMA?",
-  "response_4": "Gems are used to purchase themes that customize your interface, while coins are used to acquire personalized rewards defined by project leaders.",
+  "response_4": "Coins are used to purchase themes that customize your interface, while gems are used to acquire personalized rewards defined by project leaders.",
 
   "id_5": 5,
   "title_5": "How can I buy and change themes?",
-  "response_5": "Visit the theme store on the platform, use gems to purchase the desired theme, and change it from the interface settings section.",
+  "response_5": "Visit the theme store on the platform, use coins to purchase the desired theme, and change it from the shop themes section.",
 
   "id_6": 6,
   "title_6": "Can I change the platform language?",
@@ -26,35 +26,27 @@
 
   "id_7": 7,
   "title_7": "What does it mean when a task is 'approved'?",
-  "response_7": "A task is approved when it has met all the established validation criteria. Only then are the associated rewards activated.",
+  "response_7": "A task is approved when it has met all the established validation criteria. Only then are experience points and gems given to the task's assigned user.",
 
   "id_8": 8,
-  "title_8": "How are tasks validated in LUMA?",
-  "response_8": "Each task has specific criteria that must be met before approval. These may include verification by the project leader or other automated parameters.",
+  "title_8": "Are there any restrictions on using gems or coins?",
+  "response_8": "Coins are exclusively used in the theme store, while gems can be used to obtain specific rewards defined by project leaders within each project.",
 
   "id_9": 9,
-  "title_9": "How can I acquire more gems?",
-  "response_9": "Gems are earned by completing tasks with associated rewards or through promotions within the platform.",
+  "title_9": "Can I transfer gems or coins to another user?",
+  "response_9": "Currently, it is not possible to transfer gems or coins between users.",
 
   "id_10": 10,
-  "title_10": "Are there any restrictions on using gems or coins?",
-  "response_10": "Gems are exclusively used in the theme store, while coins can be used to obtain specific rewards defined by project leaders within each project.",
+  "title_10": "How does the reward system in LUMA work, and what is its purpose?",
+  "response_10": "The reward system in LUMA is designed to motivate users to complete tasks efficiently and collaborate on projects. Each task is assigned rewards in the form of experience points and gems, which are awarded upon completion and approval. With experience points users will increase their level, obtaining 100 coins when doing so. Coins can be used to personalize the user experience by purchasing visual themes, while gems are used to acquire personalized rewards within the project, such as access to additional resources or benefits defined by leaders. This system promotes productivity by providing users with tangible incentives to complete their tasks and improve overall project performance.",
 
   "id_11": 11,
-  "title_11": "Can I transfer gems or coins to another user?",
-  "response_11": "Currently, it is not possible to transfer gems or coins between users.",
+  "title_11": "What kind of customization does LUMA offer, and how does it benefit users?",
+  "response_11": "LUMA allows users to customize their interface through themes that can be purchased with coins in the platform’s store. This feature lets users adjust visual styles according to their preferences, creating a more attractive and comfortable work environment. Customization not only helps the platform adapt to individual tastes but can also improve concentration and productivity.",
 
   "id_12": 12,
-  "title_12": "How does the reward system in LUMA work, and what is its purpose?",
-  "response_12": "The reward system in LUMA is designed to motivate users to complete tasks efficiently and collaborate on projects. Each task is assigned rewards in the form of coins and gems, which are awarded upon completion and approval. Gems can be used to personalize the user experience by purchasing visual themes, while coins are used to acquire personalized rewards within the project, such as access to additional resources or benefits defined by leaders. This system promotes productivity by providing users with tangible incentives to complete their tasks and improve overall project performance.",
-
-  "id_13": 13,
-  "title_13": "What kind of customization does LUMA offer, and how does it benefit users?",
-  "response_13": "LUMA allows users to customize their interface through themes that can be purchased with gems in the platform’s store. This feature lets users adjust colors, backgrounds, and visual styles according to their preferences, creating a more attractive and comfortable work environment. Customization not only helps the platform adapt to individual tastes but can also improve concentration and productivity, as users can choose a theme that is visually more pleasant, reducing fatigue during long work sessions.",
-
-  "id_14": 14,
-  "title_14": "What is the process for creating and managing a project in LUMA?",
-  "response_14": "Creating and managing a project in LUMA is an intuitive process designed to facilitate organization and team coordination. To start a new project, a user with appropriate permissions can access the 'Create Project' section and define the basic parameters, such as the project name, description, and team members. Once created, the project can be managed through a centralized dashboard that allows leaders to assign tasks, set priorities, and monitor team progress. Task tracking and resource management tools ensure that all members are aligned with the project’s goals, facilitating real-time communication and collaboration.",
+  "title_12": "What is the process for creating and managing a project in LUMA?",
+  "response_12": "Creating and managing a project in LUMA is an intuitive process designed to facilitate the organization and coordination of teamwork. To start a new project, a user can access the 'Create Project' section and define the basic parameters, such as the project name and description. Once created, within the project settings, they can invite team members by entering their email addresses.",
 
   "on_this_page": "On this page"
 }

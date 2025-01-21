@@ -1,24 +1,24 @@
 {
   "faq_title": "Preguntas Frecuentes",
   "id_1": 1,
-  "title_1": "¿Quién puede modificar el valor en monedas, el esfuerzo y la prioridad de una tarea?",
+  "title_1": "¿Quién puede modificar el valor en gemas, el esfuerzo y la prioridad de una tarea?",
   "response_1": "Solo los líderes de proyecto y de la organización pueden modificar estos campos.",
 
   "id_2": 2,
   "title_2": "¿Puedo eliminar una tarea dentro de un proyecto?",
-  "response_2": "Solo los líderes de proyecto y de la organización tienen permisos para eliminar tareas.",
+  "response_2": "Solo los líderes de proyecto tienen permisos para eliminar tareas.",
 
   "id_3": 3,
   "title_3": "¿Cómo se calcula el valor en monedas de una tarea?",
-  "response_3": "El sistema calcula automáticamente el valor en monedas basado en el esfuerzo y la prioridad asignados a la tarea al momento de su creación.",
+  "response_3": "El sistema calcula automáticamente el valor en monedas basado en el esfuerzo y la prioridad asignados a la tarea al momento de su creación. A mayor esfuerzo y prioridad, mayor será el valor en monedas de la tarea.",
 
   "id_4": 4,
   "title_4": "¿Para qué sirven las gemas y las monedas en LUMA?",
-  "response_4": "Las gemas se utilizan para comprar temas que personalizan la apariencia de tu interfaz, mientras que las monedas se usan para adquirir recompensas personalizadas definidas por los líderes de proyecto.",
+  "response_4": "Las monedas se utilizan para comprar temas que personalizan la apariencia de tu interfaz, mientras que las gemas se usan para adquirir recompensas personalizadas definidas por los líderes de proyecto.",
 
   "id_5": 5,
   "title_5": "¿Cómo puedo comprar y cambiar temas?",
-  "response_5": "Visita la tienda de temas en la plataforma, utiliza gemas para adquirir el tema que desees y cámbialo desde la sección de ajustes de la interfaz.",
+  "response_5": "Visita la tienda de temas en la plataforma, utiliza monedas para adquirir el tema que desees y cámbialo desde la sección de ajustes de la interfaz.",
 
   "id_6": 6,
   "title_6": "¿Puedo cambiar el idioma de la plataforma?",
@@ -26,35 +26,27 @@
 
   "id_7": 7,
   "title_7": "¿Qué significa que una tarea esté 'aprobada'?",
-  "response_7": "Una tarea es aprobada cuando ha pasado por todos los criterios de validación establecidos. Solo entonces se activan las recompensas asociadas.",
+  "response_7": "Una tarea es aprobada cuando ha pasado por todos los criterios de validación establecidos. Solo entonces se otorgan los puntos de experiencia y gemas al usuario asignado en la tarea.",
 
   "id_8": 8,
-  "title_8": "¿Cómo se validan las tareas en LUMA?",
-  "response_8": "Cada tarea tiene criterios específicos que deben cumplirse antes de ser aprobada. Estos pueden incluir la verificación por parte del líder del proyecto u otros parámetros automáticos.",
+  "title_8": "¿Hay alguna restricción para el uso de gemas o monedas?",
+  "response_8": "Las monedas se utilizan únicamente en la tienda de temas, mientras que las gemas se pueden usar para obtener recompensas específicas que definan los líderes dentro de cada proyecto.",
 
   "id_9": 9,
-  "title_9": "¿Cómo se pueden adquirir más gemas?",
-  "response_9": "Las gemas se obtienen completando tareas que tienen recompensas asociadas o a través de promociones dentro de la plataforma.",
+  "title_9": "¿Puedo transferir gemas o monedas a otro usuario?",
+  "response_9": "Actualmente, no es posible transferir gemas o monedas entre usuarios.",
 
   "id_10": 10,
-  "title_10": "¿Hay alguna restricción para el uso de gemas o monedas?",
-  "response_10": "Las gemas se utilizan únicamente en la tienda de temas, mientras que las monedas se pueden usar para obtener recompensas específicas que definan los líderes dentro de cada proyecto.",
+  "title_10": "¿Cómo funciona el sistema de recompensas en LUMA y cuál es su propósito dentro de la plataforma?",
+  "response_10": "El sistema de recompensas en LUMA está diseñado para motivar a los usuarios a completar tareas de manera eficiente y colaborar en proyectos. Cada tarea se asigna con recompensas en forma de puntos de experiencia y gemas, que se otorgan al completarlas y aprobarlas. Con los puntos de experiencia, los usuarios aumentarán su nivel, obteniendo 100 monedas al hacerlo. Las monedas se pueden usar para personalizar la experiencia del usuario mediante la compra de temas visuales, mientras que las gemas se utilizan para adquirir recompensas personalizadas dentro del proyecto, como acceso a recursos adicionales o beneficios definidos por los líderes. Este sistema promueve la productividad al proporcionar a los usuarios incentivos tangibles para completar sus tareas y mejorar el desempeño general del proyecto.",
 
   "id_11": 11,
-  "title_11": "¿Puedo transferir gemas o monedas a otro usuario?",
-  "response_11": "Actualmente, no es posible transferir gemas o monedas entre usuarios.",
+  "title_11": "¿Qué tipo de personalización ofrece LUMA y cómo beneficia a los usuarios?",
+  "response_11": "LUMA permite a los usuarios personalizar la apariencia de su interfaz a través de temas que se pueden adquirir con monedas en la tienda de la plataforma. Esta característica les permite ajustar los estilos visuales de acuerdo a sus preferencias, creando un entorno de trabajo más atractivo y cómodo. Esta personalización no solo ayuda a que la plataforma se adapte a los gustos individuales, sino que también puede mejorar la concentración y la productividad.",
 
   "id_12": 12,
-  "title_12": "¿Cómo funciona el sistema de recompensas en LUMA y cuál es su propósito dentro de la plataforma?",
-  "response_12": "El sistema de recompensas en LUMA está diseñado para motivar a los usuarios a completar tareas de manera eficiente y colaborar en los proyectos. Cada tarea tiene asignadas recompensas en forma de monedas y gemas, que se otorgan al completarla y aprobarla. Las gemas se pueden usar para personalizar la experiencia del usuario a través de la compra de temas visuales, mientras que las monedas se utilizan para adquirir recompensas personalizadas dentro del proyecto, como acceso a recursos adicionales o beneficios definidos por los líderes. Este sistema fomenta la productividad, ya que los usuarios tienen un incentivo tangible para completar sus tareas y mejorar el rendimiento general del proyecto.",
-
-  "id_13": 13,
-  "title_13": "¿Qué tipo de personalización ofrece LUMA y cómo beneficia a los usuarios?",
-  "response_13": "LUMA permite a los usuarios personalizar la apariencia de su interfaz a través de temas que se pueden adquirir con gemas en la tienda de la plataforma. Esta característica les permite ajustar los colores, fondos y estilos visuales de acuerdo a sus preferencias, creando un entorno de trabajo más atractivo y cómodo. Esta personalización no solo ayuda a que la plataforma se adapte a los gustos individuales, sino que también puede mejorar la concentración y la productividad, ya que los usuarios pueden elegir un tema que les resulte más agradable visualmente, reduciendo la fatiga durante largas sesiones de trabajo.",
-
-  "id_14": 14,
-  "title_14": "¿Cuál es el proceso para crear y gestionar un proyecto en LUMA?",
-  "response_14": "Crear y gestionar un proyecto en LUMA es un proceso intuitivo diseñado para facilitar la organización y coordinación del trabajo en equipo. Para iniciar un nuevo proyecto, un usuario con permisos adecuados puede acceder a la sección 'Crear Proyecto' y definir los parámetros básicos, como el nombre del proyecto, la descripción y los miembros del equipo. Una vez creado, el proyecto puede ser gestionado a través de un panel de control centralizado que permite a los líderes asignar tareas, establecer prioridades y monitorear el progreso del equipo. Las herramientas de seguimiento de tareas y gestión de recursos aseguran que todos los miembros estén alineados con los objetivos del proyecto, facilitando la comunicación y la colaboración en tiempo real.",
+  "title_12": "¿Cuál es el proceso para crear y gestionar un proyecto en LUMA?",
+  "response_12": "Crear y gestionar un proyecto en LUMA es un proceso intuitivo diseñado para facilitar la organización y coordinación del trabajo en equipo. Para iniciar un nuevo proyecto, un usuario puede acceder a la sección 'Crear Proyecto' y definir los parámetros básicos, como el nombre del proyecto y la descripción. Una vez creado, dentro de la configuración del proyecto podrá invitar miembros al equipo ingresando sus correos electrónicos.",
 
   "on_this_page": "En esta página"
 }
