@@ -137,7 +137,7 @@
 				userDropdown = !userDropdown;
 			}}
 		>
-			<div class="w-8 rounded-full bg-neutral text-neutral-content">
+			<div class="w-8 rounded-full bg-primary font-bold text-neutral-content">
 				<span class="text-xs">
 					{userName
 						.split(' ')
