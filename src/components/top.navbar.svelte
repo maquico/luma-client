@@ -13,7 +13,7 @@
 	import axios from 'axios';
 
 	let userDropdown = false;
-	let userName = 'John Doe';
+	let user = { firstName: 'John', lastName: 'Doe' };
 	let userMail = 'jdoe@acme.com';
 	let userCoins = 'loading...';
 
@@ -29,7 +29,8 @@
 			const sessionData = JSON.parse(storedData);
 			// console.log(sessionData);
 
-			userName = `${sessionData.user.user_metadata.first_name} ${sessionData.user.user_metadata.last_name}`;
+			user.firstName = sessionData.user.user_metadata.first_name;
+			user.lastName = sessionData.user.user_metadata.last_name;
 			userMail = sessionData.user.user_metadata.email;
 		}
 
@@ -139,11 +140,7 @@
 		>
 			<div class="w-8 rounded-full bg-primary font-bold text-neutral-content">
 				<span class="text-xs">
-					{userName
-						.split(' ')
-						.map((name) => name[0].toUpperCase())
-						.slice(0, 2)
-						.join('')}
+					{user.firstName?.[0]?.toUpperCase()}{user.lastName?.[0]?.toUpperCase()}
 				</span>
 			</div>
 		</div>
@@ -152,7 +149,7 @@
 		<div class="dropdown-menu-container {userDropdown ? 'open' : ''}">
 			<div class="dropdown-menu">
 				<div class="user-info">
-					<h3>{userName}</h3>
+					<h3>{user.firstName} {user.lastName}</h3>
 					<p>{userMail}</p>
 				</div>
 
